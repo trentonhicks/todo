@@ -29,7 +29,49 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/{id}")]
-        public IActionResult GetAccount()
+        public IActionResult GetAccount(int id)
+        {
+            return NotFound();
+        }
+
+        [HttpDelete("accounts/{id}")]
+        public IActionResult DeleteAccount(int id)
+        {
+            return NotFound();
+        }
+
+        [HttpPost("accounts/{accountId}/lists")]
+        public IActionResult CreateList(int accountId)
+        {
+            return NotFound();
+        }
+
+        [HttpPut("accounts/{accountId}/lists/{listId}")]
+        public IActionResult UpdateList(int accountId, int listId)
+        {
+            return NotFound();
+        }
+
+        [HttpDelete("accounts/{accountId}/lists/{listId}")]
+        public IActionResult DeleteList(int accountId, int listId)
+        {
+            return NotFound();
+        }
+
+        [HttpPost("accounts/{accountId}/todos")]
+        public IActionResult CreateTodo(int accountId)
+        {
+            return NotFound();
+        }
+
+        [HttpPut("accounts/{accountId}/todos/{todoId}")]
+        public IActionResult EditTodo(int accountId, int todoId)
+        {
+            return NotFound();
+        }
+
+        [HttpDelete("accounts/{accountId}/todos/{todoId}")]
+        public IActionResult DeleteTodo(int accountId, int todoId)
         {
             return NotFound();
         }
