@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TodoWebAPI.Models
 {
-    public class AccountModel
+    public class CreateAccountModel
     {
         public int Id { get; set; }
         public string FullName { get; set; }

@@ -16,11 +16,13 @@ namespace TodoWebAPI.Controllers
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
+        private ContextService _contextService;
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
+            _contextService = new ContextService(_context, _config);
         }
 
         [HttpPost("accounts")]
@@ -89,9 +91,26 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts/{accountId}/lists")]
-        public IActionResult CreateList(int accountId)
+        public IActionResult CreateList(int accountId, [FromBody] string title)
         {
-            return NotFound();
+            if(accountId != 0)
+            {
+                if(title == "" || title == null)
+                {
+                    title = "Untitled List";
+                }
+
+                var list = new Lists()
+                {
+                    AccountId = accountId,
+                    ListTitle = title
+                };
+
+                _context.Lists.Add(list);
+                _context.SaveChanges();
+                return Ok(list);
+            }
+            return BadRequest("Account doesn't exist");
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
