@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TodoWebAPI.Models;
+using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts")]
-        public IActionResult CreateAccount(AccountModel account)
+        public IActionResult CreateAccount(CreateAccountModel account)
         {
             var a = new Accounts();
             var usernameExists = _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefault() != null;
@@ -55,10 +56,30 @@ namespace TodoWebAPI.Controllers
             return Ok($"{account.UserName} was created.");
         }
 
-        [HttpGet("accounts/{id}")]
-        public IActionResult GetAccount()
+        [HttpGet("accounts/{ID}")]
+        public IActionResult GetAccount(int id)
         {
-            return NotFound();
+            var account = _context.Accounts.Find(id);
+            var accountPicture = "";
+
+            if (account == null)
+            {
+                return NotFound("Profile doesn't exist. :(");
+            }
+            else if (account.Picture != null)
+            {
+                accountPicture = Convert.ToBase64String(account.Picture);
+            }
+
+            var profilePresentation = new AccountPresentation()
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                UserName = account.UserName,
+                Picture = accountPicture,
+            };
+
+            return Ok(profilePresentation);
         }
     }
 }
