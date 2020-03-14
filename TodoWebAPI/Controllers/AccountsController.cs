@@ -95,9 +95,9 @@ namespace TodoWebAPI.Controllers
         [HttpPost("accounts/{accountId}/lists")]
         public IActionResult CreateList(int accountId, [FromBody] string title)
         {
-            if(accountId != 0)
+            if(_contextService.AccountExists(accountId))
             {
-                if(title == "" || title == null)
+                if(title == "")
                 {
                     title = "Untitled List";
                 }
@@ -110,7 +110,7 @@ namespace TodoWebAPI.Controllers
 
                 _context.Lists.Add(list);
                 _context.SaveChanges();
-                return Ok(list);
+                return Ok( new { list.Id, list.ListTitle } );
             }
             return BadRequest("Account doesn't exist");
         }
