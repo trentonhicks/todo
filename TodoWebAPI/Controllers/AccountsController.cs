@@ -28,12 +28,12 @@ namespace TodoWebAPI.Controllers
         {
             var a = new Accounts();
             var usernameExists = _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefault() != null;
-           
-            if(usernameExists)
+
+            if (usernameExists)
             {
                 return BadRequest("Username needed.");
             }
-            else if(account.Password == null)
+            else if (account.Password == null)
             {
                 return BadRequest("Password needed.");
             }
@@ -56,10 +56,10 @@ namespace TodoWebAPI.Controllers
             return Ok($"{account.UserName} was created.");
         }
 
-        [HttpGet("accounts/{ID}")]
-        public IActionResult GetAccount(int id)
+        [HttpGet("accounts/{accountId}")]
+        public IActionResult GetAccount(int accountId)
         {
-            var account = _context.Accounts.Find(id);
+            var account = _context.Accounts.Find(accountId);
             var accountPicture = "";
 
             if (account == null)
@@ -80,6 +80,48 @@ namespace TodoWebAPI.Controllers
             };
 
             return Ok(profilePresentation);
+        }
+
+        [HttpDelete("accounts/{accountId}")]
+        public IActionResult DeleteAccount(int accountId)
+        {
+            return NotFound();
+        }
+
+        [HttpPost("accounts/{accountId}/lists")]
+        public IActionResult CreateList(int accountId)
+        {
+            return NotFound();
+        }
+
+        [HttpPut("accounts/{accountId}/lists/{listId}")]
+        public IActionResult UpdateList(int accountId, int listId)
+        {
+            return NotFound();
+        }
+
+        [HttpDelete("accounts/{accountId}/lists/{listId}")]
+        public IActionResult DeleteList(int accountId, int listId)
+        {
+            return NotFound();
+        }
+
+        [HttpPost("accounts/{accountId}/todos")]
+        public IActionResult CreateTodo(int accountId)
+        {
+            return NotFound();
+        }
+
+        [HttpPut("accounts/{accountId}/todos/{todoId}")]
+        public IActionResult EditTodo(int accountId, int todoId)
+        {
+            return NotFound();
+        }
+
+        [HttpDelete("accounts/{accountId}/todos/{todoId}")]
+        public IActionResult DeleteTodo(int accountId, int todoId)
+        {
+            return NotFound();
         }
     }
 }
