@@ -24,25 +24,23 @@ namespace TodoWebAPI.Models
             modelBuilder.Entity<Accounts>(entity =>
             {
                 entity.HasIndex(e => e.UserName)
-                    .HasName("UQ__Accounts__C9F28456320E5B2F")
+                    .HasName("UQ__Accounts__C9F2845640260CAD")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.FullName)
-                    .HasMaxLength(1)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Picture).IsRequired();
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 

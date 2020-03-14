@@ -27,12 +27,12 @@ namespace TodoWebAPI.Controllers
         {
             var a = new Accounts();
             var usernameExists = _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefault() != null;
-           
-            if(usernameExists)
+
+            if (usernameExists)
             {
                 return BadRequest("Username needed.");
             }
-            else if(account.Password == null)
+            else if (account.Password == null)
             {
                 return BadRequest("Password needed.");
             }
@@ -58,7 +58,8 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}")]
         public IActionResult GetAccount(int accountId)
         {
-            return NotFound();
+            var account = _context.Accounts.Find(accountId);
+            return Ok(account);
         }
 
         [HttpDelete("accounts/{accountId}")]
