@@ -23,9 +23,36 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts")]
-        public IActionResult CreateAccount()
+        public IActionResult CreateAccount(AccountModel account)
         {
-            return NotFound();
+            var a = new Accounts();
+            var usernameExists = _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefault() != null;
+           
+            if(usernameExists)
+            {
+                return BadRequest("Username needed.");
+            }
+            else if(account.Password == null)
+            {
+                return BadRequest("Password needed.");
+            }
+
+            a.FullName = account.FullName;
+            a.UserName = account.UserName;
+            a.Password = account.Password;
+
+            _context.Accounts.Add(a);
+
+            _context.SaveChanges();
+
+            account.Id = a.Id;
+
+            if (account.Picture != null)
+            {
+                //
+            }
+
+            return Ok($"{account.UserName} was created.");
         }
 
         [HttpGet("accounts/{id}")]
