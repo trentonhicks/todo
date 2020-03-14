@@ -52,7 +52,9 @@ namespace TodoWebAPI.Controllers
 
             if (account.Picture != null)
             {
-                //
+                var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
+
+                image.StoreImageProfile(account);
             }
 
             return Ok($"{account.UserName} was created.");
