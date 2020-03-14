@@ -55,14 +55,14 @@ namespace TodoWebAPI.Controllers
             return Ok($"{account.UserName} was created.");
         }
 
-        [HttpGet("accounts/{id}")]
-        public IActionResult GetAccount(int id)
+        [HttpGet("accounts/{accountId}")]
+        public IActionResult GetAccount(int accountId)
         {
             return NotFound();
         }
 
-        [HttpDelete("accounts/{id}")]
-        public IActionResult DeleteAccount(int id)
+        [HttpDelete("accounts/{accountId}")]
+        public IActionResult DeleteAccount(int accountId)
         {
             return NotFound();
         }
