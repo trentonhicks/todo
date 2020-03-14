@@ -1,0 +1,6 @@
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'ToDo')
+
+BEGIN
+ALTER DATABASE [ToDo] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+DROP database [ToDo]
+END
