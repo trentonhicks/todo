@@ -116,9 +116,21 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/{accountId}/lists")]
-        public IActionResult GetLists()
+        public IActionResult GetLists(int accountId)
         {
-            return NotFound();
+            if(_contextService.AccountExists(accountId))
+            {
+                var listsFromDatabase = _context.Lists.Where(l => l.AccountId == accountId).ToList();
+                var lists = new List<ListPresentation>();
+
+                foreach(var list in listsFromDatabase)
+                {
+                    lists.Add(new ListPresentation(list));
+                }
+
+                return Ok(lists);
+            }
+            return NotFound("Account doesn't exist.");
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
