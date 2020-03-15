@@ -26,5 +26,18 @@ namespace TodoWebAPI
         {
             return _context.Lists.Find(listId) == null ? false : true;
         }
+
+        public void RemoveList(Lists list)
+        {
+            var todos = _context.ToDos.Where(t => t.ListId == list.Id).ToList();
+
+            foreach (var todo in todos)
+            {
+                _context.ToDos.Remove(todo);
+            }
+
+            _context.Lists.Remove(list);
+            _context.SaveChanges();
+        }
     }
 }

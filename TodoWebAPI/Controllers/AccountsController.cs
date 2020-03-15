@@ -149,7 +149,20 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
         public IActionResult DeleteList(int accountId, int listId)
         {
-            return NotFound();
+            var list = _context.Lists.Find(listId);
+
+            if (list != null)
+            {
+                if (list.AccountId != accountId)
+                {
+                    return BadRequest("List doesn't belong to user.");
+                }
+
+                _contextService.RemoveList(list);
+
+                return Ok("List deleted");
+            }
+            return NotFound("List doesn't exist.");
         }
 
         [HttpPost("accounts/{accountId}/todos")]
