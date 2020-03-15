@@ -112,13 +112,33 @@ namespace TodoWebAPI.Controllers
                 _context.SaveChanges();
                 return Ok( new { list.Id, list.ListTitle } );
             }
-            return BadRequest("Account doesn't exist");
+            return NotFound("Account doesn't exist.");
+        }
+
+        [HttpGet("accounts/{accountId}/lists")]
+        public IActionResult GetLists()
+        {
+            return NotFound();
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
-        public IActionResult UpdateList(int accountId, int listId)
+        public IActionResult UpdateList(int accountId, int listId, [FromBody] string title)
         {
-            return NotFound();
+            var list = _context.Lists.Find(listId);
+
+            if(list != null)
+            {
+                if(title == "")
+                {
+                    title = "Untitled List";
+                }
+                list.ListTitle = title;
+
+                _context.Lists.Update(list);
+                _context.SaveChanges();
+                return Ok(new { list.Id, list.ListTitle });
+            }
+            return NotFound("List doesn't exist.");
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]

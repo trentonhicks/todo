@@ -21,5 +21,10 @@ namespace TodoWebAPI
         {
             return _context.Accounts.Find(accountId) == null ? false : true;
         }
+
+        public bool ListExists(int listId)
+        {
+            return _context.Lists.Find(listId) == null ? false : true;
+        }
     }
 }
