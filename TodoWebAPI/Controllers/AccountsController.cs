@@ -128,7 +128,12 @@ namespace TodoWebAPI.Controllers
 
             if(list != null)
             {
-                if(title == "")
+                if (list.AccountId != accountId)
+                {
+                    return BadRequest("List doesn't belong to user.");
+                }
+
+                if (title == "")
                 {
                     title = "Untitled List";
                 }
