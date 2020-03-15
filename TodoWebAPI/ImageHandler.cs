@@ -23,7 +23,6 @@ namespace TodoWebAPI
         {
             _connectionString = connectionString;
         }
-
         public byte[] ConvertStringToByteArray(string image)
         {
             byte[] imageBytes = Convert.FromBase64String(image);

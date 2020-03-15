@@ -16,7 +16,6 @@ namespace TodoWebAPI
             _context = context;
             _config = config;
         }
-
         public bool AccountExists(int accountId)
         {
             return _context.Accounts.Find(accountId) == null ? false : true;
