@@ -33,7 +33,7 @@ namespace TodoWebAPI.Controllers
 
             if (usernameExists)
             {
-                return BadRequest("Username needed.");
+                return BadRequest("Username already exists. Username must be unique.");
             }
             else if (account.Password == null)
             {
@@ -89,15 +89,33 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public IActionResult DeleteAccount(int accountId)
         {
-            return NotFound();
+            if (_contextService.AccountExists(accountId))
+            {
+                var getAccount = _context.Accounts.Find(accountId);
+                var listId = _context.Lists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
+                var getList = _context.Lists.Find(listId);
+                if (getList == null)
+                {
+                    _context.Accounts.Remove(getAccount);
+                    return Ok("Account was deleted. No data was within the account");
+                }
+
+                _contextService.RemoveList(getList);
+                _context.Lists.Remove(getList);
+                _context.Accounts.Remove(getAccount);
+
+
+                return Ok("Account was deleted");
+            }
+            return BadRequest("Account doesn't exist.");
         }
 
         [HttpPost("accounts/{accountId}/lists")]
         public IActionResult CreateList(int accountId, [FromBody] string title)
         {
-            if(_contextService.AccountExists(accountId))
+            if (_contextService.AccountExists(accountId))
             {
-                if(title == "")
+                if (title == "")
                 {
                     title = "Untitled List";
                 }
@@ -110,7 +128,7 @@ namespace TodoWebAPI.Controllers
 
                 _context.Lists.Add(list);
                 _context.SaveChanges();
-                return Ok( new { list.Id, list.ListTitle } );
+                return Ok(new { list.Id, list.ListTitle });
             }
             return NotFound("Account doesn't exist.");
         }
@@ -135,7 +153,7 @@ namespace TodoWebAPI.Controllers
                     listPresentation.Add(new ListPresentation(list));
                 }
 
-                return Ok(listPresentation);
+                return Ok(lists);
             }
             return NotFound("Account doesn't exist.");
         }
@@ -145,7 +163,7 @@ namespace TodoWebAPI.Controllers
         {
             var list = _context.Lists.Find(listId);
 
-            if(list != null)
+            if (list != null)
             {
                 if (list.AccountId != accountId)
                 {
