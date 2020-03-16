@@ -33,7 +33,7 @@ namespace TodoWebAPI.Controllers
 
             if (usernameExists)
             {
-                return BadRequest("Username needed.");
+                return BadRequest("Invalid UserName.");
             }
             else if (account.Password == null)
             {
@@ -89,20 +89,19 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public IActionResult DeleteAccount(int accountId)
         {
-            var getAccount = _context.Accounts.Find(accountId);
-            //var getList = _context.Lists.Find(listId);
-            if(getAccount != null)
+            if (_contextService.AccountExists(accountId))
             {
-                //_contextService.RemoveList(getList);
-                //_context.Lists.Remove(getList);
+                var getAccount = _context.Accounts.Find(accountId);
+                var listId = _context.Lists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
+                var getList = _context.Lists.Find(listId);
+
+                _contextService.RemoveList(getList);
+                _context.Lists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
 
                 return Ok("Account was deleted");
             }
             return BadRequest("Account doesn't exist.");
-            
-
-           
         }
 
         [HttpPost("accounts/{accountId}/lists")]
@@ -140,7 +139,6 @@ namespace TodoWebAPI.Controllers
                 {
                     lists.Add(new ListPresentation(list));
                 }
-
                 return Ok(lists);
             }
             return NotFound("Account doesn't exist.");
