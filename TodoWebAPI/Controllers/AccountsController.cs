@@ -89,15 +89,28 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public IActionResult DeleteAccount(int accountId)
         {
-            return NotFound();
+            var getAccount = _context.Accounts.Find(accountId);
+            //var getList = _context.Lists.Find(listId);
+            if(getAccount != null)
+            {
+                //_contextService.RemoveList(getList);
+                //_context.Lists.Remove(getList);
+                _context.Accounts.Remove(getAccount);
+
+                return Ok("Account was deleted");
+            }
+            return BadRequest("Account doesn't exist.");
+            
+
+           
         }
 
         [HttpPost("accounts/{accountId}/lists")]
         public IActionResult CreateList(int accountId, [FromBody] string title)
         {
-            if(_contextService.AccountExists(accountId))
+            if (_contextService.AccountExists(accountId))
             {
-                if(title == "")
+                if (title == "")
                 {
                     title = "Untitled List";
                 }
@@ -110,7 +123,7 @@ namespace TodoWebAPI.Controllers
 
                 _context.Lists.Add(list);
                 _context.SaveChanges();
-                return Ok( new { list.Id, list.ListTitle } );
+                return Ok(new { list.Id, list.ListTitle });
             }
             return NotFound("Account doesn't exist.");
         }
@@ -118,12 +131,12 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}/lists")]
         public IActionResult GetLists(int accountId)
         {
-            if(_contextService.AccountExists(accountId))
+            if (_contextService.AccountExists(accountId))
             {
                 var listsFromDatabase = _context.Lists.Where(l => l.AccountId == accountId).ToList();
                 var lists = new List<ListPresentation>();
 
-                foreach(var list in listsFromDatabase)
+                foreach (var list in listsFromDatabase)
                 {
                     lists.Add(new ListPresentation(list));
                 }
@@ -138,7 +151,7 @@ namespace TodoWebAPI.Controllers
         {
             var list = _context.Lists.Find(listId);
 
-            if(list != null)
+            if (list != null)
             {
                 if (list.AccountId != accountId)
                 {
