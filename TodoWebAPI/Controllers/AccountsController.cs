@@ -138,15 +138,23 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}/lists")]
         public IActionResult GetLists(int accountId)
         {
-            if (_contextService.AccountExists(accountId))
-            {
-                var listsFromDatabase = _context.Lists.Where(l => l.AccountId == accountId).ToList();
-                var lists = new List<ListPresentation>();
+            var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
 
-                foreach (var list in listsFromDatabase)
+            if(_contextService.AccountExists(accountId))
+            {
+                var lists = _context.Lists
+                    .Where(l => l.AccountId == accountId)
+                    .ToList();
+
+                var listPresentation = new List<ListPresentation>();
+
+                foreach(var list in lists)
                 {
-                    lists.Add(new ListPresentation(list));
+                    var todos = _context.ToDos.Where(t => t.ListId == list.Id).Take(todoPreviewNum).ToList();
+                    list.ToDos = todos;
+                    listPresentation.Add(new ListPresentation(list));
                 }
+
                 return Ok(lists);
             }
             return NotFound("Account doesn't exist.");

@@ -12,8 +12,16 @@ namespace TodoWebAPI.Presentation
         {
             ListId = list.Id;
             ListTitle = list.ListTitle;
+
+            Todos = new List<TodoPresentation>();
+
+            foreach(var todo in list.ToDos)
+            {
+                Todos.Add(new TodoPresentation(todo));
+            }
         }
         public int ListId { get; set; }
         public string ListTitle { get; set; }
+        public List<TodoPresentation> Todos { get; set; }
     }
 }
