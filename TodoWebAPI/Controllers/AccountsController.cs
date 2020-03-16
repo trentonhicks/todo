@@ -33,7 +33,7 @@ namespace TodoWebAPI.Controllers
 
             if (usernameExists)
             {
-                return BadRequest("Invalid UserName.");
+                return BadRequest("Username already exists. Username must be unique.");
             }
             else if (account.Password == null)
             {
@@ -94,10 +94,16 @@ namespace TodoWebAPI.Controllers
                 var getAccount = _context.Accounts.Find(accountId);
                 var listId = _context.Lists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
                 var getList = _context.Lists.Find(listId);
+                if (getList == null)
+                {
+                    _context.Accounts.Remove(getAccount);
+                    return Ok("Account was deleted. No data was within the account");
+                }
 
                 _contextService.RemoveList(getList);
                 _context.Lists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
+
 
                 return Ok("Account was deleted");
             }
