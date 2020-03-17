@@ -12,13 +12,13 @@ using TodoWebAPI.Presentation;
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class FooController : ControllerBase
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
 
-        public AccountsController(ToDoContext context, IConfiguration config)
+        public FooController(ToDoContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
@@ -202,10 +202,24 @@ namespace TodoWebAPI.Controllers
             return NotFound("List doesn't exist.");
         }
 
-        [HttpPost("accounts/{accountId}/todos")]
-        public IActionResult CreateTodo(int accountId)
+        [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
+        public IActionResult CreateTodo(int accountId, int listId, [FromBody] ToDos todos)
         {
-            return NotFound();
+            var list = _context.Lists.Find(listId);
+
+            todos.ListId = listId; 
+
+            if (list != null)
+            {
+                if (list.AccountId != accountId)
+                {
+                    return BadRequest("List belongs to another account");
+                }
+                _context.ToDos.Add(todos);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return NotFound("List doesn't exist.");
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
