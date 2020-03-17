@@ -97,12 +97,14 @@ namespace TodoWebAPI.Controllers
                 if (getList == null)
                 {
                     _context.Accounts.Remove(getAccount);
+                    _context.SaveChanges();
                     return Ok("Account was deleted. No data was within the account");
                 }
 
                 _contextService.RemoveList(getList);
                 _context.Lists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
+                _context.SaveChanges();
 
 
                 return Ok("Account was deleted");
@@ -202,10 +204,24 @@ namespace TodoWebAPI.Controllers
             return NotFound("List doesn't exist.");
         }
 
-        [HttpPost("accounts/{accountId}/todos")]
-        public IActionResult CreateTodo(int accountId)
+        [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
+        public IActionResult CreateTodo(int accountId, int listId, [FromBody] ToDos todos)
         {
-            return NotFound();
+            var list = _context.Lists.Find(listId);
+
+            todos.ListId = listId; 
+
+            if (list != null)
+            {
+                if (list.AccountId != accountId)
+                {
+                    return BadRequest("List belongs to another account");
+                }
+                _context.ToDos.Add(todos);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return NotFound("List doesn't exist.");
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
@@ -217,7 +233,21 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public IActionResult DeleteTodo(int accountId, int todoId)
         {
-            return NotFound();
+            var todo = _context.ToDos.Find(todoId);
+            if (_contextService.AccountExists(accountId))
+            {
+                if (todo != null)
+                {
+                    _context.ToDos.Remove(todo);
+                    _context.SaveChanges();
+                    return Ok("ToDo list removed.");
+                }
+                else
+                {
+                    return NotFound("ToDo is already empty");
+                }
+            }
+            return NotFound("Account doesn't exist.");
         }
     }
 }
