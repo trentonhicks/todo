@@ -97,12 +97,14 @@ namespace TodoWebAPI.Controllers
                 if (getList == null)
                 {
                     _context.Accounts.Remove(getAccount);
+                    _context.SaveChanges();
                     return Ok("Account was deleted. No data was within the account");
                 }
 
                 _contextService.RemoveList(getList);
                 _context.Lists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
+                _context.SaveChanges();
 
 
                 return Ok("Account was deleted");
