@@ -12,13 +12,13 @@ using TodoWebAPI.Presentation;
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
-    public class FooController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
 
-        public FooController(ToDoContext context, IConfiguration config)
+        public AccountsController(ToDoContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
