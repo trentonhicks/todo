@@ -233,7 +233,21 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public IActionResult DeleteTodo(int accountId, int todoId)
         {
-            return NotFound();
+            var todo = _context.ToDos.Find(todoId);
+            if (_contextService.AccountExists(accountId))
+            {
+                if (todo != null)
+                {
+                    _context.ToDos.Remove(todo);
+                    _context.SaveChanges();
+                    return Ok("ToDo list removed.");
+                }
+                else
+                {
+                    return NotFound("ToDo is already empty");
+                }
+            }
+            return NotFound("Account doesn't exist.");
         }
     }
 }
