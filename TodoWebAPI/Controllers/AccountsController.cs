@@ -153,7 +153,7 @@ namespace TodoWebAPI.Controllers
                     listPresentation.Add(new ListPresentation(list));
                 }
 
-                return Ok(lists);
+                return Ok(listPresentation);
             }
             return NotFound("Account doesn't exist.");
         }
