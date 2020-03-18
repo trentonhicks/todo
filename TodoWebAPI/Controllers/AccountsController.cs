@@ -20,7 +20,11 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
+<<<<<<< HEAD
         private IAccountCollection _account = new ListAcountCollection();
+=======
+        private IListsCollection _lists = new InMemoryListsCollection();
+>>>>>>> 4fd09d54a812d513b9b3866be796cd8a6342aa83
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
@@ -119,8 +123,19 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts/{accountId}/lists")]
-        public IActionResult CreateList(int accountId, [FromBody] string title)
+        public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel listToCreate)
         {
+            var list = new ListModel()
+            {
+                AccountId = accountId,
+                ListTitle = listToCreate.ListTitle
+            };
+
+            var listCreated = await _lists.CreateListAsync(list);
+
+            return Ok(listCreated);
+
+            /* MOVE TO Entity Framework Implementation of IListsCollection
             if (_contextService.AccountExists(accountId))
             {
                 if (title == "")
@@ -138,7 +153,7 @@ namespace TodoWebAPI.Controllers
                 _context.SaveChanges();
                 return Ok(new { list.Id, list.ListTitle });
             }
-            return NotFound("Account doesn't exist.");
+            return NotFound("Account doesn't exist.");*/
         }
 
         [HttpGet("accounts/{accountId}/lists")]
