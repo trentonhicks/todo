@@ -8,7 +8,7 @@ namespace TodoWebAPI.Interfaces
 {
     public interface IAccountCollection
     {
-        Accounts GetAccount(Accounts account);
+        Accounts GetAccount(int accountId, Accounts account);
         Accounts CreateAccount(Accounts account);
         void DeleteAccounts(Accounts account);
     }
