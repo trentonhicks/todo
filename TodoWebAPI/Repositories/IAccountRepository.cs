@@ -9,8 +9,8 @@ namespace TodoWebAPI.Repositories
 {
     public interface IAccountRepository
     {
-        Task GetAccount(int accountId);
-        Task CreateAccount(CreateAccountModel account);
-        void DeleteAccounts(int accountId);
+        Task <AccountModel>GetAccountAsync(int accountId);
+        Task <AccountModel>CreateAccountAsync(AccountModel account);
+        void DeleteAccountsAsync(int accountId);
     }
 }

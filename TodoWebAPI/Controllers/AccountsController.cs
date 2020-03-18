@@ -20,7 +20,7 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
-        private IAccountRepository _account = new ListAcountCollection();
+        private IAccountRepository _account = new InMemoryAccount();
         private IListsRepository _lists = new InMemoryListsCollection();
 
         public AccountsController(ToDoContext context, IConfiguration config)
@@ -31,41 +31,44 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts")]
-        public IActionResult CreateAccount(CreateAccountModel account)
+        public async Task<IActionResult> CreateAccount(CreateAccountModel accountToCreate)
         {
-            var a = new Accounts();
-            var usernameExists = _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefault() != null;
-
-            if (usernameExists)
+            
+            if(accountToCreate.UserName == null)
             {
-                return BadRequest("Username already exists. Username must be unique.");
+                return BadRequest("Username required");
             }
-            else if (account.Password == null)
+            else if(accountToCreate.Password == null)
             {
-                return BadRequest("Password needed.");
+                return BadRequest("Password required");
             }
 
-            a.FullName = account.FullName;
-            a.UserName = account.UserName;
-            a.Password = account.Password;
-
-            _account.CreateAccount(account);
-
-            if (account.Picture != null)
+            var account = new AccountModel()
             {
-                var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
+                FullName = accountToCreate.FullName,
+                UserName = accountToCreate.UserName,
+                Password = accountToCreate.Password,
+                Picture = accountToCreate.Picture
+            };
+            var accounts = await _account.CreateAccountAsync(account);
 
-                image.StoreImageProfile(account);
-            }
+            return Ok(accounts);
 
-            return Ok($"{account.UserName} was created.");
+            //if (account.Picture != null)
+            //{
+            //    var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
+
+            //    image.StoreImageProfile(account);
+            //}
+
         }
 
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
+            
 
-            var account = _account.GetAccount(accountId);
+            var account = _account.GetAccountAsync(accountId);
 
             if(account == null)
             {
@@ -96,26 +99,8 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public IActionResult DeleteAccount(int accountId)
         {
-            if (_contextService.AccountExists(accountId))
-            {
-                var getAccount = _context.Accounts.Find(accountId);
-                var listId = _context.Lists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
-                var getList = _context.Lists.Find(listId);
-                if (getList == null)
-                {
-                    _context.Accounts.Remove(getAccount);
-                    _context.SaveChanges();
-                    return Ok("Account was deleted. No data was within the account");
-                }
-
-                _contextService.RemoveList(getList);
-                _context.Lists.Remove(getList);
-                _context.Accounts.Remove(getAccount);
-                _context.SaveChanges();
-
-                return Ok("Account was deleted");
-            }
-            return BadRequest("Account doesn't exist.");
+             _account.DeleteAccountsAsync(accountId);
+            return Ok("Acccount Deleted");
         }
 
         [HttpPost("accounts/{accountId}/lists")]
