@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoWebAPI.Data;
+using TodoWebAPI.Models;
 
 namespace TodoWebAPI.Interfaces
 {
     public interface IAccountCollection
     {
-        Accounts GetAccount(Accounts account);
-        Accounts CreateAccount(Accounts account);
-        void DeleteAccounts(Accounts account);
+        Task GetAccount(int accountId);
+        Task CreateAccount(CreateAccountModel account);
+        void DeleteAccounts(int accountId);
     }
 }
