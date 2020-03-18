@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TodoWebAPI.Models
+namespace TodoWebAPI.Data
 {
     public partial class Lists
     {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace TodoWebAPI.Models
+namespace TodoWebAPI.Data
 {
     public partial class ToDoContext : DbContext
     {
