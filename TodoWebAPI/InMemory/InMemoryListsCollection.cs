@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoWebAPI.Data;
-using TodoWebAPI.Interfaces;
+using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryListsCollection : IListsCollection
+    public class InMemoryListsCollection : IListsRepository
     {
         public InMemoryListsCollection()
         {
@@ -51,7 +51,10 @@ namespace TodoWebAPI.InMemory
 
         public Task<string> UpdateListAsync(int listId, string title)
         {
-            throw new NotImplementedException();
+            var listIndex = _lists.FindIndex(x => x.Id == listId);
+            _lists[listIndex].ListTitle = title;
+
+            return Task.FromResult(title);
         }
 
         public Task DeleteTodosAsync(int listId)

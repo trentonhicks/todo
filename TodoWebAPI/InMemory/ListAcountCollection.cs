@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoWebAPI.Data;
-using TodoWebAPI.Interfaces;
+using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.InMemory
 {
-    public class ListAcountCollection : IAccountCollection
+    public class ListAcountCollection : IAccountRepository
     {
         private List<CreateAccountModel> _accounts = new List<CreateAccountModel>();
 

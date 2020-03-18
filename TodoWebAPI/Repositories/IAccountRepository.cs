@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using TodoWebAPI.Data;
 using TodoWebAPI.Models;
 
-namespace TodoWebAPI.Interfaces
+namespace TodoWebAPI.Repositories
 {
-    public interface IAccountCollection
+    public interface IAccountRepository
     {
         Task GetAccount(int accountId);
         Task CreateAccount(CreateAccountModel account);
