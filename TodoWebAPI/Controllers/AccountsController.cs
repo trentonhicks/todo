@@ -20,7 +20,11 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
+<<<<<<< HEAD
+        private IAccountCollection _account = new ListAcountCollection();
+=======
         private IListsCollection _lists = new InMemoryListsCollection();
+>>>>>>> 4fd09d54a812d513b9b3866be796cd8a6342aa83
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
@@ -48,11 +52,7 @@ namespace TodoWebAPI.Controllers
             a.UserName = account.UserName;
             a.Password = account.Password;
 
-            _context.Accounts.Add(a);
-
-            _context.SaveChanges();
-
-            account.Id = a.Id;
+            _account.CreateAccount(account);
 
             if (account.Picture != null)
             {
@@ -65,29 +65,35 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/{accountId}")]
-        public IActionResult GetAccount(int accountId)
+        public async Task<IActionResult> GetAccount(int accountId)
         {
-            var account = _context.Accounts.Find(accountId);
-            var accountPicture = "";
 
-            if (account == null)
+            var account = _account.GetAccount(accountId);
+
+            if(account == null)
             {
-                return NotFound("Profile doesn't exist. :(");
+                return BadRequest("Profile Doesn't exist");
             }
-            else if (account.Picture != null)
-            {
-                accountPicture = Convert.ToBase64String(account.Picture);
-            }
+            //var accountPicture = "";
 
-            var profilePresentation = new AccountPresentation()
-            {
-                Id = account.Id,
-                FullName = account.FullName,
-                UserName = account.UserName,
-                Picture = accountPicture,
-            };
+            //if (account == null)
+            //{
+            //    return NotFound("Profile doesn't exist. :(");
+            //}
+            //else if (account.Picture != null)
+            //{
+            //    accountPicture = Convert.ToBase64String(account.Picture);
+            //}
 
-            return Ok(profilePresentation);
+            //var profilePresentation = new AccountPresentation()
+            //{
+            //    Id = account.Id,
+            //    FullName = account.FullName,
+            //    UserName = account.UserName,
+            //    Picture = account.Picture,
+            //};
+
+            return Ok(account);
         }
 
         [HttpDelete("accounts/{accountId}")]
