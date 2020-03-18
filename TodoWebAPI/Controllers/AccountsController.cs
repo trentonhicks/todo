@@ -20,11 +20,8 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
-<<<<<<< HEAD
         private IAccountCollection _account = new ListAcountCollection();
-=======
         private IListsCollection _lists = new InMemoryListsCollection();
->>>>>>> 4fd09d54a812d513b9b3866be796cd8a6342aa83
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
@@ -116,7 +113,6 @@ namespace TodoWebAPI.Controllers
                 _context.Accounts.Remove(getAccount);
                 _context.SaveChanges();
 
-
                 return Ok("Account was deleted");
             }
             return BadRequest("Account doesn't exist.");
@@ -207,9 +203,13 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
-        public IActionResult DeleteList(int accountId, int listId)
+        public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            var list = _context.Lists.Find(listId);
+            await _lists.DeleteListAsync(listId);
+
+            return Ok();
+
+            /* var list = _context.Lists.Find(listId);
 
             if (list != null)
             {
@@ -222,7 +222,7 @@ namespace TodoWebAPI.Controllers
 
                 return Ok("List deleted");
             }
-            return NotFound("List doesn't exist.");
+            return NotFound("List doesn't exist."); */
         }
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]

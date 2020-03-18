@@ -11,7 +11,7 @@ namespace TodoWebAPI.Interfaces
     {
         Task<ListModel> CreateListAsync(ListModel list);
         Task<List<ListModel>> GetListsAsync(int accountId);
-        Task<string> UpdateList(int accountId, int listId, string title);
-        Task DeleteList(int accountId, int listId);
+        Task<string> UpdateListAsync(int listId, string title);
+        Task DeleteListAsync(int listId);
     }
 }
