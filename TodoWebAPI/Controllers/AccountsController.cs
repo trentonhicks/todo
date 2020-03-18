@@ -181,7 +181,7 @@ namespace TodoWebAPI.Controllers
 
                 _context.Lists.Update(list);
                 _context.SaveChanges();
-                return Ok(new { list.Id, list.ListTitle });
+                return Ok(list.ListTitle);
             }
             return NotFound("List doesn't exist.");
         }
