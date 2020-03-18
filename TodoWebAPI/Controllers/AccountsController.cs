@@ -112,9 +112,9 @@ namespace TodoWebAPI.Controllers
                 ListTitle = listToCreate.ListTitle
             };
 
-            var listCreated = await _lists.CreateListAsync(list);
+            var createdList = await _lists.CreateListAsync(list);
 
-            return Ok(listCreated);
+            return Ok(new CreateListPresentation() { Id = createdList.Id, ListTitle = createdList.ListTitle });
 
             /* MOVE TO Entity Framework Implementation of IListsCollection
             if (_contextService.AccountExists(accountId))
