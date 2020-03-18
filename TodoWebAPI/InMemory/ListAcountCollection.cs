@@ -4,28 +4,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using TodoWebAPI.Data;
 using TodoWebAPI.Interfaces;
+using TodoWebAPI.Models;
 
 namespace TodoWebAPI.InMemory
 {
     public class ListAcountCollection : IAccountCollection
     {
-        private List<Accounts> _accounts = new List<Accounts>();
+        private List<CreateAccountModel> _accounts = new List<CreateAccountModel>();
 
-        public Accounts CreateAccount(Accounts account)
+        public Task CreateAccount(CreateAccountModel account)
         {
             _accounts.Add(account);
-            return account;
+            return Task.FromResult(account);
         }
 
-        public void DeleteAccounts(Accounts account)
-        {
-            _accounts.Remove(account);
-        }
-        public Accounts GetAccount(int accountId, Accounts account)
+        public void DeleteAccounts(int accountId)
         {
             var value = _accounts.Find(x => x.Id == accountId);
 
-            return value;
+            _accounts.Remove(value);
+        }
+        public Task GetAccount(int accountId)
+        {
+            var value = _accounts.Find(x => x.Id == accountId);
+
+            return Task.FromResult(value);
         }
     }
 }
