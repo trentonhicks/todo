@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
+using SqlConnection = System.Data.SqlClient.SqlConnection;
 
 namespace TodoWebAPI
 {

@@ -188,9 +188,13 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
-        public IActionResult DeleteList(int accountId, int listId)
+        public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            var list = _context.Lists.Find(listId);
+            await _lists.DeleteListAsync(listId);
+
+            return Ok();
+
+            /* var list = _context.Lists.Find(listId);
 
             if (list != null)
             {
@@ -203,7 +207,7 @@ namespace TodoWebAPI.Controllers
 
                 return Ok("List deleted");
             }
-            return NotFound("List doesn't exist.");
+            return NotFound("List doesn't exist."); */
         }
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
