@@ -20,15 +20,15 @@ namespace TodoWebAPI.InMemory
 
         public void DeleteAccounts(int accountId)
         {
-            var value = _accounts.Find(x => x.Id == accountId);
+            var getAccount = _accounts.Find(x => x.Id == accountId);
 
-            _accounts.Remove(value);
+            _accounts.Remove(getAccount);
         }
         public Task GetAccount(int accountId)
         {
-            var value = _accounts.Find(x => x.Id == accountId);
+            var account = _accounts.Find(x => x.Id == accountId);
 
-            return Task.FromResult(value);
+            return Task.FromResult(account);
         }
     }
 }
