@@ -34,7 +34,7 @@ namespace TodoWebAPI
             var id = account.Id;
             var s = account.Picture;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new System.Data.SqlClient.SqlConnection(_connectionString))
             {
                 connection.Open();
 
