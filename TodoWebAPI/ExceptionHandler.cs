@@ -14,5 +14,10 @@ namespace TodoWebAPI
                 throw new Exception(customMessage);
             }
         }
+
+        public static async void ThrowException(string message)
+        {
+            throw new Exception(message);
+        }
     }
 }
