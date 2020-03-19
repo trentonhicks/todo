@@ -9,13 +9,13 @@ using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.Data
 {
-    public class EFAccountCollection : IAccountRepository
+    public class EFAccountRepsitory : IAccountRepository
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
 
-        public EFAccountCollection(IConfiguration config, ToDoContext context)
+        public EFAccountRepsitory(IConfiguration config, ToDoContext context)
         {
             _context = context;
             _config = config;
@@ -65,6 +65,7 @@ namespace TodoWebAPI.Data
 
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
+            ExceptionHandler.BoolCheck(_contextService.AccountExists(accountId), "Account doesn't exist.");
 
             var account = _context.Accounts.Find(accountId);
 

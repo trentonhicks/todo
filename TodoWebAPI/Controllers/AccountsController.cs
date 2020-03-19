@@ -31,7 +31,7 @@ namespace TodoWebAPI.Controllers
             _context = context;
             _config = config;
             _contextService = new ContextService(_context, _config);
-            _account = new EFAccountCollection(config, context);
+            _account = new EFAccountRepsitory(config, context);
         }
 
         [HttpPost("accounts")]
