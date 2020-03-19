@@ -7,7 +7,7 @@ namespace TodoWebAPI.Data
     {
         public Accounts()
         {
-            Lists = new HashSet<Lists>();
+            Lists = new HashSet<TodoLists>();
         }
 
         public int Id { get; set; }
@@ -16,6 +16,6 @@ namespace TodoWebAPI.Data
         public byte[] Picture { get; set; }
         public string Password { get; set; }
 
-        public virtual ICollection<Lists> Lists { get; set; }
+        public virtual ICollection<TodoLists> Lists { get; set; }
     }
 }

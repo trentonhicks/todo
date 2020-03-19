@@ -20,27 +20,27 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
-        private IAccountRepository _account = new InMemoryAccount();
-        private IListsRepository _lists = new InMemoryListsCollection();
-        private IToDoRepository _todo = new InMemoryToDo();
 
+        private IAccountRepository _account;
+        private IListsRepository _lists = new InMemoryListsRepository();
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
             _contextService = new ContextService(_context, _config);
+            _account = new EFAccountCollection(config, context);
         }
 
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel accountToCreate)
         {
-
-            if (accountToCreate.UserName == null)
+            
+            if(accountToCreate.UserName == null)
             {
                 return BadRequest("Username required");
             }
-            else if (accountToCreate.Password == null)
+            else if(accountToCreate.Password == null)
             {
                 return BadRequest("Password required");
             }
@@ -55,60 +55,41 @@ namespace TodoWebAPI.Controllers
             var accounts = await _account.CreateAccountAsync(account);
 
             return Ok(accounts);
-
-            //if (account.Picture != null)
-            //{
-            //    var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
-
-            //    image.StoreImageProfile(account);
-            //}
-
+          
         }
 
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
+            var account = await _account.GetAccountAsync(accountId);
 
-
-            var account = _account.GetAccountAsync(accountId);
-
-            if (account == null)
+            if(account == null)
             {
                 return BadRequest("Profile Doesn't exist");
             }
-            //var accountPicture = "";
 
-            //if (account == null)
-            //{
-            //    return NotFound("Profile doesn't exist. :(");
-            //}
-            //else if (account.Picture != null)
-            //{
-            //    accountPicture = Convert.ToBase64String(account.Picture);
-            //}
-
-            //var profilePresentation = new AccountPresentation()
-            //{
-            //    Id = account.Id,
-            //    FullName = account.FullName,
-            //    UserName = account.UserName,
-            //    Picture = account.Picture,
-            //};
-
-            return Ok(account);
+            var accountPresentation = new AccountPresentation()
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                UserName = account.UserName,
+                Picture = account.Picture
+            };
+          
+            return Ok(accountPresentation);
         }
 
         [HttpDelete("accounts/{accountId}")]
         public IActionResult DeleteAccount(int accountId)
         {
-            _account.DeleteAccountsAsync(accountId);
+             _account.DeleteAccountsAsync(accountId);
             return Ok("Acccount Deleted");
         }
 
         [HttpPost("accounts/{accountId}/lists")]
         public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel listToCreate)
         {
-            var list = new ListModel()
+            var list = new TodoListModel()
             {
                 AccountId = accountId,
                 ListTitle = listToCreate.ListTitle
@@ -140,11 +121,16 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/{accountId}/lists")]
-        public IActionResult GetLists(int accountId)
+        public async Task<IActionResult> GetLists(int accountId)
         {
             var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
+            var lists = await _lists.GetListsAsync(accountId, todoPreviewNum);
 
-            if (_contextService.AccountExists(accountId))
+            return Ok(lists);
+
+            /*var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
+
+            if(_contextService.AccountExists(accountId))
             {
                 var lists = _context.Lists
                     .Where(l => l.AccountId == accountId)
@@ -152,7 +138,7 @@ namespace TodoWebAPI.Controllers
 
                 var listPresentation = new List<ListPresentation>();
 
-                foreach (var list in lists)
+                foreach(var list in lists)
                 {
                     var todos = _context.ToDos.Where(t => t.ListId == list.Id).Take(todoPreviewNum).ToList();
                     list.ToDos = todos;
@@ -161,7 +147,7 @@ namespace TodoWebAPI.Controllers
 
                 return Ok(listPresentation);
             }
-            return NotFound("Account doesn't exist.");
+            return NotFound("Account doesn't exist.");*/
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
@@ -217,98 +203,49 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todos)
+        public IActionResult CreateTodo(int accountId, int listId, [FromBody] ToDos todos)
         {
-            var todo = new ToDos()
-            {
-                ToDoName = todos.ToDoName,
-                ParentId = todos.ParentId,
-                Notes = todos.Notes,
-                Completed = todos.Completed,
-                ListId = listId
-            };
-            var foo = await _todo.CreateToDoAsync(todo);
+            var list = _context.Lists.Find(listId);
 
-            return Ok(foo);
+            todos.ListId = listId; 
+
+            if (list != null)
+            {
+                if (list.AccountId != accountId)
+                {
+                    return BadRequest("List belongs to another account");
+                }
+                _context.ToDos.Add(todos);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return NotFound("List doesn't exist.");
         }
 
-        //var list = _context.Lists.Find(listId);
-
-        //todos.ListId = listId; 
-
-        //if (list != null)
-        //{
-        //    if (list.AccountId != accountId)
-        //    {
-        //        return BadRequest("List belongs to another account");
-        //    }
-        //    if (todos.ParentId != null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    _context.ToDos.Add(todos);
-        //    _context.SaveChanges();
-        //    return Ok();
-
-        //return NotFound("List doesn't exist.");
-
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodo(int accountId, int todoId,[FromBody] ToDos todo )
+        public IActionResult EditTodo(int accountId, int todoId)
         {
-
-            var foo = await _todo.UpdateToDoAsync(todoId, todo);
-
-            return Ok(foo);
-
-
-
-
-
-            //var todo = _context.ToDos.Find(todoId);
-            //if (_contextService.AccountExists(accountId))
-            //{
-            //    if (_contextService.ToDoExists(todoId))
-            //    {
-            //        var toDoName = todo.ToDoName;
-            //        var toDoNote = todo.Notes;
-            //        var toDoState = todo.Completed;
-            //        if (toDoName != null)
-            //        {
-            //            _context.ToDos.Update(todo);
-            //            _context.SaveChanges();
-            //            return Ok();
-            //        }
-            //    }
-
-            //    //logic to update the title
-            //    //logic to update the note
-            //    //logic to update the state
-            //}
-            //return NotFound();
+            return NotFound();
         }
 
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
+        public IActionResult DeleteTodo(int accountId, int todoId)
         {
-            await _todo.DeleteToDoAsync(todoId);
-
-            return Ok();
-
-            //var todo = _context.ToDos.Find(todoId);
-            //if (_contextService.AccountExists(accountId))
-            //{
-            //    if (todo != null)
-            //    {
-            //        _context.ToDos.Remove(todo);
-            //        _context.SaveChanges();
-            //        return Ok("ToDo list removed.");
-            //    }
-            //    else
-            //    {
-            //        return NotFound("ToDo is already empty");
-            //    }
-            //}
-            //return NotFound("Account doesn't exist.");
+            var todo = _context.ToDos.Find(todoId);
+            if (_contextService.AccountExists(accountId))
+            {
+                if (todo != null)
+                {
+                    _context.ToDos.Remove(todo);
+                    _context.SaveChanges();
+                    return Ok("ToDo list removed.");
+                }
+                else
+                {
+                    return NotFound("ToDo is already empty");
+                }
+            }
+            return NotFound("Account doesn't exist.");
         }
     }
 }

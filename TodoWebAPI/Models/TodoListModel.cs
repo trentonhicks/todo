@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TodoWebAPI.Models
 {
-    public class ListModel
+    public class TodoListModel
     {
         public int Id { get; set; }
         public string ListTitle { get; set; }

@@ -12,6 +12,6 @@ namespace TodoWebAPI.Data
         public string ToDoName { get; set; }
         public int ListId { get; set; }
 
-        public virtual Lists List { get; set; }
+        public virtual TodoLists List { get; set; }
     }
 }

@@ -9,20 +9,13 @@ namespace TodoWebAPI.Presentation
 {
     public class ListPresentation
     {
-        public ListPresentation(Lists list)
+        public ListPresentation(TodoListModel list, List<ToDos> todos)
         {
-            ListId = list.Id;
-            ListTitle = list.ListTitle;
-
-            Todos = new List<TodoPresentation>();
-
-            foreach(var todo in list.ToDos)
-            {
-                Todos.Add(new TodoPresentation(todo));
-            }
+            TodoList = list;
+            TodoItemPreview = todos;
         }
-        public int ListId { get; set; }
-        public string ListTitle { get; set; }
-        public List<TodoPresentation> Todos { get; set; }
+        
+        public TodoListModel TodoList { get; set; }
+        public List<ToDos> TodoItemPreview { get; set; }
     }
 }
