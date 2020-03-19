@@ -22,7 +22,7 @@ namespace TodoWebAPI.Controllers
         private ContextService _contextService;
 
         private IAccountRepository _account;
-        private IListsRepository _lists = new InMemoryListsCollection();
+        private IListsRepository _lists = new InMemoryListsRepository();
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
