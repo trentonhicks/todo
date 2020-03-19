@@ -22,7 +22,7 @@ namespace TodoWebAPI.Controllers
         private ContextService _contextService;
 
         private IAccountRepository _account;
-        private ITodoListRepository _lists = new InMemoryListsRepository();
+        private ITodoListRepository _lists = new InMemoryTodoListRepository();
         private IToDoRepository _todo = new InMemoryToDo();
 
 
