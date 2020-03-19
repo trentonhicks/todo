@@ -163,11 +163,11 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
-        public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] string title)
+        public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            var updatedTitle = await _lists.UpdateListAsync(listId, title);
+            var updatedTitle = await _lists.UpdateListAsync(listId, updatedList.ListTitle);
 
-            return Ok();
+            return Ok(updatedTitle);
 
             //var list = _context.Lists.Find(listId);
 
