@@ -49,7 +49,7 @@ namespace TodoWebAPI.Data
             var getAccount = _context.Accounts.Find(accountId);
             var listId = _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
             var getList = _context.TodoLists.Find(listId);
-            if (getList == null)
+            if (_contextService.ListExists(listId))
             {
                 _context.Accounts.Remove(getAccount);
                 _context.SaveChanges();
@@ -65,27 +65,28 @@ namespace TodoWebAPI.Data
 
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
-            ExceptionHandler.BoolCheck(_contextService.AccountExists(accountId), "Account doesn't exist.");
-
-            var account = _context.Accounts.Find(accountId);
-
-            var accountPicture = "";
-
-            if (account.Picture != null)
+            if (_contextService.AccountExists(accountId))
             {
-                accountPicture = Convert.ToBase64String(account.Picture);
+                var account = _context.Accounts.Find(accountId);
+
+                var accountPicture = "";
+
+                if (account.Picture != null)
+                {
+                    accountPicture = Convert.ToBase64String(account.Picture);
+                }
+
+                var accountModel = new AccountModel()
+                {
+                    Id = account.Id,
+                    FullName = account.FullName,
+                    UserName = account.UserName,
+                    Picture = accountPicture
+                };
+
+                return Task.FromResult(accountModel);
             }
-
-            var accountModel = new AccountModel()
-            {
-                Id = account.Id,
-                FullName = account.FullName,
-                UserName = account.UserName,
-                Picture = accountPicture
-            };
-
-            return Task.FromResult(accountModel);
-
+            return null;
         }
     }
 }
