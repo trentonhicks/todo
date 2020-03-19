@@ -13,10 +13,13 @@ namespace TodoWebAPI.Data
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
+        private ContextService _contextService;
+
         public EFAccountCollection(IConfiguration config, ToDoContext context)
         {
             _context = context;
             _config = config;
+            _contextService = new ContextService(_context, _config);
         }
         public Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
@@ -28,7 +31,7 @@ namespace TodoWebAPI.Data
 
             _context.Accounts.Add(a);
             _context.SaveChanges();
-            
+
             account.Id = a.Id;
             if (account.Picture != null)
             {
@@ -43,11 +46,26 @@ namespace TodoWebAPI.Data
 
         public void DeleteAccountsAsync(int accountId)
         {
-            throw new NotImplementedException();
+            var getAccount = _context.Accounts.Find(accountId);
+            var listId = _context.Lists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
+            var getList = _context.Lists.Find(listId);
+            if (getList == null)
+            {
+                _context.Accounts.Remove(getAccount);
+                _context.SaveChanges();
+            }
+            else
+            {
+                _contextService.RemoveList(getList);
+                _context.Lists.Remove(getList);
+                _context.Accounts.Remove(getAccount);
+                _context.SaveChanges();
+            }
         }
 
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
+
             var account = _context.Accounts.Find(accountId);
 
             var accountPicture = "";
@@ -66,6 +84,7 @@ namespace TodoWebAPI.Data
             };
 
             return Task.FromResult(accountModel);
+
         }
     }
 }
