@@ -20,7 +20,7 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
-        private IAccountCollection _account = new InMemoryAccount();
+        private IAccountCollection _account;
         private IListsCollection _lists = new InMemoryListsCollection();
 
         public AccountsController(ToDoContext context, IConfiguration config)
@@ -28,7 +28,10 @@ namespace TodoWebAPI.Controllers
             _context = context;
             _config = config;
             _contextService = new ContextService(_context, _config);
+            _account = new EFAccountCollection(config, context);
         }
+
+        
 
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel accountToCreate)
@@ -53,14 +56,7 @@ namespace TodoWebAPI.Controllers
             var accounts = await _account.CreateAccountAsync(account);
 
             return Ok(accounts);
-
-            //if (account.Picture != null)
-            //{
-            //    var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
-
-            //    image.StoreImageProfile(account);
-            //}
-
+          
         }
 
         [HttpGet("accounts/{accountId}")]
@@ -68,7 +64,7 @@ namespace TodoWebAPI.Controllers
         {
             
 
-            var account = _account.GetAccountAsync(accountId);
+            var account = await _account.GetAccountAsync(accountId);
 
             if(account == null)
             {
