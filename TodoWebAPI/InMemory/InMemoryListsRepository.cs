@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using TodoWebAPI.Data;
 using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
+using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryListsCollection : IListsRepository
+    public class InMemoryListsRepository : IListsRepository
     {
-        public InMemoryListsCollection()
+        public InMemoryListsRepository()
         {
             _lists = new List<ListModel>();
             _lists.Add(new ListModel() { Id = 1, AccountId = 1, ListTitle = "List 1" });
@@ -23,12 +24,11 @@ namespace TodoWebAPI.InMemory
 
             _todos = new List<ToDos>();
             _todos.Add(new ToDos() { Id = 1, Completed = false, ListId = 1, ToDoName = "First Todo" });
-            _todos.Add(new ToDos() { Id = 3, Completed = false, ListId = 1, ToDoName = "First Todo" });
-            _todos.Add(new ToDos() { Id = 2, Completed = false, ListId = 1, ToDoName = "First Todo" });
+            _todos.Add(new ToDos() { Id = 2, Completed = false, ListId = 1, ToDoName = "Second Todo" });
+            _todos.Add(new ToDos() { Id = 3, Completed = false, ListId = 1, ToDoName = "Third Todo" });
         }
         private List<ListModel> _lists;
         private List<ToDos> _todos;
-
         public Task<ListModel> CreateListAsync(ListModel list)
         {
             _lists.Add(list);
@@ -44,9 +44,17 @@ namespace TodoWebAPI.InMemory
             _lists.Remove(list);
         }
 
-        public Task<List<ListModel>> GetListsAsync(int accountId)
+        public Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize)
         {
-            throw new NotImplementedException();
+            var todoLists = _lists.FindAll(x => x.AccountId == accountId);
+            var listPresentation = new List<ListPresentation>();
+
+            foreach(var todoList in todoLists)
+            {
+                var todos = _todos.FindAll(x => x.ListId == todoList.Id).Take(pageSize).ToList();
+                listPresentation.Add(new ListPresentation(todoList, todos));
+            }
+            return Task.FromResult(listPresentation);
         }
 
         public Task<string> UpdateListAsync(int listId, string title)
