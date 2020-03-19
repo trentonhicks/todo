@@ -20,13 +20,9 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
-<<<<<<< HEAD
-        private IAccountCollection _account;
-        private IListsCollection _lists = new InMemoryListsCollection();
-=======
-        private IAccountRepository _account = new InMemoryAccount();
+
+        private IAccountRepository _account;
         private IListsRepository _lists = new InMemoryListsCollection();
->>>>>>> f28b3d5f2035662a1ef0ca5f9b5a423691a267c6
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
@@ -35,8 +31,6 @@ namespace TodoWebAPI.Controllers
             _contextService = new ContextService(_context, _config);
             _account = new EFAccountCollection(config, context);
         }
-
-        
 
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel accountToCreate)
