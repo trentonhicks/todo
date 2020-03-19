@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
+using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.Data
 {
@@ -47,7 +48,24 @@ namespace TodoWebAPI.Data
 
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
-            throw new NotImplementedException();
+            var account = _context.Accounts.Find(accountId);
+
+            var accountPicture = "";
+
+            if (account.Picture != null)
+            {
+                accountPicture = Convert.ToBase64String(account.Picture);
+            }
+
+            var accountModel = new AccountModel()
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                UserName = account.UserName,
+                Picture = accountPicture
+            };
+
+            return Task.FromResult(accountModel);
         }
     }
 }

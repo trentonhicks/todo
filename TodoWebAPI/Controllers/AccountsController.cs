@@ -61,34 +61,22 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
-            
-
             var account = await _account.GetAccountAsync(accountId);
 
             if(account == null)
             {
                 return BadRequest("Profile Doesn't exist");
             }
-            //var accountPicture = "";
 
-            //if (account == null)
-            //{
-            //    return NotFound("Profile doesn't exist. :(");
-            //}
-            //else if (account.Picture != null)
-            //{
-            //    accountPicture = Convert.ToBase64String(account.Picture);
-            //}
-
-            //var profilePresentation = new AccountPresentation()
-            //{
-            //    Id = account.Id,
-            //    FullName = account.FullName,
-            //    UserName = account.UserName,
-            //    Picture = account.Picture,
-            //};
-
-            return Ok(account);
+            var accountPresentation = new AccountPresentation()
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                UserName = account.UserName,
+                Picture = account.Picture
+            };
+          
+            return Ok(accountPresentation);
         }
 
         [HttpDelete("accounts/{accountId}")]
