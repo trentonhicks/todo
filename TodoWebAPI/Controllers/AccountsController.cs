@@ -64,12 +64,10 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> GetAccount(int accountId)
         {
             var account = await _account.GetAccountAsync(accountId);
-
-            if (account == null)
+            if(account == null)
             {
-                return BadRequest("Profile Doesn't exist");
+                BadRequest("Account doesn't exist");
             }
-
             var accountPresentation = new AccountPresentation()
             {
                 Id = account.Id,
