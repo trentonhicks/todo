@@ -20,7 +20,8 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
-        private IAccountRepository _account = new InMemoryAccount();
+
+        private IAccountRepository _account;
         private IListsRepository _lists = new InMemoryListsCollection();
 
         public AccountsController(ToDoContext context, IConfiguration config)
@@ -28,6 +29,7 @@ namespace TodoWebAPI.Controllers
             _context = context;
             _config = config;
             _contextService = new ContextService(_context, _config);
+            _account = new EFAccountCollection(config, context);
         }
 
         [HttpPost("accounts")]
@@ -53,47 +55,28 @@ namespace TodoWebAPI.Controllers
             var accounts = await _account.CreateAccountAsync(account);
 
             return Ok(accounts);
-
-            //if (account.Picture != null)
-            //{
-            //    var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
-
-            //    image.StoreImageProfile(account);
-            //}
-
+          
         }
 
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
-            
-
-            var account = _account.GetAccountAsync(accountId);
+            var account = await _account.GetAccountAsync(accountId);
 
             if(account == null)
             {
                 return BadRequest("Profile Doesn't exist");
             }
-            //var accountPicture = "";
 
-            //if (account == null)
-            //{
-            //    return NotFound("Profile doesn't exist. :(");
-            //}
-            //else if (account.Picture != null)
-            //{
-            //    accountPicture = Convert.ToBase64String(account.Picture);
-            //}
-
-            //var profilePresentation = new AccountPresentation()
-            //{
-            //    Id = account.Id,
-            //    FullName = account.FullName,
-            //    UserName = account.UserName,
-            //    Picture = account.Picture,
-            //};
-
-            return Ok(account);
+            var accountPresentation = new AccountPresentation()
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                UserName = account.UserName,
+                Picture = account.Picture
+            };
+          
+            return Ok(accountPresentation);
         }
 
         [HttpDelete("accounts/{accountId}")]

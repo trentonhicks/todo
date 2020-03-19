@@ -30,7 +30,7 @@ namespace TodoWebAPI
             return imageBytes;
         }
 
-        public void StoreImageProfile(CreateAccountModel account)
+        public void StoreImageProfile(AccountModel account)
         {
             var id = account.Id;
             var s = account.Picture;
