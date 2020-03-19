@@ -9,7 +9,7 @@ namespace TodoWebAPI
     {
         public static async void BoolCheck(bool torf, string customMessage = "The parent does not exist")
         {
-            if (torf)
+            if (torf == false)
             {
                 throw new Exception(customMessage);
             }
