@@ -22,7 +22,7 @@ namespace TodoWebAPI.Controllers
         private ContextService _contextService;
 
         private IAccountRepository _account;
-        private ITodoListRepository _lists = new InMemoryTodoListRepository();
+        private ITodoListRepository _lists;
         private IToDoRepository _todo = new InMemoryToDo();
 
 
@@ -32,6 +32,7 @@ namespace TodoWebAPI.Controllers
             _config = config;
             _contextService = new ContextService(_context, _config);
             _account = new EFAccountRepsitory(config, context);
+            _lists = new EFTodoListRepository(_config, _context);
         }
 
         [HttpPost("accounts")]
@@ -98,26 +99,6 @@ namespace TodoWebAPI.Controllers
             var createdList = await _lists.CreateListAsync(list);
 
             return Ok(new CreateListPresentation() { Id = createdList.Id, ListTitle = createdList.ListTitle });
-
-            /* MOVE TO Entity Framework Implementation of IListsCollection
-            if (_contextService.AccountExists(accountId))
-            {
-                if (title == "")
-                {
-                    title = "Untitled List";
-                }
-
-                var list = new Lists()
-                {
-                    AccountId = accountId,
-                    ListTitle = title
-                };
-
-                _context.Lists.Add(list);
-                _context.SaveChanges();
-                return Ok(new { list.Id, list.ListTitle });
-            }
-            return NotFound("Account doesn't exist.");*/
         }
 
         [HttpGet("accounts/{accountId}/lists")]

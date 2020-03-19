@@ -16,7 +16,7 @@ namespace TodoWebAPI.Data
         }
 
         public virtual DbSet<Accounts> Accounts { get; set; }
-        public virtual DbSet<TodoLists> Lists { get; set; }
+        public virtual DbSet<TodoLists> TodoLists { get; set; }
         public virtual DbSet<ToDos> ToDos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

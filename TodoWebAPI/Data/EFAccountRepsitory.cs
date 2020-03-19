@@ -47,8 +47,8 @@ namespace TodoWebAPI.Data
         public void DeleteAccountsAsync(int accountId)
         {
             var getAccount = _context.Accounts.Find(accountId);
-            var listId = _context.Lists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
-            var getList = _context.Lists.Find(listId);
+            var listId = _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
+            var getList = _context.TodoLists.Find(listId);
             if (_contextService.ListExists(listId))
             {
                 _context.Accounts.Remove(getAccount);
@@ -57,7 +57,7 @@ namespace TodoWebAPI.Data
             else
             {
                 _contextService.RemoveList(getList);
-                _context.Lists.Remove(getList);
+                _context.TodoLists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
                 _context.SaveChanges();
             }

@@ -11,6 +11,8 @@ namespace TodoWebAPI.InMemory
 {
     public class InMemoryTodoListRepository : ITodoListRepository
     {
+        private List<TodoListModel> _lists;
+        private List<ToDos> _todos;
         public InMemoryTodoListRepository()
         {
             _lists = new List<TodoListModel>();
@@ -27,8 +29,7 @@ namespace TodoWebAPI.InMemory
             _todos.Add(new ToDos() { Id = 2, Completed = false, ListId = 1, ToDoName = "Second Todo" });
             _todos.Add(new ToDos() { Id = 3, Completed = false, ListId = 1, ToDoName = "Third Todo" });
         }
-        private List<TodoListModel> _lists;
-        private List<ToDos> _todos;
+        
         public Task<TodoListModel> CreateListAsync(TodoListModel list)
         {
             _lists.Add(list);

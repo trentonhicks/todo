@@ -24,7 +24,7 @@ namespace TodoWebAPI
 
         public bool ListExists(int listId)
         {
-            return _context.Lists.Find(listId) == null ? false : true;
+            return _context.TodoLists.Find(listId) == null ? false : true;
         }
 
         public void RemoveList(TodoLists list)
@@ -36,7 +36,7 @@ namespace TodoWebAPI
                 _context.ToDos.Remove(todo);
             }
 
-            _context.Lists.Remove(list);
+            _context.TodoLists.Remove(list);
             _context.SaveChanges();
         }
     }
