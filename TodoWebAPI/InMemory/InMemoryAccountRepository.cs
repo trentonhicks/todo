@@ -8,9 +8,9 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryAccount : IAccountRepository
+    public class InMemoryAccountRepository : IAccountRepository
     {
-        public InMemoryAccount()
+        public InMemoryAccountRepository()
         {
             _accounts = new List<AccountModel>();
             _accounts.Add(new AccountModel() { Id = 1, FullName = "Parker", UserName = "parker", Picture = "", Password = "1234" });
@@ -46,6 +46,10 @@ namespace TodoWebAPI.InMemory
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
             var account = _accounts.Find(x => x.Id == accountId);
+            if(account == null)
+            {
+                return null;
+            }
 
             return Task.FromResult(account);
         }
