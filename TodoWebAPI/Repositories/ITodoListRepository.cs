@@ -8,7 +8,7 @@ using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.Repositories
 {
-    public interface IListsRepository
+    public interface ITodoListRepository
     {
         Task<TodoListModel> CreateListAsync(TodoListModel list);
         Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize);

@@ -9,7 +9,7 @@ using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryListsRepository : IListsRepository
+    public class InMemoryListsRepository : ITodoListRepository
     {
         public InMemoryListsRepository()
         {
