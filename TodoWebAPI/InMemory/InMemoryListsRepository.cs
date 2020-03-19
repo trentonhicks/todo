@@ -13,23 +13,23 @@ namespace TodoWebAPI.InMemory
     {
         public InMemoryListsRepository()
         {
-            _lists = new List<ListModel>();
-            _lists.Add(new ListModel() { Id = 1, AccountId = 1, ListTitle = "List 1" });
-            _lists.Add(new ListModel() { Id = 2, AccountId = 1, ListTitle = "List 2" });
-            _lists.Add(new ListModel() { Id = 3, AccountId = 2, ListTitle = "List 3" });
-            _lists.Add(new ListModel() { Id = 4, AccountId = 1, ListTitle = "List 4" });
-            _lists.Add(new ListModel() { Id = 5, AccountId = 2, ListTitle = "List 5" });
-            _lists.Add(new ListModel() { Id = 6, AccountId = 1, ListTitle = "List 6" });
-            _lists.Add(new ListModel() { Id = 7, AccountId = 1, ListTitle = "List 7" });
+            _lists = new List<TodoListModel>();
+            _lists.Add(new TodoListModel() { Id = 1, AccountId = 1, ListTitle = "List 1" });
+            _lists.Add(new TodoListModel() { Id = 2, AccountId = 1, ListTitle = "List 2" });
+            _lists.Add(new TodoListModel() { Id = 3, AccountId = 2, ListTitle = "List 3" });
+            _lists.Add(new TodoListModel() { Id = 4, AccountId = 1, ListTitle = "List 4" });
+            _lists.Add(new TodoListModel() { Id = 5, AccountId = 2, ListTitle = "List 5" });
+            _lists.Add(new TodoListModel() { Id = 6, AccountId = 1, ListTitle = "List 6" });
+            _lists.Add(new TodoListModel() { Id = 7, AccountId = 1, ListTitle = "List 7" });
 
             _todos = new List<ToDos>();
             _todos.Add(new ToDos() { Id = 1, Completed = false, ListId = 1, ToDoName = "First Todo" });
             _todos.Add(new ToDos() { Id = 2, Completed = false, ListId = 1, ToDoName = "Second Todo" });
             _todos.Add(new ToDos() { Id = 3, Completed = false, ListId = 1, ToDoName = "Third Todo" });
         }
-        private List<ListModel> _lists;
+        private List<TodoListModel> _lists;
         private List<ToDos> _todos;
-        public Task<ListModel> CreateListAsync(ListModel list)
+        public Task<TodoListModel> CreateListAsync(TodoListModel list)
         {
             _lists.Add(list);
             return Task.FromResult(list);

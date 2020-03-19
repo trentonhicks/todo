@@ -16,7 +16,7 @@ namespace TodoWebAPI.Data
         }
 
         public virtual DbSet<Accounts> Accounts { get; set; }
-        public virtual DbSet<Lists> Lists { get; set; }
+        public virtual DbSet<TodoLists> Lists { get; set; }
         public virtual DbSet<ToDos> ToDos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,7 +44,7 @@ namespace TodoWebAPI.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Lists>(entity =>
+            modelBuilder.Entity<TodoLists>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 

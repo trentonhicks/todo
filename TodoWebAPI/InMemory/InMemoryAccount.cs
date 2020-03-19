@@ -14,13 +14,13 @@ namespace TodoWebAPI.InMemory
         {
             _accounts = new List<AccountModel>();
             _accounts.Add(new AccountModel() { Id = 1, FullName = "Parker", UserName = "parker", Picture = "", Password = "1234" });
-            _list = new List<ListModel>();
-            _list.Add(new ListModel() { Id = 1, AccountId = 1, ListTitle = "New List" });
+            _list = new List<TodoListModel>();
+            _list.Add(new TodoListModel() { Id = 1, AccountId = 1, ListTitle = "New List" });
             _todo = new List<ToDos>();
             _todo.Add(new ToDos() { Id = 1, Completed = false, ListId = 1, Notes = "", ToDoName = "yes" });
         }
         private List<AccountModel> _accounts;
-        private List<ListModel> _list;
+        private List<TodoListModel> _list;
         private List<ToDos> _todo;
         public Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
@@ -50,7 +50,7 @@ namespace TodoWebAPI.InMemory
             return Task.FromResult(account);
         }
 
-        public void DeleteToDo(ListModel list)
+        public void DeleteToDo(TodoListModel list)
         {
             var todos = _todo.Find(x => x.ListId == list.Id);
 

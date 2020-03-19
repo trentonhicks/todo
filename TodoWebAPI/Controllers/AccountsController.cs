@@ -89,7 +89,7 @@ namespace TodoWebAPI.Controllers
         [HttpPost("accounts/{accountId}/lists")]
         public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel listToCreate)
         {
-            var list = new ListModel()
+            var list = new TodoListModel()
             {
                 AccountId = accountId,
                 ListTitle = listToCreate.ListTitle

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TodoWebAPI.Data
 {
-    public partial class Lists
+    public partial class TodoLists
     {
-        public Lists()
+        public TodoLists()
         {
             ToDos = new HashSet<ToDos>();
         }

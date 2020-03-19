@@ -10,7 +10,7 @@ namespace TodoWebAPI.Repositories
 {
     public interface IListsRepository
     {
-        Task<ListModel> CreateListAsync(ListModel list);
+        Task<TodoListModel> CreateListAsync(TodoListModel list);
         Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize);
         Task<string> UpdateListAsync(int listId, string title);
         Task DeleteListAsync(int listId);
