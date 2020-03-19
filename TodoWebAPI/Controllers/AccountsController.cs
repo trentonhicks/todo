@@ -138,9 +138,14 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/{accountId}/lists")]
-        public IActionResult GetLists(int accountId)
+        public async Task<IActionResult> GetLists(int accountId)
         {
             var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
+            var lists = await _lists.GetListsAsync(accountId, todoPreviewNum);
+
+            return Ok(lists);
+
+            /*var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
 
             if(_contextService.AccountExists(accountId))
             {
@@ -159,7 +164,7 @@ namespace TodoWebAPI.Controllers
 
                 return Ok(listPresentation);
             }
-            return NotFound("Account doesn't exist.");
+            return NotFound("Account doesn't exist.");*/
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
