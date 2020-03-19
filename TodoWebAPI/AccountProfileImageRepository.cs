@@ -1,26 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using TodoWebAPI.Models;
-using System;
-using SixLabors.ImageSharp;
-using System.IO;
-using SixLabors.ImageSharp.Formats;
-using System.Configuration;
 using System.Data.SqlClient;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SqlConnection = System.Data.SqlClient.SqlConnection;
+
 
 namespace TodoWebAPI
 {
-    public class ImageHandler
+    public class AccountProfileImageRepository
     {
         private readonly string _connectionString;
-        public ImageHandler(string connectionString)
+        public AccountProfileImageRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -35,7 +23,7 @@ namespace TodoWebAPI
             var id = account.Id;
             var s = account.Picture;
 
-            using (var connection = new System.Data.SqlClient.SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 

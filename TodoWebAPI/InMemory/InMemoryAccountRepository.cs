@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TodoWebAPI.Data;
 using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
-
+using Microsoft.EntityFrameworkCore;
 namespace TodoWebAPI.InMemory
 {
     public class InMemoryAccountRepository : IAccountRepository
@@ -22,14 +22,15 @@ namespace TodoWebAPI.InMemory
         private List<AccountModel> _accounts;
         private List<TodoListModel> _list;
         private List<ToDos> _todo;
+
         public Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
             account.Id = 1;
-            _accounts.Add(account);
+           _accounts.Add(account);
             return Task.FromResult(account);
         }
 
-        public void DeleteAccountsAsync(int accountId)
+        public async Task DeleteAccountsAsync(int accountId)
         {
             var getAccount = _accounts.Find(x => x.Id == accountId);
             var getList = _list.Find(x => x.AccountId == accountId);
@@ -45,7 +46,7 @@ namespace TodoWebAPI.InMemory
         }
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
-            var account = _accounts.Find(x => x.Id == accountId);
+            var account =  _accounts.Find(x => x.Id == accountId);
             if(account == null)
             {
                 return null;
