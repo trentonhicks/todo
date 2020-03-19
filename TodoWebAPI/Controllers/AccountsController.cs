@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TodoWebAPI.Data;
 using TodoWebAPI.InMemory;
-using TodoWebAPI.Interfaces;
+using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
 
@@ -20,8 +20,13 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private ContextService _contextService;
+<<<<<<< HEAD
         private IAccountCollection _account;
         private IListsCollection _lists = new InMemoryListsCollection();
+=======
+        private IAccountRepository _account = new InMemoryAccount();
+        private IListsRepository _lists = new InMemoryListsCollection();
+>>>>>>> f28b3d5f2035662a1ef0ca5f9b5a423691a267c6
 
         public AccountsController(ToDoContext context, IConfiguration config)
         {
@@ -159,28 +164,32 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
-        public IActionResult UpdateList(int accountId, int listId, [FromBody] string title)
+        public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            var list = _context.Lists.Find(listId);
+            var updatedTitle = await _lists.UpdateListAsync(listId, updatedList.ListTitle);
 
-            if (list != null)
-            {
-                if (list.AccountId != accountId)
-                {
-                    return BadRequest("List doesn't belong to user.");
-                }
+            return Ok(updatedTitle);
 
-                if (title == "")
-                {
-                    title = "Untitled List";
-                }
-                list.ListTitle = title;
+            //var list = _context.Lists.Find(listId);
 
-                _context.Lists.Update(list);
-                _context.SaveChanges();
-                return Ok(list.ListTitle);
-            }
-            return NotFound("List doesn't exist.");
+            //if (list != null)
+            //{
+            //    if (list.AccountId != accountId)
+            //    {
+            //        return BadRequest("List doesn't belong to user.");
+            //    }
+
+            //    if (title == "")
+            //    {
+            //        title = "Untitled List";
+            //    }
+            //    list.ListTitle = title;
+
+            //    _context.Lists.Update(list);
+            //    _context.SaveChanges();
+            //    return Ok(list.ListTitle);
+            //}
+            //return NotFound("List doesn't exist.");
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]

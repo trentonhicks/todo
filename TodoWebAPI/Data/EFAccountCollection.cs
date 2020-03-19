@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoWebAPI.Interfaces;
+using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.Data
 {
-    public class EFAccountCollection : IAccountCollection
+    public class EFAccountCollection : IAccountRepository
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;

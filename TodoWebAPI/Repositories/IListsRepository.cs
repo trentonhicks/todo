@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using TodoWebAPI.Data;
 using TodoWebAPI.Models;
 
-namespace TodoWebAPI.Interfaces
+namespace TodoWebAPI.Repositories
 {
-    public interface IListsCollection
+    public interface IListsRepository
     {
         Task<ListModel> CreateListAsync(ListModel list);
         Task<List<ListModel>> GetListsAsync(int accountId);
