@@ -9,9 +9,9 @@ using TodoWebAPI.Presentation;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryListsRepository : IListsRepository
+    public class InMemoryTodoListRepository : ITodoListRepository
     {
-        public InMemoryListsRepository()
+        public InMemoryTodoListRepository()
         {
             _lists = new List<TodoListModel>();
             _lists.Add(new TodoListModel() { Id = 1, AccountId = 1, ListTitle = "List 1" });
