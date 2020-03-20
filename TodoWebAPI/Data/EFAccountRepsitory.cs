@@ -44,7 +44,6 @@ namespace TodoWebAPI.Data
                     var image = new AccountProfileImageRepository(connectionString: _config.GetConnectionString("Development"));
 
                     image.StoreImageProfile(account);
-
                 }
                 return account;
             }
@@ -57,7 +56,7 @@ namespace TodoWebAPI.Data
         public async Task DeleteAccountsAsync(int accountId)
         {
             var getAccount = await _context.Accounts.FindAsync(accountId);
-            var listId = _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
+            var listId = await _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var getList = _context.TodoLists.Find(listId);
             if (await _contextService.ListExistsAsync(listId))
             {
