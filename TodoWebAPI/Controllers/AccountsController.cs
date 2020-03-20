@@ -38,12 +38,7 @@ namespace TodoWebAPI.Controllers
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel accountToCreate)
         {
-
-            if (accountToCreate.UserName == null)
-            {
-                return BadRequest("Username required");
-            }
-            else if (accountToCreate.Password == null)
+            if (accountToCreate.Password == null)
             {
                 return BadRequest("Password required");
             }
@@ -56,7 +51,10 @@ namespace TodoWebAPI.Controllers
                 Picture = accountToCreate.Picture
             };
             var accounts = await _account.CreateAccountAsync(account);
-
+            if (accounts == null)
+            {
+                return BadRequest("Username already Exists.");
+            }
             return Ok(accounts);
 
         }
