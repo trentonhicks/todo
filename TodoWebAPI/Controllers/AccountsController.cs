@@ -65,7 +65,7 @@ namespace TodoWebAPI.Controllers
             var account = await _account.GetAccountAsync(accountId);
             if(account == null)
             {
-                BadRequest("Account doesn't exist");
+                return BadRequest("Account doesn't exist");
             }
             var accountPresentation = new AccountPresentation()
             {
@@ -81,6 +81,10 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
+            if (_account.GetAccountAsync(accountId) == null)
+            {
+                return NotFound("Account already doesn't exist.");
+            }
            await _account.DeleteAccountsAsync(accountId);
             return Ok("Acccount Deleted");
         }
