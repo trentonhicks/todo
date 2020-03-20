@@ -13,13 +13,13 @@ namespace TodoWebAPI.Data
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
-        private ContextService _contextService;
+        private TodoListService _contextService;
 
         public EFAccountRepsitory(IConfiguration config, ToDoContext context)
         {
             _context = context;
             _config = config;
-            _contextService = new ContextService(_context, _config);
+            _contextService = new TodoListService(_context, _config);
         }
         public Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
@@ -49,14 +49,14 @@ namespace TodoWebAPI.Data
             var getAccount = _context.Accounts.Find(accountId);
             var listId = _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
             var getList = _context.TodoLists.Find(listId);
-            if (_contextService.ListExists(listId))
+            if (_contextService.ListExistsAsync(listId))
             {
                 _context.Accounts.Remove(getAccount);
                 _context.SaveChanges();
             }
             else
             {
-                _contextService.RemoveList(getList);
+                _contextService.RemoveListAsync(getList);
                 _context.TodoLists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
                 _context.SaveChanges();
@@ -65,7 +65,7 @@ namespace TodoWebAPI.Data
 
         public Task<AccountModel> GetAccountAsync(int accountId)
         {
-            if (_contextService.AccountExists(accountId))
+            if (_contextService.AccountExistsAsync(accountId))
             {
                 var account = _context.Accounts.Find(accountId);
 

@@ -19,7 +19,7 @@ namespace TodoWebAPI.Controllers
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
-        private ContextService _contextService;
+        private TodoListService _contextService;
 
         private IAccountRepository _account;
         private ITodoListRepository _lists;
@@ -30,7 +30,7 @@ namespace TodoWebAPI.Controllers
         {
             _context = context;
             _config = config;
-            _contextService = new ContextService(_context, _config);
+            _contextService = new TodoListService(_context, _config);
             _account = new EFAccountRepsitory(config, context);
             _lists = new EFTodoListRepository(_config, _context);
         }
