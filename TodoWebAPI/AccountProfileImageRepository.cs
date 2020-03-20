@@ -1,13 +1,14 @@
 ﻿using System;
 using TodoWebAPI.Models;
 using System.Data.SqlClient;
-
+using System.Threading.Tasks;
 
 namespace TodoWebAPI
 {
     public class AccountProfileImageRepository
     {
         private readonly string _connectionString;
+
         public AccountProfileImageRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -18,14 +19,14 @@ namespace TodoWebAPI
             return imageBytes;
         }
 
-        public void StoreImageProfile(AccountModel account)
+        public async Task StoreImageProfileAsync(AccountModel account)
         {
             var id = account.Id;
             var s = account.Picture;
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 using (var command = connection.CreateCommand())
                 {
@@ -36,7 +37,7 @@ namespace TodoWebAPI
                     command.Parameters.AddWithValue(@"pic", pic);
                     command.Parameters.AddWithValue(@"id", id);
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                 }
             }
         }

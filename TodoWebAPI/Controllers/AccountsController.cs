@@ -20,7 +20,7 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private TodoListService _contextService;
-
+        private AccountProfileImageRepository _image;
         private IAccountRepository _account;
         private ITodoListRepository _lists;
         private IToDoRepository _todo = new InMemoryToDo();
@@ -32,6 +32,7 @@ namespace TodoWebAPI.Controllers
             _config = config;
             _contextService = new TodoListService(_context, _config);
             _account = new EFAccountRepsitory(_config, _context);
+            _image = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
             _lists = new EFTodoListRepository(_config, _context, _contextService);
         }
 
@@ -55,6 +56,12 @@ namespace TodoWebAPI.Controllers
             {
                 return BadRequest("Username already Exists.");
             }
+
+            if(accounts.Picture != null)
+            {
+                await _image.StoreImageProfileAsync(accounts);
+            }
+
             return Ok(accounts);
 
         }

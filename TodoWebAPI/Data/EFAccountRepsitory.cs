@@ -26,8 +26,9 @@ namespace TodoWebAPI.Data
         public async Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
             var usernameExists = await _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefaultAsync() != null;
-            if (usernameExists == false)
-            {
+            if (usernameExists)
+                return null;
+
                 var a = new Accounts()
                 {
                     Id = account.Id,
@@ -38,19 +39,8 @@ namespace TodoWebAPI.Data
                 await _context.Accounts.AddAsync(a);
                 await _context.SaveChangesAsync();
                 account.Id = a.Id;
-                if (account.Picture != null)
-                {
 
-                    var image = new AccountProfileImageRepository(connectionString: _config.GetConnectionString("Development"));
-
-                    image.StoreImageProfile(account);
-                }
                 return account;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         public async Task DeleteAccountsAsync(int accountId)
