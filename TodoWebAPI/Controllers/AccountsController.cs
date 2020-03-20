@@ -96,8 +96,13 @@ namespace TodoWebAPI.Controllers
                 ListTitle = listToCreate.ListTitle
             };
 
-            var createdList = await _lists.CreateListAsync(list);
+            if(await _account.GetAccountAsync(accountId) == null)
+            {
+                return BadRequest("Account doesn't exist.");
+            }
 
+            var createdList = await _lists.CreateListAsync(list);
+            
             return Ok(new CreateListPresentation() { Id = createdList.Id, ListTitle = createdList.ListTitle });
         }
 
