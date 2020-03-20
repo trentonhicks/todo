@@ -32,6 +32,8 @@ namespace TodoWebAPI.Data
             await _context.TodoLists.AddAsync(todoList);
             await _context.SaveChangesAsync();
 
+            list.Id = todoList.Id;
+
             return list;
         }
 
