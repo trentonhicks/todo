@@ -25,40 +25,47 @@ namespace TodoWebAPI.Data
         }
         public async Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
-            var a = new Accounts()
+            var usernameExists = await _context.Accounts.Where(x => x.UserName == account.UserName).FirstOrDefaultAsync() != null;
+            if (usernameExists == false)
             {
-                Id = account.Id,
-                FullName = account.FullName,
-                UserName = account.UserName,
-                Password = account.Password
-            };
-           await _context.Accounts.AddAsync(a);
-            await _context.SaveChangesAsync();
-            account.Id = a.Id;
-            if (account.Picture != null)
-            {
+                var a = new Accounts()
+                {
+                    Id = account.Id,
+                    FullName = account.FullName,
+                    UserName = account.UserName,
+                    Password = account.Password
+                };
+                await _context.Accounts.AddAsync(a);
+                await _context.SaveChangesAsync();
+                account.Id = a.Id;
+                if (account.Picture != null)
+                {
 
-                var image = new AccountProfileImageRepository(connectionString: _config.GetConnectionString("Development"));
+                    var image = new AccountProfileImageRepository(connectionString: _config.GetConnectionString("Development"));
 
-                image.StoreImageProfile(account);
-
+                    image.StoreImageProfile(account);
+                }
+                return account;
             }
-            return account;
+            else
+            {
+                return null;
+            }
         }
 
         public async Task DeleteAccountsAsync(int accountId)
         {
             var getAccount = await _context.Accounts.FindAsync(accountId);
-            var listId = _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
+            var listId = await _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefaultAsync();
             var getList = _context.TodoLists.Find(listId);
-            if (await _contextService.ListExistsAsync(listId))
+            if (await _contextService.ListExistsAsync(listId) == false)
             {
                 _context.Accounts.Remove(getAccount);
                 await _context.SaveChangesAsync();
             }
             else
             {
-                _contextService.RemoveListAsync(getList);
+                await _contextService.RemoveListAsync(getList);
                 _context.TodoLists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
                 await _context.SaveChangesAsync();

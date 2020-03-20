@@ -38,12 +38,7 @@ namespace TodoWebAPI.Controllers
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel accountToCreate)
         {
-
-            if (accountToCreate.UserName == null)
-            {
-                return BadRequest("Username required");
-            }
-            else if (accountToCreate.Password == null)
+            if (accountToCreate.Password == null)
             {
                 return BadRequest("Password required");
             }
@@ -56,7 +51,10 @@ namespace TodoWebAPI.Controllers
                 Picture = accountToCreate.Picture
             };
             var accounts = await _account.CreateAccountAsync(account);
-
+            if (accounts == null)
+            {
+                return BadRequest("Username already Exists.");
+            }
             return Ok(accounts);
 
         }
@@ -67,7 +65,7 @@ namespace TodoWebAPI.Controllers
             var account = await _account.GetAccountAsync(accountId);
             if(account == null)
             {
-                BadRequest("Account doesn't exist");
+                return BadRequest("Account doesn't exist");
             }
             var accountPresentation = new AccountPresentation()
             {
@@ -83,6 +81,10 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
+            if (_account.GetAccountAsync(accountId) == null)
+            {
+                return NotFound("Account already doesn't exist.");
+            }
            await _account.DeleteAccountsAsync(accountId);
             return Ok("Acccount Deleted");
         }
