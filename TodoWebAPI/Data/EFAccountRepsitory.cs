@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace TodoWebAPI.Data
 {
@@ -29,14 +31,14 @@ namespace TodoWebAPI.Data
             a.UserName = account.UserName;
             a.Password = account.Password;
 
-            _context.Accounts.Add(a);
-            _context.SaveChanges();
+            _context.Accounts.AddAsync(a);
+            _context.SaveChangesAsync();
 
             account.Id = a.Id;
             if (account.Picture != null)
             {
 
-                var image = new ImageHandler(connectionString: _config.GetConnectionString("Development"));
+                var image = new AccountProfileImageRepository(connectionString: _config.GetConnectionString("Development"));
 
                 image.StoreImageProfile(account);
 
@@ -44,33 +46,33 @@ namespace TodoWebAPI.Data
             return Task.FromResult(account);
         }
 
-        public void DeleteAccountsAsync(int accountId)
+        public async Task DeleteAccountsAsync(int accountId)
         {
-            var getAccount = _context.Accounts.Find(accountId);
+            var getAccount = await _context.Accounts.FindAsync(accountId);
             var listId = _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefault();
             var getList = _context.TodoLists.Find(listId);
             if (_contextService.ListExistsAsync(listId))
             {
                 _context.Accounts.Remove(getAccount);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             else
             {
                 _contextService.RemoveListAsync(getList);
                 _context.TodoLists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public Task<AccountModel> GetAccountAsync(int accountId)
+        public async Task<AccountModel> GetAccountAsync(int accountId)
         {
             if (_contextService.AccountExistsAsync(accountId))
             {
-                var account = _context.Accounts.Find(accountId);
+                var account = await _context.Accounts.FindAsync(accountId);
 
                 var accountPicture = "";
-
+                
                 if (account.Picture != null)
                 {
                     accountPicture = Convert.ToBase64String(account.Picture);
@@ -84,7 +86,7 @@ namespace TodoWebAPI.Data
                     Picture = accountPicture
                 };
 
-                return Task.FromResult(accountModel);
+                return accountModel;
             }
             return null;
         }

@@ -81,9 +81,9 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpDelete("accounts/{accountId}")]
-        public IActionResult DeleteAccount(int accountId)
+        public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
-            _account.DeleteAccountsAsync(accountId);
+           await _account.DeleteAccountsAsync(accountId);
             return Ok("Acccount Deleted");
         }
 
