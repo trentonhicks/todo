@@ -9,7 +9,7 @@ CREATE TABLE [ToDos](
     [Completed] BIT NOT NULL,
     [ToDoName] VARCHAR(50),
     [ListID] INT NOT NULL,
-    FOREIGN KEY ([ListID]) REFERENCES [Lists](ID)
+    FOREIGN KEY ([ListID]) REFERENCES [TodoLists](ID)
 )
 
 GO
