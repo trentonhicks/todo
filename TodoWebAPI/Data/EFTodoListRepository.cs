@@ -12,14 +12,15 @@ namespace TodoWebAPI.Data
 {
     public class EFTodoListRepository : ITodoListRepository
     {
-        public EFTodoListRepository(IConfiguration config, ToDoContext context)
+        private IConfiguration _config { get; set; }
+        private ToDoContext _context { get; set; }
+        private TodoListService _todoListService { get; set; }
+        public EFTodoListRepository(IConfiguration config, ToDoContext context, TodoListService todoListService)
         {
             _config = config;
             _context = context;
+            _todoListService = todoListService;
         }
-
-        private IConfiguration _config { get; set; }
-        private ToDoContext _context { get; set; }
 
         public async Task<TodoListModel> CreateListAsync(TodoListModel list)
         {
@@ -60,9 +61,15 @@ namespace TodoWebAPI.Data
             return listPresentation;
         }
 
-        public Task<string> UpdateListAsync(int listId, string title)
+        public async Task<string> UpdateListAsync(int listId, string title)
         {
-            throw new NotImplementedException();
+            var todoList = await _context.TodoLists.FindAsync(listId);
+            todoList.ListTitle = title;
+
+            _context.TodoLists.Update(todoList);
+            await _context.SaveChangesAsync();
+
+            return title;
         }
     }
 }

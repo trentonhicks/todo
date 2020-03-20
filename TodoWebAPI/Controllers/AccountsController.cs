@@ -32,7 +32,7 @@ namespace TodoWebAPI.Controllers
             _config = config;
             _contextService = new TodoListService(_context, _config);
             _account = new EFAccountRepsitory(_config, _context);
-            _lists = new EFTodoListRepository(_config, _context);
+            _lists = new EFTodoListRepository(_config, _context, _contextService);
         }
 
         [HttpPost("accounts")]
@@ -113,7 +113,7 @@ namespace TodoWebAPI.Controllers
             {
                 return BadRequest("Account doesn't exist.");
             }
-            
+
             var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
             var lists = await _lists.GetListsAsync(accountId, todoPreviewNum);
 
@@ -123,30 +123,11 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
+            // Need to check if list exists and if the account id matches
+            // If both of those things are true then update the list
             var updatedTitle = await _lists.UpdateListAsync(listId, updatedList.ListTitle);
 
             return Ok(updatedTitle);
-
-            //var list = _context.Lists.Find(listId);
-
-            //if (list != null)
-            //{
-            //    if (list.AccountId != accountId)
-            //    {
-            //        return BadRequest("List doesn't belong to user.");
-            //    }
-
-            //    if (title == "")
-            //    {
-            //        title = "Untitled List";
-            //    }
-            //    list.ListTitle = title;
-
-            //    _context.Lists.Update(list);
-            //    _context.SaveChanges();
-            //    return Ok(list.ListTitle);
-            //}
-            //return NotFound("List doesn't exist.");
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
