@@ -23,11 +23,11 @@ namespace TodoWebAPI.InMemory
         private List<TodoListModel> _list;
         private List<ToDos> _todo;
 
-        public async Task<AccountModel> CreateAccountAsync(AccountModel account)
+        public Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
             account.Id = 1;
            _accounts.Add(account);
-            return account;
+            return Task.FromResult(account);
         }
 
         public async Task DeleteAccountsAsync(int accountId)
@@ -44,7 +44,7 @@ namespace TodoWebAPI.InMemory
             _list.Remove(getList);
             _accounts.Remove(getAccount);
         }
-        public async Task<AccountModel> GetAccountAsync(int accountId)
+        public Task<AccountModel> GetAccountAsync(int accountId)
         {
             var account =  _accounts.Find(x => x.Id == accountId);
             if(account == null)
@@ -52,7 +52,7 @@ namespace TodoWebAPI.InMemory
                 return null;
             }
 
-            return account;
+            return Task.FromResult(account);
         }
 
         public void DeleteToDo(TodoListModel list)
