@@ -31,7 +31,7 @@ namespace TodoWebAPI.Controllers
             _context = context;
             _config = config;
             _contextService = new TodoListService(_context, _config);
-            _account = new EFAccountRepsitory(config, context);
+            _account = new EFAccountRepsitory(_config, _context);
             _lists = new EFTodoListRepository(_config, _context);
         }
 

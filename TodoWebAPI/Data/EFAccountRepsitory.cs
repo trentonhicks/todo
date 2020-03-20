@@ -23,17 +23,17 @@ namespace TodoWebAPI.Data
             _config = config;
             _contextService = new TodoListService(_context, _config);
         }
-        public Task<AccountModel> CreateAccountAsync(AccountModel account)
+        public async Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
-            var a = new Accounts();
-
-            a.FullName = account.FullName;
-            a.UserName = account.UserName;
-            a.Password = account.Password;
-
-            _context.Accounts.AddAsync(a);
-            _context.SaveChangesAsync();
-
+            var a = new Accounts()
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                UserName = account.UserName,
+                Password = account.Password
+            };
+           await _context.Accounts.AddAsync(a);
+            await _context.SaveChangesAsync();
             account.Id = a.Id;
             if (account.Picture != null)
             {
@@ -43,7 +43,7 @@ namespace TodoWebAPI.Data
                 image.StoreImageProfile(account);
 
             }
-            return Task.FromResult(account);
+            return account;
         }
 
         public async Task DeleteAccountsAsync(int accountId)
