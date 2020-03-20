@@ -48,7 +48,10 @@ namespace TodoWebAPI.Data
                 }
                 return account;
             }
-            else return null;
+            else
+            {
+                return null;
+            }
         }
 
         public async Task DeleteAccountsAsync(int accountId)
@@ -63,7 +66,7 @@ namespace TodoWebAPI.Data
             }
             else
             {
-                _contextService.RemoveListAsync(getList);
+                await _contextService.RemoveListAsync(getList);
                 _context.TodoLists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
                 await _context.SaveChangesAsync();
