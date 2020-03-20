@@ -11,6 +11,6 @@ namespace TodoWebAPI.Repositories
     {
         Task <AccountModel>GetAccountAsync(int accountId);
         Task <AccountModel>CreateAccountAsync(AccountModel account);
-        async Task DeleteAccountsAsync(int accountId);
+        Task DeleteAccountsAsync(int accountId);
     }
 }
