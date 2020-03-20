@@ -42,9 +42,22 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize)
+        public async Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize)
         {
-            throw new NotImplementedException();
+            var todoLists = await _context.TodoLists.Where(l => l.AccountId == accountId).ToListAsync();
+            var listPresentation = new List<ListPresentation>();
+
+            foreach(var todoList in todoLists)
+            {
+                var todoListPresentation = new TodoListModel() {
+                    Id = todoList.Id,
+                    ListTitle = todoList.ListTitle,
+                    AccountId = todoList.AccountId
+                };
+                var todos = await _context.ToDos.Where(t => t.ListId == todoList.Id).Take(pageSize).ToListAsync();
+                listPresentation.Add(new ListPresentation(todoListPresentation, todos));
+            }
+            return listPresentation;
         }
 
         public Task<string> UpdateListAsync(int listId, string title)
