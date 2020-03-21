@@ -33,7 +33,7 @@ namespace TodoWebAPI.Controllers
             _contextService = new TodoListService(_context, _config);
             _account = new EFAccountRepsitory(_config, _context);
             _image = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
-            _lists = new EFTodoListRepository(_config, _context, _contextService);
+            _lists = new EFTodoListRepository(_context, _contextService);
         }
 
         [HttpPost("accounts")]
@@ -132,34 +132,31 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            // Need to check if list exists and if the account id matches
-            // If both of those things are true then update the list
-            var updatedTitle = await _lists.UpdateListAsync(listId, updatedList.ListTitle);
+            var todoListModel = new TodoListModel() { Id = listId, AccountId = accountId, ListTitle = updatedList.ListTitle };
+            var todoList = await _lists.GetListAsync(todoListModel);
 
-            return Ok(updatedTitle);
+            if(todoList != null)
+            {
+                var updatedTitle = await _lists.UpdateListAsync(todoListModel);
+                return Ok("List updated successfully.");
+            }
+
+            return BadRequest("User doesn't have access to this list.");
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            await _lists.DeleteListAsync(listId);
+            var todoListModel = new TodoListModel() { Id = listId, AccountId = accountId };
+            var todoList = await _lists.GetListAsync(todoListModel);
 
-            return Ok();
-
-            /* var list = _context.Lists.Find(listId);
-
-            if (list != null)
+            if(todoList == null)
             {
-                if (list.AccountId != accountId)
-                {
-                    return BadRequest("List doesn't belong to user.");
-                }
-
-                _contextService.RemoveList(list);
-
-                return Ok("List deleted");
+                return BadRequest("User doesn't have access to this list.");
             }
-            return NotFound("List doesn't exist."); */
+
+            await _lists.DeleteListAsync(listId);
+            return Ok();
         }
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]

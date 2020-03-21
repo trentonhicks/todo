@@ -12,12 +12,10 @@ namespace TodoWebAPI.Data
 {
     public class EFTodoListRepository : ITodoListRepository
     {
-        private IConfiguration _config { get; set; }
         private ToDoContext _context { get; set; }
         private TodoListService _todoListService { get; set; }
-        public EFTodoListRepository(IConfiguration config, ToDoContext context, TodoListService todoListService)
+        public EFTodoListRepository(ToDoContext context, TodoListService todoListService)
         {
-            _config = config;
             _context = context;
             _todoListService = todoListService;
         }
@@ -30,7 +28,7 @@ namespace TodoWebAPI.Data
                 AccountId = list.AccountId,
                 ListTitle = list.ListTitle
             };
-            await _context.TodoLists.AddAsync(todoList);
+            _context.TodoLists.Add(todoList);
             await _context.SaveChangesAsync();
 
             list.Id = todoList.Id;
@@ -38,9 +36,10 @@ namespace TodoWebAPI.Data
             return list;
         }
 
-        public Task DeleteListAsync(int listId)
+        public async Task DeleteListAsync(int listId)
         {
-            throw new NotImplementedException();
+            var todoList = await _context.TodoLists.FindAsync(listId);
+            await _todoListService.RemoveListAsync(todoList);
         }
 
         public async Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize)
@@ -61,15 +60,23 @@ namespace TodoWebAPI.Data
             return listPresentation;
         }
 
-        public async Task<string> UpdateListAsync(int listId, string title)
+        public async Task<string> UpdateListAsync(TodoListModel list)
         {
-            var todoList = await _context.TodoLists.FindAsync(listId);
-            todoList.ListTitle = title;
-
+            var todoList = await _context.TodoLists.FindAsync(list.Id);
             _context.TodoLists.Update(todoList);
             await _context.SaveChangesAsync();
 
-            return title;
+            return list.ListTitle;
         }
+
+        public async Task<TodoListModel> GetListAsync(TodoListModel list)
+        {
+            var todoList = await _context.TodoLists
+                .Where(x => x.Id == list.Id && x.AccountId == list.AccountId)
+                .FirstOrDefaultAsync();
+
+            return todoList != null ? list : null;
+        }
+
     }
 }

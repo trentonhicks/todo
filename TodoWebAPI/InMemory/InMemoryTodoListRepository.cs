@@ -72,5 +72,18 @@ namespace TodoWebAPI.InMemory
 
             return Task.CompletedTask;
         }
+
+        public Task<TodoListModel> GetListAsync(TodoListModel list)
+        {
+          return Task.FromResult(_lists.Find(x => x.Id == list.Id));
+        }
+
+        public Task<string> UpdateListAsync(TodoListModel list)
+        {
+            var listIndex = _lists.FindIndex(x => x.Id == list.Id);
+            _lists[listIndex].ListTitle = list.ListTitle;
+
+            return Task.FromResult(list.ListTitle);
+        }
     }
 }
