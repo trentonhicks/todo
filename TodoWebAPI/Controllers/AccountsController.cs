@@ -34,7 +34,7 @@ namespace TodoWebAPI.Controllers
             _contextService = new TodoListService(_context, _config);
             _account = new EFAccountRepsitory(_config, _context);
             _image = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
-            _lists = new EFTodoListRepository(_context, _contextService);
+            _lists = new InMemoryTodoListRepository();
             _todo = new EFTodoItemRepository(_context);
 
         }
