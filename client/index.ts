@@ -1,7 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import BootstrapVue from "bootstrap-vue";
+import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import App from './vue/App.vue';
+import Home from './vue/components/Home.vue';
+import TodoList from './vue/components/TodoList.vue';
+
+// Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
@@ -18,13 +22,16 @@ import { CardPlugin } from 'bootstrap-vue';
 Vue.use(CardPlugin);
 
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons)
 Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    // dynamic segments start with a colon
-    { path: '/', component: App }
-  ]
+    { path: '/', component: Home },
+    { path: '/lists', component: Home, props: true },
+    { path: '/lists/:id', component: TodoList, props: true },
+  ],
+  mode: 'history'
 });
 
 new Vue({
