@@ -31,17 +31,14 @@ namespace TodoWebAPI
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.WithOrigins(
-                        "http://localhost:5000",
-                        "http://localhost:5002"
-                    )
+                options.AddPolicy("Policy", builder => builder
+                    .WithOrigins("http://localhost:5002")
+                    .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
+                    .AllowCredentials()
+                );
             });
+
             services.AddDbContext<ToDoContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
@@ -55,6 +52,8 @@ namespace TodoWebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseRouting();
 
