@@ -8,9 +8,9 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryToDo : IToDoRepository
+    public class InMemoryToDoItemRepository : IToDoItemRepository
     {
-        public InMemoryToDo()
+        public InMemoryToDoItemRepository()
         {
             _todo = new List<ToDos>();
             _todo.Add(new ToDos() { Id = 1, Completed = false, ListId = 1, Notes = "dude", ToDoName = "Clean" });

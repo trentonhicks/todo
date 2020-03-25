@@ -23,7 +23,7 @@ namespace TodoWebAPI.Controllers
         private AccountProfileImageRepository _image;
         private IAccountRepository _account;
         private ITodoListRepository _lists;
-        private IToDoRepository _todo = new InMemoryToDo();
+        private IToDoItemRepository _todo = new InMemoryToDoItemRepository();
 
 
         public AccountsController(ToDoContext context, IConfiguration config)
