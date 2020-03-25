@@ -3,7 +3,7 @@
 #content.mt-4
   b-navbar(toggleable="sm" type="light" variant="light").fixed-top
     b-navbar-brand Todo
-    b-avatar(text="A")
+    b-avatar(text="A").ml-auto
 
   router-view
 
