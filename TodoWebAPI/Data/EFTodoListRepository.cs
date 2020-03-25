@@ -13,11 +13,9 @@ namespace TodoWebAPI.Data
     public class EFTodoListRepository : ITodoListRepository
     {
         private ToDoContext _context { get; set; }
-        private TodoListService _todoListService { get; set; }
-        public EFTodoListRepository(ToDoContext context, TodoListService todoListService)
+        public EFTodoListRepository(ToDoContext context)
         {
             _context = context;
-            _todoListService = todoListService;
         }
 
         public async Task<TodoListModel> CreateListAsync(TodoListModel list)
@@ -39,7 +37,7 @@ namespace TodoWebAPI.Data
         public async Task DeleteListAsync(int listId)
         {
             var todoList = await _context.TodoLists.FindAsync(listId);
-            await _todoListService.RemoveListAsync(todoList);
+            await RemoveListAsync(todoList);
         }
 
         public async Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize)
@@ -78,5 +76,28 @@ namespace TodoWebAPI.Data
             return todoList != null ? list : null;
         }
 
+        public async Task<TodoListModel> GetListAsync(int listId)
+        {
+            var todolist = await _context.TodoLists.FindAsync(listId);
+            return new TodoListModel
+            {
+                AccountId = todolist.AccountId,
+                Id = todolist.Id,
+                ListTitle = todolist.ListTitle
+            };
+        }
+
+        public async Task RemoveListAsync(TodoLists list)
+        {
+            var todos = await _context.ToDos.Where(t => t.ListId == list.Id).ToListAsync();
+
+            foreach (var todo in todos)
+            {
+                _context.ToDos.Remove(todo);
+            }
+
+            _context.TodoLists.Remove(list);
+            await _context.SaveChangesAsync();
+        }
     }
 }

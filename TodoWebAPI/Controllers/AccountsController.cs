@@ -19,7 +19,6 @@ namespace TodoWebAPI.Controllers
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
-        private TodoListService _contextService;
         private AccountProfileImageRepository _image;
         private IAccountRepository _account;
         private ITodoListRepository _lists;
@@ -31,12 +30,10 @@ namespace TodoWebAPI.Controllers
         {
             _context = context;
             _config = config;
-            _contextService = new TodoListService(_context, _config);
             _account = new EFAccountRepsitory(_config, _context);
             _image = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
             _lists = new InMemoryTodoListRepository();
             _todo = new EFTodoItemRepository(_context);
-
         }
 
         [HttpPost("accounts")]
@@ -91,11 +88,11 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
-            if (_account.GetAccountAsync(accountId) == null)
+            if (await _account.GetAccountAsync(accountId) == null)
             {
                 return NotFound("Account already doesn't exist.");
             }
-           await _account.DeleteAccountsAsync(accountId);
+            await _account.DeleteAccountsAsync(accountId);
             return Ok("Acccount Deleted");
         }
 
@@ -157,7 +154,7 @@ namespace TodoWebAPI.Controllers
             {
                 return BadRequest("User doesn't have access to this list.");
             }
-
+           
             await _lists.DeleteListAsync(listId);
             return Ok();
         }

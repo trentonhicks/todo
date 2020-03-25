@@ -15,13 +15,11 @@ namespace TodoWebAPI.Data
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
-        private TodoListService _contextService;
 
         public EFAccountRepsitory(IConfiguration config, ToDoContext context)
         {
             _context = context;
             _config = config;
-            _contextService = new TodoListService(_context, _config);
         }
         public async Task<AccountModel> CreateAccountAsync(AccountModel account)
         {
@@ -47,16 +45,15 @@ namespace TodoWebAPI.Data
         {
             var getAccount = await _context.Accounts.FindAsync(accountId);
             var listId = await _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            var getList = _context.TodoLists.Find(listId);
-            if (await _contextService.ListExistsAsync(listId) == false)
+            var getList = await _context.TodoLists.FindAsync(listId);
+            if(getList == null)
             {
                 _context.Accounts.Remove(getAccount);
                 await _context.SaveChangesAsync();
             }
             else
             {
-                await _contextService.RemoveListAsync(getList);
-                _context.TodoLists.Remove(getList);
+                 await RemoveListAsync(getList);
                 _context.Accounts.Remove(getAccount);
                 await _context.SaveChangesAsync();
             }
@@ -64,10 +61,10 @@ namespace TodoWebAPI.Data
 
         public async Task<AccountModel> GetAccountAsync(int accountId)
         {
-            if (await _contextService.AccountExistsAsync(accountId))
-            {
-                var account = await _context.Accounts.FindAsync(accountId);
+            var account = await _context.Accounts.FindAsync(accountId);
 
+            if (account != null)
+            {
                 var accountPicture = "";
                 
                 if (account.Picture != null)
@@ -86,6 +83,18 @@ namespace TodoWebAPI.Data
                 return accountModel;
             }
             return null;
+        }
+        public async Task RemoveListAsync(TodoLists list)
+        {
+            var todos = await _context.ToDos.Where(t => t.ListId == list.Id).ToListAsync();
+
+            foreach (var todo in todos)
+            {
+                _context.ToDos.Remove(todo);
+            }
+
+            _context.TodoLists.Remove(list);
+            await _context.SaveChangesAsync();
         }
     }
 }
