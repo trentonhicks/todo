@@ -13,6 +13,7 @@ namespace TodoWebAPI.Repositories
         Task<TodoListModel> CreateListAsync(TodoListModel list);
         Task<List<ListPresentation>> GetListsAsync(int accountId, int pageSize);
         Task<TodoListModel> GetListAsync(TodoListModel list);
+        Task<TodoListModel> GetListAsync(int listId);
         Task<string> UpdateListAsync(TodoListModel list);
         Task DeleteListAsync(int listId);
     }
