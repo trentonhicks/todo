@@ -42,9 +42,15 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task DeleteToDoAsync(int todo)
+        public async Task DeleteToDoAsync(int todoId)
         {
-            throw new NotImplementedException();
+            var todo = _context.ToDos.Find(todoId);
+
+            if (todo != null)
+            {
+                _context.ToDos.Remove(todo);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

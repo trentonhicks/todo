@@ -11,6 +11,6 @@ namespace TodoWebAPI.Repositories
     {
         Task<TodoItemModel> CreateToDoAsync(TodoItemModel toDo);
         Task<ToDos> UpdateToDoAsync(int listId, ToDos toDo);
-        Task DeleteToDoAsync(int todo);
+        Task DeleteToDoAsync(int todoId);
     }
 }
