@@ -23,7 +23,8 @@ namespace TodoWebAPI.Controllers
         private AccountProfileImageRepository _image;
         private IAccountRepository _account;
         private ITodoListRepository _lists;
-        private IToDoItemRepository _todo = new InMemoryToDoItemRepository();
+        private EFTodoItemRepository _todo;
+        //private IToDoItemRepository _todoMemory = new InMemoryToDoItemRepository();
 
 
         public AccountsController(ToDoContext context, IConfiguration config)
@@ -34,6 +35,8 @@ namespace TodoWebAPI.Controllers
             _account = new EFAccountRepsitory(_config, _context);
             _image = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
             _lists = new EFTodoListRepository(_context, _contextService);
+            _todo = new EFTodoItemRepository(_context);
+
         }
 
         [HttpPost("accounts")]
@@ -162,7 +165,7 @@ namespace TodoWebAPI.Controllers
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
         public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todos)
         {
-            var todo = new ToDos()
+            var todo = new TodoItemModel()
             {
                 ToDoName = todos.ToDoName,
                 ParentId = todos.ParentId,
@@ -170,9 +173,9 @@ namespace TodoWebAPI.Controllers
                 Completed = todos.Completed,
                 ListId = listId
             };
-            var foo = await _todo.CreateToDoAsync(todo);
+            var toDoItem = await _todo.CreateToDoAsync(todo);
 
-            return Ok(foo);
+            return Ok(toDoItem);
         }
 
         //var list = _context.Lists.Find(listId);

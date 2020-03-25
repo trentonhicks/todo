@@ -9,7 +9,7 @@ namespace TodoWebAPI.Repositories
 {
     public interface IToDoItemRepository
     {
-        Task<ToDos> CreateToDoAsync(ToDos toDo);
+        Task<TodoItemModel> CreateToDoAsync(TodoItemModel toDo);
         Task<ToDos> UpdateToDoAsync(int listId, ToDos toDo);
         Task DeleteToDoAsync(int todo);
     }

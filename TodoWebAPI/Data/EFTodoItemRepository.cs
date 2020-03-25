@@ -12,9 +12,29 @@ namespace TodoWebAPI.Data
 {
     public class EFTodoItemRepository : IToDoItemRepository
     {
-        public Task<ToDos> CreateToDoAsync(ToDos toDo)
+        private readonly ToDoContext _context;
+        public EFTodoItemRepository(ToDoContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task<TodoItemModel> CreateToDoAsync(TodoItemModel toDo)
+        {
+            var toDoItem = new ToDos()
+            {
+                Id = toDo.Id,
+                ToDoName = toDo.ToDoName,
+                ParentId = toDo.ParentId,
+                Notes = toDo.Notes,
+                Completed = toDo.Completed,
+                ListId = toDo.ListId
+            };
+            _context.ToDos.Add(toDoItem);
+            await _context.SaveChangesAsync();
+
+            toDo.Id = toDoItem.Id;
+
+            return toDo;
         }
 
         public Task<ToDos> UpdateToDoAsync(int listId, ToDos toDo)
