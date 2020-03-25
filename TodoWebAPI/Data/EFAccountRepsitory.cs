@@ -45,7 +45,7 @@ namespace TodoWebAPI.Data
         {
             var getAccount = await _context.Accounts.FindAsync(accountId);
             var listId = await _context.TodoLists.Where(x => x.AccountId == getAccount.Id).Select(x => x.Id).FirstOrDefaultAsync();
-            var getList = _context.TodoLists.Find(listId);
+            var getList = await _context.TodoLists.FindAsync(listId);
             if(getList == null)
             {
                 _context.Accounts.Remove(getAccount);
@@ -54,7 +54,6 @@ namespace TodoWebAPI.Data
             else
             {
                  await RemoveListAsync(getList);
-                _context.TodoLists.Remove(getList);
                 _context.Accounts.Remove(getAccount);
                 await _context.SaveChangesAsync();
             }

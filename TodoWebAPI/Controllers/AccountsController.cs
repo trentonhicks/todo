@@ -89,7 +89,7 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
-            if (_account.GetAccountAsync(accountId) == null)
+            if (await _account.GetAccountAsync(accountId) == null)
             {
                 return NotFound("Account already doesn't exist.");
             }
