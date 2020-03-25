@@ -7,7 +7,7 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.Repositories
 {
-    public interface IToDoRepository
+    public interface IToDoItemRepository
     {
         Task<ToDos> CreateToDoAsync(ToDos toDo);
         Task<ToDos> UpdateToDoAsync(int listId, ToDos toDo);
