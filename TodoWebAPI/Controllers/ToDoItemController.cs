@@ -15,17 +15,16 @@ namespace TodoWebAPI.Controllers
     {
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
-        private EFTodoItemRepository _todo;
+        private IToDoItemRepository _todo;
         private readonly IEmailService _email;
         private IAccountRepository _account;
-        //private IToDoItemRepository _todoMemory = new InMemoryToDoItemRepository();
 
         public ToDoItemController(ToDoContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
-            _todo = new EFTodoItemRepository(_context);
-            _email = new InMemoryEmailService();
+            _todo = new InMemoryToDoItemRepository();
+            _email = new DebuggerWindowOutputEmailService();
             _account = new InMemoryAccountRepository();
         }
 
@@ -67,10 +66,19 @@ namespace TodoWebAPI.Controllers
         //return NotFound("List doesn't exist.");
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodo(int accountId, int todoId, [FromBody] ToDos todo)
+        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] ToDos todo)
         {
             var foo = await _todo.UpdateToDoAsync(todoId, todo);
+            var account = await  _account.GetAccountAsync(accountId);
 
+            var email = new Email()
+            {
+                To = account.Email,
+                From = _config.GetSection("Emails")["Notifications"],
+                Subject = $"Updated: {todo.ToDoName}",
+                Body = $"Item {todo.ToDoName} was updated to: {(todo.Completed ? "Completed" : "Incomplete")}"
+            };
+            await _email.SendEmailAsync(email);
             return Ok(foo);
 
             //var todo = _context.ToDos.Find(todoId);

@@ -6,6 +6,6 @@ namespace TodoWebAPI.Services
 {
     public interface IEmailService
     {
-        Task SendEmail(Email email);
+        Task SendEmailAsync(Email email);
     }
 }

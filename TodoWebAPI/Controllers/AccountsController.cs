@@ -27,7 +27,7 @@ namespace TodoWebAPI.Controllers
         {
             _context = context;
             _config = config;
-            _account = new EFAccountRepsitory(_config, _context);
+            _account = new InMemoryAccountRepository();
             _image = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
         }
 
@@ -75,7 +75,8 @@ namespace TodoWebAPI.Controllers
                 Id = account.Id,
                 FullName = account.FullName,
                 UserName = account.UserName,
-                Picture = account.Picture
+                Picture = account.Picture,
+                Email = account.Email
             };
 
             return Ok(accountPresentation);

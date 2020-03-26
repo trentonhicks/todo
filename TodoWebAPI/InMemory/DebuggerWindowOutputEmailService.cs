@@ -6,12 +6,12 @@ using TodoWebAPI.Services;
 
 namespace TodoWebAPI.InMemory
 {
-    public class InMemoryEmailService : IEmailService
+    public class DebuggerWindowOutputEmailService : IEmailService
     {
-        public Task SendEmail(Email email)
+        public Task SendEmailAsync(Email email)
         {
             var timestamp = DateTime.Now;
-            Debug.WriteLine($"Time Sent: {timestamp}\n To: {email.To}\n From: {email.From}\n Subject: {email.Subject}\n Content: {email.Body}");
+            Debug.WriteLine($"Time Sent: {timestamp}\nTo: {email.To}\nFrom: {email.From}\nSubject: {email.Subject}\nContent: {email.Body}");
             return Task.CompletedTask;
         }
     }
