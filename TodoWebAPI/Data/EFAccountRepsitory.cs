@@ -32,7 +32,8 @@ namespace TodoWebAPI.Data
                     Id = account.Id,
                     FullName = account.FullName,
                     UserName = account.UserName,
-                    Password = account.Password
+                    Password = account.Password,
+                    Email = account.Email
                 };
                 await _context.Accounts.AddAsync(a);
                 await _context.SaveChangesAsync();

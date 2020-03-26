@@ -15,6 +15,7 @@ namespace TodoWebAPI.Data
         public string UserName { get; set; }
         public byte[] Picture { get; set; }
         public string Password { get; set; }
+        public string Email { get; set; }
 
         public virtual ICollection<TodoLists> Lists { get; set; }
     }

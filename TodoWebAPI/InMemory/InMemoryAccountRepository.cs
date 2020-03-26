@@ -13,7 +13,7 @@ namespace TodoWebAPI.InMemory
         public InMemoryAccountRepository()
         {
             _accounts = new List<AccountModel>();
-            _accounts.Add(new AccountModel() { Id = 1, FullName = "Parker", UserName = "parker", Picture = "", Password = "1234" });
+            _accounts.Add(new AccountModel() { Id = 1, FullName = "Parker", UserName = "parker", Picture = "", Password = "1234", Email = "plwieseler@gmail.com" });
             _list = new List<TodoListModel>();
             _list.Add(new TodoListModel() { Id = 1, AccountId = 1, ListTitle = "New List" });
             _todo = new List<ToDos>();
