@@ -44,6 +44,7 @@ namespace TodoWebAPI.Controllers
                 FullName = accountToCreate.FullName,
                 UserName = accountToCreate.UserName,
                 Password = accountToCreate.Password,
+                Email = accountToCreate.Email,
                 Picture = accountToCreate.Picture
             };
             var accounts = await _account.CreateAccountAsync(account);
