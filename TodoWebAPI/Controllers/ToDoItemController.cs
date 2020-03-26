@@ -6,6 +6,9 @@ using TodoWebAPI.Data;
 using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
+using TodoWebAPI.Services;
+using TodoWebAPI.InMemory;
+
 namespace TodoWebAPI.Controllers
 {
     public class ToDoItemController : ControllerBase
@@ -13,15 +16,17 @@ namespace TodoWebAPI.Controllers
         private readonly ToDoContext _context;
         private readonly IConfiguration _config;
         private EFTodoItemRepository _todo;
+        private readonly IEmailService _email;
+        private IAccountRepository _account;
         //private IToDoItemRepository _todoMemory = new InMemoryToDoItemRepository();
-
 
         public ToDoItemController(ToDoContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
             _todo = new EFTodoItemRepository(_context);
-
+            _email = new InMemoryEmailService();
+            _account = new InMemoryAccountRepository();
         }
 
 
@@ -64,11 +69,9 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> EditTodo(int accountId, int todoId, [FromBody] ToDos todo)
         {
-
             var foo = await _todo.UpdateToDoAsync(todoId, todo);
 
             return Ok(foo);
-
 
             //var todo = _context.ToDos.Find(todoId);
             //if (_contextService.AccountExists(accountId))
@@ -97,7 +100,6 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
         {
             await _todo.DeleteToDoAsync(todoId);
-
             return Ok();
 
             //var todo = _context.ToDos.Find(todoId);

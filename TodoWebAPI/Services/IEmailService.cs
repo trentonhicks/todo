@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using TodoWebAPI;
 
-namespace TodoWebAPI.Service
+namespace TodoWebAPI.Services
 {
     public interface IEmailService
     {
-        Task SendEmail(string to, string from, string subject, string content);
+        Task SendEmail(Email email);
     }
 }
