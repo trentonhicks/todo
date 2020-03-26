@@ -7,7 +7,8 @@ Create Table [Accounts](
     [FullName] VARCHAR(50),
     [UserName] VARCHAR(50) UNIQUE NOT NULL,
     [Picture] VARBINARY(max),
-    [Password] VARCHAR(50) NOT NULL
+    [Password] VARCHAR(50) NOT NULL,
+	[Email] VARCHAR(50) NOT NULL
 )
 
 GO
