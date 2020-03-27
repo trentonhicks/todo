@@ -10,5 +10,6 @@ namespace Todo.Domain.Repositories
         Task AddTodoListItemAsync(TodoListItem todo);
         Task<TodoListItem> UpdateToDoListItemAsync(int listId, TodoListItem todo);
         Task RemoveTodoListItemAsync(int todo);
+        Task RemoveAllTodoListItemsFromAccountAsync(int listId);
     }
 }

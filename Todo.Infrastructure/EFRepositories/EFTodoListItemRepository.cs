@@ -11,10 +11,10 @@ using TodoWebAPI.InMemory;
 
 namespace TodoWebAPI.Data
 {
-    public class EFTodoItemRepository : ITodoListItemRepository
+    public class EFTodoListItemRepository : ITodoListItemRepository
     {
         private readonly TodoDatabaseContext _context;
-        public EFTodoItemRepository(TodoDatabaseContext context)
+        public EFTodoListItemRepository(TodoDatabaseContext context)
         {
             _context = context;
         }
@@ -30,6 +30,11 @@ namespace TodoWebAPI.Data
         }
 
         public Task RemoveTodoListItemAsync(int todo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveAllTodoListItemsFromAccountAsync(int listId)
         {
             throw new NotImplementedException();
         }

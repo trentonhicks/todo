@@ -11,6 +11,7 @@ namespace Todo.Domain.Repositories
         Task<List<TodoList>> FindTodoListsByAccountIdAsync(int accountId, int pageSize);
         Task<TodoList> FindTodoListIdByIdAsync(int listId);
         Task RemoveTodoListAsync(int listId);
+        Task RemoveAllTodoListsFromAccountAsync(int accountId);
         Task UpdateTodoListAsync(TodoList todoList);
     }
 }

@@ -12,6 +12,6 @@ namespace Todo.Domain.Repositories
         Task<Account> FindAccountByIdAsync(int id);
         Task<bool> DoesAccountWithUserNameExistAsync(string userName);
         Task<bool> DoesAccountWithAccountIdExistAsync(int accountId);
-
+        Task RemoveAccountAsync(int accountId);
     }
 }

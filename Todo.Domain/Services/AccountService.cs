@@ -10,11 +10,15 @@ namespace ToDo.Domain.Services
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IAccountProfileImageRepository _profileImageRepository;
+        private readonly ITodoListRepository _todoListRepository;
+        private readonly ITodoListItemRepository _todoListItemRepository;
 
-        public AccountService(IAccountRepository accountRepository, IAccountProfileImageRepository profileImageRepository)
+        public AccountService(IAccountRepository accountRepository, IAccountProfileImageRepository profileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
         {
             _accountRepository = accountRepository;
             _profileImageRepository = profileImageRepository;
+            _todoListRepository = todoListRepository;
+            _todoListItemRepository = todoListItemRepository;
         }
 
         public async Task<Account> CreateAccountAsync(string fullName, string userName, string password, string email, string profileImage)
@@ -38,6 +42,13 @@ namespace ToDo.Domain.Services
                 await _profileImageRepository.StoreImageProfileAsync(account.Id, profileImage);
 
             return account;
+        }
+
+        public async Task DeleteAccountAsync(int accountId)
+        {
+            await _todoListItemRepository.RemoveAllTodoListItemsFromAccountAsync(accountId);
+            await _todoListRepository.RemoveAllTodoListsFromAccountAsync(accountId);
+            await _accountRepository.RemoveAccountAsync(accountId);
         }
     }
 }

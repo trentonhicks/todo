@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Todo.Domain.Repositories;
 using Todo.Infrastructure;
+using Todo.Infrastructure.EFRepositories;
 using TodoWebAPI.Data;
 using TodoWebAPI.Models;
 
@@ -43,6 +45,10 @@ namespace TodoWebAPI
             services.AddDbContext<TodoDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
+            services.AddScoped<ITodoListRepository, EFTodoListRepository>();
+            services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
+            services.AddScoped<IAccountRepository, EFAccountRepository>();
+            services.AddScoped<IAccountProfileImageRepository, AccountProfileImageRepository>((x) => new AccountProfileImageRepository(Configuration.GetConnectionString("Development")));
             services.AddControllers();
         }
 

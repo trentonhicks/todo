@@ -20,23 +20,23 @@ namespace TodoWebAPI.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly TodoDatabaseContext _context;
-        private readonly IConfiguration _config;
-        private IAccountProfileImageRepository _profileImageRepository;
-        private IAccountRepository _accountRepository;
+        private readonly ITodoListRepository _todoListRepository;
+        private readonly ITodoListItemRepository _todoListItemRepository;
+        private readonly IAccountProfileImageRepository _profileImageRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public AccountsController(TodoDatabaseContext context, IConfiguration config)
+        public AccountsController(IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
         {
-            _context = context;
-            _config = config;
-            _accountRepository = new InMemoryAccountRepository();
-            _profileImageRepository = new AccountProfileImageRepository(_config.GetConnectionString("Development"));
+            _todoListRepository = todoListRepository;
+            _todoListItemRepository = todoListItemRepository;
+            _accountRepository = accountRepository;
+            _profileImageRepository = accountProfileImageRepository;
         }
 
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel model)
         {
-            var service = new AccountService(_accountRepository, _profileImageRepository);
+            var service = new AccountService(_accountRepository, _profileImageRepository, _todoListRepository, _todoListItemRepository);
 
             var account = await service.CreateAccountAsync(
                 model.FullName,

@@ -72,5 +72,10 @@ namespace TodoWebAPI.InMemory
         {
             throw new NotImplementedException();
         }
+
+        public Task RemoveAccountAsync(int accountId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

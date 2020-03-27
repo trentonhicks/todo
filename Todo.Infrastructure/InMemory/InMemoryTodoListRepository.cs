@@ -98,6 +98,11 @@ namespace TodoWebAPI.InMemory
             throw new NotImplementedException();
         }
 
+        public Task RemoveAllTodoListsFromAccountAsync(int accountId)
+        {
+            throw new NotImplementedException();
+        }
+
         //public Task<TodoListModel> GetListAsync(TodoListModel list)
         //{
         //  return Task.FromResult(_lists.Find(x => x.Id == list.Id));

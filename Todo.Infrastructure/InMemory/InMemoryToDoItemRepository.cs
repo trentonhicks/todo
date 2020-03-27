@@ -31,6 +31,11 @@ namespace TodoWebAPI.InMemory
             throw new NotImplementedException();
         }
 
+        public Task RemoveAllTodoListItemsFromAccountAsync(int listId)
+        {
+            throw new NotImplementedException();
+        }
+
 
         //public Task<TodoListItem> CreateToDoAsync(TodoListItem toDo)
         //{

@@ -43,6 +43,11 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
+        public Task RemoveAllTodoListsFromAccountAsync(int accountId)
+        {
+            throw new NotImplementedException();
+        }
+
 
         //public async Task<TodoListModel> CreateListAsync(TodoListModel list)
         //{
