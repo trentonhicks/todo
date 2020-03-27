@@ -1,11 +1,11 @@
 ﻿using System;
-using TodoWebAPI.Models;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Todo.Domain.Repositories;
 
 namespace TodoWebAPI
 {
-    public class AccountProfileImageRepository
+    public class AccountProfileImageRepository : IAccountProfileImageRepository
     {
         private readonly string _connectionString;
 
@@ -19,11 +19,8 @@ namespace TodoWebAPI
             return imageBytes;
         }
 
-        public async Task StoreImageProfileAsync(AccountModel account)
+        public async Task StoreImageProfileAsync(int accountId, string profileImage)
         {
-            var id = account.Id;
-            var s = account.Picture;
-
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -32,10 +29,10 @@ namespace TodoWebAPI
                 {
                     command.CommandText = @"Update Accounts SET Picture = @pic WHERE ID = @id";
 
-                    var pic = ConvertStringToByteArray(s);
+                    var byteArray = ConvertStringToByteArray(profileImage);
 
-                    command.Parameters.AddWithValue(@"pic", pic);
-                    command.Parameters.AddWithValue(@"id", id);
+                    command.Parameters.AddWithValue(@"pic", byteArray);
+                    command.Parameters.AddWithValue(@"id", accountId);
 
                     await command.ExecuteNonQueryAsync();
                 }

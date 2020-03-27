@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TodoWebAPI.Data
+namespace Todo.Domain
 {
-    public partial class ToDos
+    public partial class TodoListItem
     {
         public int Id { get; set; }
         public int? ParentId { get; set; }
@@ -12,6 +12,6 @@ namespace TodoWebAPI.Data
         public string ToDoName { get; set; }
         public int ListId { get; set; }
 
-        public virtual TodoLists List { get; set; }
+        public virtual TodoList List { get; set; }
     }
 }

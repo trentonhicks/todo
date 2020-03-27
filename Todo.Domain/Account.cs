@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace TodoWebAPI.Data
+namespace Todo.Domain
 {
-    public partial class Accounts
+    public class Account
     {
-        public Accounts()
+        public Account()
         {
-            Lists = new HashSet<TodoLists>();
+            Lists = new HashSet<TodoList>();
         }
 
         public int Id { get; set; }
@@ -17,6 +18,6 @@ namespace TodoWebAPI.Data
         public string Password { get; set; }
         public string Email { get; set; }
 
-        public virtual ICollection<TodoLists> Lists { get; set; }
+        public virtual ICollection<TodoList> Lists { get; set; }
     }
 }

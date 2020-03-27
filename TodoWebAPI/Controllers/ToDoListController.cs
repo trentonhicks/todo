@@ -3,59 +3,55 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TodoWebAPI.Data;
-using TodoWebAPI.Repositories;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
-
+using Todo.Domain.Repositories;
+using TodoWebAPI.InMemory;
+using Todo.Domain.Services;
+using Todo.Infrastructure.EFRepositories;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.Controllers
 {
     public class ToDoListController : ControllerBase
     {
-        private readonly ToDoContext _context;
+        private readonly TodoDatabaseContext _context;
         private readonly IConfiguration _config;
         private IAccountRepository _account;
         private ITodoListRepository _lists;
+        private TodoListService _todoListService;
 
-
-        public ToDoListController(ToDoContext context, IConfiguration config)
+        public ToDoListController(TodoDatabaseContext context, IConfiguration config, TodoListService todoListService)
         {
             _context = context;
             _config = config;
-            _account = new EFAccountRepsitory(_config, _context);
-            _lists = new EFTodoListRepository(_context);
+            _todoListService = todoListService;
+            _account = new EFAccountRepository(_context);
+            //_lists = new EFTodoListRepository(_context);
 
         }
 
         [HttpPost("accounts/{accountId}/lists")]
-        public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel listToCreate)
+        public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel todoList)
         {
-            var list = new TodoListModel()
-            {
-                AccountId = accountId,
-                ListTitle = listToCreate.ListTitle
-            };
+            var todoListCreated = await _todoListService.CreateTodoListAsync(accountId, todoList.ListTitle);
 
-            if (await _account.GetAccountAsync(accountId) == null)
-            {
-                return BadRequest("Account doesn't exist.");
-            }
+            if (!todoListCreated)
+                return BadRequest("Account doesn't exist :(");
 
-            var createdList = await _lists.CreateListAsync(list);
-
-            return Ok(new CreateListPresentation() { Id = createdList.Id, ListTitle = createdList.ListTitle });
+            return Ok(new CreateListPresentation() { Id = accountId, ListTitle = todoList.ListTitle });
         }
 
         [HttpGet("accounts/{accountId}/lists")]
         public async Task<IActionResult> GetLists(int accountId)
         {
-            if (await _account.GetAccountAsync(accountId) == null)
+            if (await _account.FindAccountByIdAsync(accountId) == null)
             {
                 return BadRequest("Account doesn't exist.");
             }
 
             var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
-            var lists = await _lists.GetListsAsync(accountId, todoPreviewNum);
+            var lists = await _lists.FindTodoListsByAccountIdAsync(accountId, todoPreviewNum);
 
             return Ok(lists);
         }
@@ -63,12 +59,11 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            var todoListModel = new TodoListModel() { Id = listId, AccountId = accountId, ListTitle = updatedList.ListTitle };
-            var todoList = await _lists.GetListAsync(todoListModel);
+            var todoList = await _lists.FindTodoListIdByIdAsync(listId);
 
             if (todoList != null)
             {
-                var updatedTitle = await _lists.UpdateListAsync(todoListModel);
+                await _lists.UpdateTodoListAsync(todoList);
                 return Ok("List updated successfully.");
             }
 
@@ -78,16 +73,9 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            var todoListModel = new TodoListModel() { Id = listId, AccountId = accountId };
-            var todoList = await _lists.GetListAsync(todoListModel);
+            await _lists.RemoveTodoListAsync(listId);
 
-            if (todoList == null)
-            {
-                return BadRequest("User doesn't have access to this list.");
-            }
-
-            await _lists.DeleteListAsync(listId);
-            return Ok();
+            return Ok("List deleted");
         }
 
     }
