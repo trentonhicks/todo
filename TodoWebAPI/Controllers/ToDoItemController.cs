@@ -18,25 +18,27 @@ namespace TodoWebAPI.Controllers
     {
         private readonly TodoDatabaseContext _context;
         private readonly IConfiguration _config;
-        private ITodoListItemRepository _todo;
+        private readonly ITodoListRepository _todoListRepository;
+        private ITodoListItemRepository _todoListItemRepository;
         private readonly IEmailService _email;
-        private IAccountRepository _account;
-        private TodoListItemService _todoListItemService;
+        private IAccountRepository _accountRepository;
 
-        public ToDoItemController(TodoDatabaseContext context, IConfiguration config, TodoListItemService todoListItemService, ITodoListItemRepository todoListItemRepository)
+        public ToDoItemController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
         {
             _context = context;
             _config = config;
-            _todo = todoListItemRepository;
+            _todoListRepository = todoListRepository;
+            _todoListItemRepository = todoListItemRepository;
             _email = new DebuggerWindowOutputEmailService();
-            _account = new InMemoryAccountRepository();
-            _todoListItemService = todoListItemService;
+            _accountRepository = accountRepository;
         }
 
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
         public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todos)
         {
+            var todoListItemService = new TodoListItemService(_todoListRepository, _todoListItemRepository);
+
             var todo = new TodoItemModel()
             {
                 ToDoName = todos.ToDoName,
@@ -46,7 +48,7 @@ namespace TodoWebAPI.Controllers
                 ListId = listId
             };
 
-            var todoItem = await _todoListItemService.CreateTodoListAsync(listId, todos.ParentId, todos.Completed, todos.ToDoName, todos.Notes);
+            var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todos.ParentId, accountId, todos.Completed, todos.ToDoName, todos.Notes);
 
             if (!todoItem)
               return BadRequest("List doesn't exist");
@@ -57,8 +59,8 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItem todo)
         {
-            var foo = await _todo.UpdateToDoListItemAsync(todoId, todo);
-            var account = await _account.FindAccountByIdAsync(accountId);
+            var foo = await _todoListItemRepository.UpdateToDoListItemAsync(todoId, todo);
+            var account = await _accountRepository.FindAccountByIdAsync(accountId);
 
             var email = new Email()
             {
@@ -74,7 +76,7 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
         {
-            await _todo.RemoveTodoListItemAsync(todoId);
+            await _todoListItemRepository.RemoveTodoListItemAsync(todoId);
             return Ok();
         }
     }

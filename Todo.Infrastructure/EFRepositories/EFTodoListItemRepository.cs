@@ -19,9 +19,10 @@ namespace TodoWebAPI.Data
             _context = context;
         }
        
-        public Task AddTodoListItemAsync(TodoListItem todo)
+        public async Task AddTodoListItemAsync(TodoListItem todo)
         {
-            throw new NotImplementedException();
+            _context.TodoListItems.Add(todo);
+            await _context.SaveChangesAsync();
         }
 
         public Task<TodoListItem> UpdateToDoListItemAsync(int listId, TodoListItem todo)
@@ -34,9 +35,12 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task RemoveAllTodoListItemsFromAccountAsync(int listId)
+        public async Task RemoveAllTodoListItemsFromAccountAsync(int accountId)
         {
-            throw new NotImplementedException();
+            var todoListItems = await _context.TodoListItems.Where(t => t.AccountId == accountId).ToListAsync();
+
+            _context.TodoListItems.RemoveRange(todoListItems);
+            await _context.SaveChangesAsync();
         }
     }
 }

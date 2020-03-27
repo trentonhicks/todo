@@ -39,9 +39,13 @@ namespace Todo.Infrastructure.EFRepositories
             return await _context.Accounts.FindAsync(accountId) != null;
         }
 
-        public Task RemoveAccountAsync(int accountId)
+        public async Task RemoveAccountAsync(int accountId)
         {
-            throw new NotImplementedException();
+            var account = await _context.Accounts.FindAsync(accountId);
+
+            _context.Accounts.Remove(account);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

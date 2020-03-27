@@ -18,9 +18,10 @@ namespace TodoWebAPI.Data
             _context = context;
         }
 
-        public Task AddTodoListAsync(TodoList list)
+        public async Task AddTodoListAsync(TodoList todoList)
         {
-            throw new NotImplementedException();
+            _context.TodoLists.Add(todoList);
+            await _context.SaveChangesAsync();
         }
 
         public Task<List<TodoList>> FindTodoListsByAccountIdAsync(int accountId, int pageSize)
@@ -28,9 +29,9 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task<TodoList> FindTodoListIdByIdAsync(int listId)
+        public async Task<TodoList> FindTodoListIdByIdAsync(int listId)
         {
-            throw new NotImplementedException();
+            return await _context.TodoLists.FindAsync(listId);
         }
 
         public Task RemoveTodoListAsync(int listId)
@@ -43,9 +44,12 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task RemoveAllTodoListsFromAccountAsync(int accountId)
+        public async Task RemoveAllTodoListsFromAccountAsync(int accountId)
         {
-            throw new NotImplementedException();
+            var todoLists = await _context.TodoLists.Where(t => t.AccountId == accountId).ToListAsync();
+
+            _context.TodoLists.RemoveRange(todoLists);
+            await _context.SaveChangesAsync();
         }
 
 

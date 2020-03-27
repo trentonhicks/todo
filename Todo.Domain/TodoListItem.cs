@@ -6,6 +6,7 @@ namespace Todo.Domain
     public partial class TodoListItem
     {
         public int Id { get; set; }
+        public int AccountId { get; set; }
         public int? ParentId { get; set; }
         public string Notes { get; set; }
         public bool Completed { get; set; }

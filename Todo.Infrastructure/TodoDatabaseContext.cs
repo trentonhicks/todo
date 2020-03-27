@@ -16,6 +16,10 @@ namespace Todo.Infrastructure
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<TodoList> TodoLists { get; set; }
+        public virtual DbSet<TodoListItem> TodoListItems { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
@@ -38,6 +42,47 @@ namespace Todo.Infrastructure
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TodoList>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
+
+                entity.Property(e => e.ListTitle)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Lists)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Lists__AccountID__3A81B327");
+            });
+
+            modelBuilder.Entity<TodoListItem>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ListId).HasColumnName("ListID");
+
+                entity.Property(e => e.Notes)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
+
+                entity.Property(e => e.ToDoName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.List)
+                    .WithMany(p => p.ToDos)
+                    .HasForeignKey(d => d.ListId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ToDos__ListID__3D5E1FD2");
             });
         }
     }

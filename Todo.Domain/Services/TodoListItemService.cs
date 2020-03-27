@@ -17,7 +17,7 @@ namespace Todo.Domain.Services
             _listItemRepository = todoListItemRepository;
         }
 
-        public async Task<bool> CreateTodoListAsync(int listId, int? parentId, bool completed, string todoName, string notes)
+        public async Task<bool> CreateTodoListItemAsync(int listId, int? parentId, int accountId, bool completed, string todoName, string notes)
         {
             var doesListExist = await _listRepository.FindTodoListIdByIdAsync(listId);
 
@@ -30,7 +30,8 @@ namespace Todo.Domain.Services
                 ParentId = parentId,
                 Completed = completed,
                 ToDoName = todoName,
-                Notes = notes
+                Notes = notes,
+                AccountId = accountId
             };
 
             await _listItemRepository.AddTodoListItemAsync(todoItem);

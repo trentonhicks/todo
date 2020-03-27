@@ -21,7 +21,7 @@ namespace Todo.Domain.Services
         {
             var doesAccountExist = await _accountRepository.DoesAccountWithAccountIdExistAsync(accountId);
 
-            if (doesAccountExist)
+            if (!doesAccountExist)
                 return false;
 
             var todoList = new TodoList()

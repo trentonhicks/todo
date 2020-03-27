@@ -2,14 +2,16 @@ USE [ToDo]
 
 GO
 
-CREATE TABLE [ToDos](
+CREATE TABLE [TodoListItems](
     [ID] INT PRIMARY KEY IDENTITY(1,1),
     [ParentID] INT,
     [Notes] VARCHAR(200),
     [Completed] BIT NOT NULL,
     [ToDoName] VARCHAR(50),
     [ListID] INT NOT NULL,
-    FOREIGN KEY ([ListID]) REFERENCES [TodoLists](ID)
+	[AccountID] INT NOT NULL,
+    FOREIGN KEY ([ListID]) REFERENCES [TodoLists](ID),
+    FOREIGN KEY ([AccountID]) REFERENCES [Accounts](ID)
 )
 
 GO
