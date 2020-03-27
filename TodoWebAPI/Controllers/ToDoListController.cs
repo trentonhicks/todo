@@ -22,19 +22,21 @@ namespace TodoWebAPI.Controllers
         private readonly IConfiguration _config;
         private readonly ITodoListRepository _todoListRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly ITodoListItemRepository _todoListItemRepository;
 
-        public ToDoListController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository)
+        public ToDoListController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
         {
             _context = context;
             _config = config;
             _todoListRepository = todoListRepository;
             _accountRepository = accountRepository;
+            _todoListItemRepository = todoListItemRepository;
         }
 
         [HttpPost("accounts/{accountId}/lists")]
         public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel createTodoList)
         {
-            var todoListService = new TodoListService(_todoListRepository, _accountRepository);
+            var todoListService = new TodoListService(_todoListRepository, _accountRepository, _todoListItemRepository);
 
             var todoList = await todoListService.CreateTodoListAsync(accountId, createTodoList.ListTitle);
 
@@ -60,7 +62,7 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            var service = new TodoListService(_todoListRepository, _accountRepository);
+            var service = new TodoListService(_todoListRepository, _accountRepository, _todoListItemRepository);
 
             await service.RenameTodoListAsync(listId, updatedList.ListTitle);
 
@@ -70,7 +72,9 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            await _todoListRepository.RemoveTodoListAsync(listId);
+            var service = new TodoListService(_todoListRepository, _accountRepository, _todoListItemRepository);
+
+            await service.DeleteTodoList(listId);
 
             return Ok("List deleted");
         }

@@ -10,11 +10,13 @@ namespace Todo.Domain.Services
     {
         private readonly ITodoListRepository _listRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly ITodoListItemRepository _todoListItemRepository;
 
-        public TodoListService(ITodoListRepository listRepository, IAccountRepository accountRepository)
+        public TodoListService(ITodoListRepository listRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
         {
             _listRepository = listRepository;
             _accountRepository = accountRepository;
+            _todoListItemRepository = todoListItemRepository;
         }
 
         public async Task<TodoList> CreateTodoListAsync(int accountId, string listTitle)
@@ -40,6 +42,13 @@ namespace Todo.Domain.Services
 
             todoList.ListTitle = listTitle;
 
+            await _listRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteTodoList(int listId)
+        {
+            await _todoListItemRepository.RemoveAllTodoListItemsFromAccountAsync(listId);
+            await _listRepository.RemoveTodoListAsync(listId);
             await _listRepository.SaveChangesAsync();
         }
     }
