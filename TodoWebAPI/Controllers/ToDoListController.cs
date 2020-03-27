@@ -10,6 +10,9 @@ using TodoWebAPI.InMemory;
 using Todo.Domain.Services;
 using Todo.Infrastructure.EFRepositories;
 using Todo.Infrastructure;
+using System.Data.SqlClient;
+using Dapper;
+using System.Collections.Generic;
 
 namespace TodoWebAPI.Controllers
 {
@@ -29,30 +32,29 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("accounts/{accountId}/lists")]
-        public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel todoList)
+        public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel createTodoList)
         {
             var todoListService = new TodoListService(_todoListRepository, _accountRepository);
 
-            var todoListCreated = await todoListService.CreateTodoListAsync(accountId, todoList.ListTitle);
+            var todoList = await todoListService.CreateTodoListAsync(accountId, createTodoList.ListTitle);
 
-            if (!todoListCreated)
-                return BadRequest("Account doesn't exist :(");
+            if (todoList == null)
+                return BadRequest("Unable to create list :(");
 
-            return Ok(new CreateListPresentation() { Id = accountId, ListTitle = todoList.ListTitle });
+            return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
         }
 
         [HttpGet("accounts/{accountId}/lists")]
         public async Task<IActionResult> GetLists(int accountId)
         {
-            if (await _accountRepository.FindAccountByIdAsync(accountId) == null)
+            using (var connection = new SqlConnection("Server=.;Database=ToDo;Integrated Security=True"))
             {
-                return BadRequest("Account doesn't exist.");
+                await connection.OpenAsync();
+
+                var todoLists = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId", new { accountId = accountId });
+
+                return Ok(todoLists);
             }
-
-            var todoPreviewNum = Convert.ToInt32(_config.GetSection("Lists")["TodoPreviewNum"]);
-            var lists = await _todoListRepository.FindTodoListsByAccountIdAsync(accountId, todoPreviewNum);
-
-            return Ok(lists);
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]

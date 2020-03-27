@@ -8,9 +8,9 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.Presentation
 {
-    public class ListPresentation
+    public class TodoListPresentation
     {
-        public ListPresentation(TodoListModel list, List<TodoListItem> todos)
+        public TodoListPresentation(TodoListModel list, List<TodoListItem> todos)
         {
             TodoList = list;
             TodoItemPreview = todos;

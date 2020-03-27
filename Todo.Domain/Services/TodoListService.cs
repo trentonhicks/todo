@@ -17,12 +17,12 @@ namespace Todo.Domain.Services
             _accountRepository = accountRepository;
         }
 
-        public async Task<bool> CreateTodoListAsync(int accountId, string listTitle)
+        public async Task<TodoList> CreateTodoListAsync(int accountId, string listTitle)
         {
             var doesAccountExist = await _accountRepository.DoesAccountWithAccountIdExistAsync(accountId);
 
             if (!doesAccountExist)
-                return false;
+                return null;
 
             var todoList = new TodoList()
             {
@@ -30,7 +30,8 @@ namespace Todo.Domain.Services
                 ListTitle = listTitle
             };
             await _listRepository.AddTodoListAsync(todoList);
-            return true;
+
+            return todoList;
         }
 
         public async Task RenameTodoListAsync(int listId, string listTitle)

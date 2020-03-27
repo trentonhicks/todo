@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +26,6 @@ namespace TodoWebAPI.Controllers
         private readonly ITodoListItemRepository _todoListItemRepository;
         private readonly IAccountProfileImageRepository _profileImageRepository;
         private readonly IAccountRepository _accountRepository;
-
         public AccountsController(IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
         {
             _todoListRepository = todoListRepository;
@@ -54,23 +55,14 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
-            //var account = await _account.GetAccountAsync(accountId);
-            //if(account == null)
-            //{
-            //    return BadRequest("Account doesn't exist");
-            //}
-            //var accountPresentation = new AccountPresentation()
-            //{
-            //    Id = account.Id,
-            //    FullName = account.FullName,
-            //    UserName = account.UserName,
-            //    Picture = account.Picture,
-            //    Email = account.Email
-            //};
+            using (var connection = new SqlConnection("Server=.;Database=ToDo;Integrated Security=True"))
+            {
+                await connection.OpenAsync();
 
-            //return Ok(accountPresentation);
+                var account = await connection.QueryAsync<AccountPresentation>("SELECT * From Accounts Where ID = @accountId", new { accountId = accountId });
 
-            return Ok();
+                return Ok(account);
+            }
         }
 
         [HttpDelete("accounts/{accountId}")]
