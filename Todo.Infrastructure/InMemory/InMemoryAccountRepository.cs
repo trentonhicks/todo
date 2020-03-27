@@ -6,6 +6,7 @@ using TodoWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using System.Threading;
 
 namespace TodoWebAPI.InMemory
 {
@@ -74,6 +75,11 @@ namespace TodoWebAPI.InMemory
         }
 
         public Task RemoveAccountAsync(int accountId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

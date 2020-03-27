@@ -58,15 +58,11 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            var todoList = await _todoListRepository.FindTodoListIdByIdAsync(listId);
+            var service = new TodoListService(_todoListRepository, _accountRepository);
 
-            if (todoList != null)
-            {
-                await _todoListRepository.UpdateTodoListAsync(todoList);
-                return Ok("List updated successfully.");
-            }
+            await service.RenameTodoListAsync(listId, updatedList.ListTitle);
 
-            return BadRequest("User doesn't have access to this list.");
+            return Ok($"List title changed to {updatedList.ListTitle}");
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]

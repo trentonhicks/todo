@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
@@ -39,17 +40,17 @@ namespace TodoWebAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task UpdateTodoListAsync(TodoList todoList)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task RemoveAllTodoListsFromAccountAsync(int accountId)
         {
             var todoLists = await _context.TodoLists.Where(t => t.AccountId == accountId).ToListAsync();
 
             _context.TodoLists.RemoveRange(todoLists);
             await _context.SaveChangesAsync();
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
         }
 
 

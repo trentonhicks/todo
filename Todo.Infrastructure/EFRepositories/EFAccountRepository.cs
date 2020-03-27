@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using System.Threading;
 
 namespace Todo.Infrastructure.EFRepositories
 {
@@ -46,6 +47,11 @@ namespace Todo.Infrastructure.EFRepositories
             _context.Accounts.Remove(account);
 
             await _context.SaveChangesAsync();
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

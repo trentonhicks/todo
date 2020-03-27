@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Todo.Domain.Repositories
 {
-    public interface ITodoListItemRepository
+    public interface ITodoListItemRepository : IRepository
     {
         Task AddTodoListItemAsync(TodoListItem todo);
         Task<TodoListItem> UpdateToDoListItemAsync(int listId, TodoListItem todo);

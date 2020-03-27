@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
@@ -32,6 +33,11 @@ namespace TodoWebAPI.InMemory
         }
 
         public Task RemoveAllTodoListItemsFromAccountAsync(int listId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

@@ -32,5 +32,14 @@ namespace Todo.Domain.Services
             await _listRepository.AddTodoListAsync(todoList);
             return true;
         }
+
+        public async Task RenameTodoListAsync(int listId, string listTitle)
+        {
+            var todoList = await _listRepository.FindTodoListIdByIdAsync(listId);
+
+            todoList.ListTitle = listTitle;
+
+            await _listRepository.SaveChangesAsync();
+        }
     }
 }
