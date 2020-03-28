@@ -26,11 +26,6 @@ namespace TodoWebAPI.Data
             await _context.SaveChangesAsync();
         }
 
-        public Task<TodoListItem> UpdateToDoListItemAsync(int listId, TodoListItem todo)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task RemoveTodoListItemAsync(int todo)
         {
             throw new NotImplementedException();
@@ -47,6 +42,11 @@ namespace TodoWebAPI.Data
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<TodoListItem> FindToDoListItemByIdAsync(int todoListItemId)
+        {
+            return await _context.TodoListItems.FindAsync(todoListItemId);
         }
     }
 }

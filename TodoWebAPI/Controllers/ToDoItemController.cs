@@ -59,18 +59,18 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItem todo)
         {
-            var foo = await _todoListItemRepository.UpdateToDoListItemAsync(todoId, todo);
-            var account = await _accountRepository.FindAccountByIdAsync(accountId);
+            var service = new TodoListItemService(_todoListRepository, _todoListItemRepository);
+            await service.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.Completed);
 
-            var email = new Email()
-            {
-                To = account.Email,
-                From = _config.GetSection("Emails")["Notifications"],
-                Subject = $"Updated: {todo.ToDoName}",
-                Body = $"Item {todo.ToDoName} was updated to: {(todo.Completed ? "Completed" : "Incomplete")}"
-            };
-            await _email.SendEmailAsync(email);
-            return Ok(foo);
+            //var email = new Email()
+            //{
+            //    To = account.Email,
+            //    From = _config.GetSection("Emails")["Notifications"],
+            //    Subject = $"Updated: {todo.ToDoName}",
+            //    Body = $"Item {todo.ToDoName} was updated to: {(todo.Completed ? "Completed" : "Incomplete")}"
+            //};
+            //await _email.SendEmailAsync(email);
+            return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}, Status = {todo.Completed}");
         }
 
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]

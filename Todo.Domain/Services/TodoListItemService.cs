@@ -38,10 +38,15 @@ namespace Todo.Domain.Services
             return true;
         }
 
+        public async Task UpdateTodoListItemAsync(int todoListItemId, string notes, string todoName, bool completed)
+        {
+            var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
+            todoListItem.Notes = notes;
+            todoListItem.ToDoName = todoName;
+            todoListItem.Completed = completed;
 
-
-
-
+            await _listItemRepository.SaveChangesAsync();
+        }
     }
 }

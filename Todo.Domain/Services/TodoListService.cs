@@ -41,7 +41,7 @@ namespace Todo.Domain.Services
             var todoList = await _listRepository.FindTodoListIdByIdAsync(listId);
 
             todoList.ListTitle = listTitle;
-
+            
             await _listRepository.SaveChangesAsync();
         }
 

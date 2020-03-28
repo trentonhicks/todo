@@ -42,6 +42,11 @@ namespace TodoWebAPI.InMemory
             throw new NotImplementedException();
         }
 
+        public Task<TodoListItem> FindToDoListItemByIdAsync(int todoListItemId)
+        {
+            throw new NotImplementedException();
+        }
+
 
         //public Task<TodoListItem> CreateToDoAsync(TodoListItem toDo)
         //{
