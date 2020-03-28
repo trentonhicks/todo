@@ -48,5 +48,11 @@ namespace Todo.Domain.Services
 
             await _listItemRepository.SaveChangesAsync();
         }
+
+        public async Task DeleteTodoListItem(int todoListItemId)
+        {
+            await _listItemRepository.RemoveTodoListItemAsync(todoListItemId);
+            await _listItemRepository.SaveChangesAsync();
+        }
     }
 }

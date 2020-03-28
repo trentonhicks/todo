@@ -26,9 +26,10 @@ namespace TodoWebAPI.Data
             await _context.SaveChangesAsync();
         }
 
-        public Task RemoveTodoListItemAsync(int todo)
+        public async Task RemoveTodoListItemAsync(int todo)
         {
-            throw new NotImplementedException();
+           var todoListItem =  await _context.TodoListItems.FindAsync(todo);
+            _context.Remove(todoListItem);
         }
 
         public async Task RemoveAllTodoListItemsFromAccountAsync(int accountId)

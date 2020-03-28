@@ -61,23 +61,16 @@ namespace TodoWebAPI.Controllers
         {
             var service = new TodoListItemService(_todoListRepository, _todoListItemRepository);
             await service.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.Completed);
-
-            //var email = new Email()
-            //{
-            //    To = account.Email,
-            //    From = _config.GetSection("Emails")["Notifications"],
-            //    Subject = $"Updated: {todo.ToDoName}",
-            //    Body = $"Item {todo.ToDoName} was updated to: {(todo.Completed ? "Completed" : "Incomplete")}"
-            //};
-            //await _email.SendEmailAsync(email);
+           
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}, Status = {todo.Completed}");
         }
 
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
         {
-            await _todoListItemRepository.RemoveTodoListItemAsync(todoId);
-            return Ok();
+            var service = new TodoListItemService(_todoListRepository, _todoListItemRepository);
+            await service.DeleteTodoListItem(todoId);
+            return Ok("Todo list item deleted.");
         }
     }
 }
