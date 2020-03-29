@@ -10,8 +10,10 @@ CREATE TABLE [TodoListItems](
     [ToDoName] VARCHAR(50),
     [ListID] INT NOT NULL,
 	[AccountID] INT NOT NULL,
+
     FOREIGN KEY ([ListID]) REFERENCES [TodoLists](ID),
-    FOREIGN KEY ([AccountID]) REFERENCES [Accounts](ID)
+
+    FOREIGN KEY ([AccountID]) REFERENCES [Accounts](ID) ON DELETE CASCADE
 )
 
 GO

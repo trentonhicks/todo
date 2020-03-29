@@ -46,8 +46,6 @@ namespace ToDo.Domain.Services
 
         public async Task DeleteAccountAsync(int accountId)
         {
-            await _todoListItemRepository.RemoveAllTodoListItemsFromAccountAsync(accountId);
-            await _todoListRepository.RemoveAllTodoListsFromAccountAsync(accountId);
             await _accountRepository.RemoveAccountAsync(accountId);
         }
     }
