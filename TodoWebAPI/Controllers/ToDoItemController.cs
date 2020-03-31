@@ -11,6 +11,7 @@ using Todo.Domain.Repositories;
 using Todo.Domain;
 using Todo.Domain.Services;
 using Todo.Infrastructure;
+using TodoWebAPI.Repository;
 
 namespace TodoWebAPI.Controllers
 {
@@ -20,7 +21,7 @@ namespace TodoWebAPI.Controllers
         private readonly IConfiguration _config;
         private readonly ITodoListRepository _todoListRepository;
         private ITodoListItemRepository _todoListItemRepository;
-        private readonly IEmailService _email;
+        private readonly IEmailServiceRepository _email;
         private IAccountRepository _accountRepository;
 
         public ToDoItemController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
@@ -29,7 +30,7 @@ namespace TodoWebAPI.Controllers
             _config = config;
             _todoListRepository = todoListRepository;
             _todoListItemRepository = todoListItemRepository;
-            _email = new DebuggerWindowOutputEmailService();
+            _email = new SendGridEmailService();
             _accountRepository = accountRepository;
         }
 
@@ -61,7 +62,12 @@ namespace TodoWebAPI.Controllers
         {
             var service = new TodoListItemService(_todoListRepository, _todoListItemRepository);
             await service.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.Completed);
-           
+
+            var emailService = new EmailService(_email, _accountRepository);
+            var notification = _config.GetSection("Emails")["Notifications"];
+            
+            await emailService.FormatEmailAsunc(notification, todo, accountId);
+
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}, Status = {todo.Completed}");
         }
 
