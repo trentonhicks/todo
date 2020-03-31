@@ -2,11 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TodoWebAPI.Repository;
 using TodoWebAPI.Services;
 
 namespace TodoWebAPI.InMemory
 {
-    public class DebuggerWindowOutputEmailService : IEmailService
+    public class DebuggerWindowOutputEmailService : IEmailServiceRepository
     {
         public Task SendEmailAsync(Email email)
         {

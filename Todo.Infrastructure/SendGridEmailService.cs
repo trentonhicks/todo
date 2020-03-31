@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TodoWebAPI.Repository;
 
 namespace TodoWebAPI.Services
 {
-    public class SendGridEmailService : IEmailService
+    public class SendGridEmailService : IEmailServiceRepository
     {
         public async Task SendEmailAsync(Email email)
         {
