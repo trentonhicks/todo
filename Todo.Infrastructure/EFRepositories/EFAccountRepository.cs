@@ -13,16 +13,14 @@ namespace Todo.Infrastructure.EFRepositories
     public class EFAccountRepository : IAccountRepository
     {
         private TodoDatabaseContext _context;
-        private readonly IConfiguration _config;
         public EFAccountRepository(TodoDatabaseContext context)
         {
             _context = context;
         }
-        public async Task AddAccountAsync(Account account)
+        public Task AddAccountAsync(Account account)
         {
             _context.Accounts.Add(account);
-
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
         public async Task<Account> FindAccountByIdAsync(int id)
@@ -45,8 +43,6 @@ namespace Todo.Infrastructure.EFRepositories
             var account = await _context.Accounts.FindAsync(accountId);
 
             _context.Accounts.Remove(account);
-
-            await _context.SaveChangesAsync();
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

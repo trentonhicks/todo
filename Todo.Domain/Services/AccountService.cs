@@ -33,6 +33,7 @@ namespace ToDo.Domain.Services
             };
 
             await _accountRepository.AddAccountAsync(account);
+            await _accountRepository.SaveChangesAsync();
 
             if (!string.IsNullOrEmpty(profileImage))
                 await _profileImageRepository.StoreImageProfileAsync(account.Id, profileImage);
@@ -43,6 +44,7 @@ namespace ToDo.Domain.Services
         public async Task DeleteAccountAsync(int accountId)
         {
             await _accountRepository.RemoveAccountAsync(accountId);
+            await _accountRepository.SaveChangesAsync();
         }
     }
 }
