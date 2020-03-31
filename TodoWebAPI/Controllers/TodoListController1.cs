@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace TodoWebAPI.Controllers
 {
-    public class ToDoListController : ControllerBase
+    public class TodoListController : ControllerBase
     {
         private readonly TodoDatabaseContext _context;
         private readonly IConfiguration _config;
@@ -24,7 +24,7 @@ namespace TodoWebAPI.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly ITodoListItemRepository _todoListItemRepository;
 
-        public ToDoListController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
+        public TodoListController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
         {
             _context = context;
             _config = config;

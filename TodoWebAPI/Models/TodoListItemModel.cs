@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TodoWebAPI.Models
 {
-    public class TodoItemModel
+    public class TodoListItemModel
     {
         public int Id { get; set; }
         public int? ParentId { get; set; }

@@ -14,7 +14,7 @@ using MediatR;
 
 namespace TodoWebAPI.Controllers
 {
-    public class ToDoItemController : ControllerBase
+    public class TodoListItemController : ControllerBase
     {
         private readonly TodoDatabaseContext _context;
         private readonly IConfiguration _config;
@@ -23,7 +23,7 @@ namespace TodoWebAPI.Controllers
         private readonly IMediator _mediator;
         private IAccountRepository _accountRepository;
 
-        public ToDoItemController(TodoDatabaseContext context,
+        public TodoListItemController(TodoDatabaseContext context,
             IConfiguration config,
             ITodoListRepository todoListRepository,
             IAccountRepository accountRepository,
@@ -44,7 +44,10 @@ namespace TodoWebAPI.Controllers
         {
             var todoListItemService = new TodoListItemService(_todoListRepository, _todoListItemRepository, _mediator);
 
-            var todo = new TodoItemModel()
+
+            var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todos.ParentId, accountId, todos.Completed, todos.ToDoName, todos.Notes);
+            
+            var todo = new TodoListItemModel()
             {
                 ToDoName = todos.ToDoName,
                 ParentId = todos.ParentId,
@@ -53,12 +56,10 @@ namespace TodoWebAPI.Controllers
                 ListId = listId
             };
 
-            var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todos.ParentId, accountId, todos.Completed, todos.ToDoName, todos.Notes);
-
             if (!todoItem)
               return BadRequest("List doesn't exist");
 
-            return Ok(todoItem);
+            return Ok(todo);
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]

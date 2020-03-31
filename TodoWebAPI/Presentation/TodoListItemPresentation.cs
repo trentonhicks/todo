@@ -8,9 +8,9 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.Presentation
 {
-    public class TodoPresentation
+    public class TodoListItemPresentation
     {
-        public TodoPresentation(TodoListItem todo)
+        public TodoListItemPresentation(TodoListItem todo)
         {
             Id = todo.Id;
             ParentId = todo.ParentId;
