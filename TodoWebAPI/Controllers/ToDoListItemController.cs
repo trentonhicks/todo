@@ -42,6 +42,15 @@ namespace TodoWebAPI.Controllers
 
 
             var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todos.ParentId, accountId, todos.Completed, todos.ToDoName, todos.Notes);
+            
+            var todo = new TodoListItemModel()
+            {
+                ToDoName = todos.ToDoName,
+                ParentId = todos.ParentId,
+                Notes = todos.Notes,
+                Completed = todos.Completed,
+                ListId = listId
+            };
 
             if (!todoItem)
               return BadRequest("List doesn't exist");
