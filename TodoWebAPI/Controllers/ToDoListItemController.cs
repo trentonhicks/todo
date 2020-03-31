@@ -15,7 +15,7 @@ using TodoWebAPI.Repository;
 
 namespace TodoWebAPI.Controllers
 {
-    public class ToDoItemController : ControllerBase
+    public class ToDoListItemController : ControllerBase
     {
         private readonly TodoDatabaseContext _context;
         private readonly IConfiguration _config;
@@ -24,7 +24,7 @@ namespace TodoWebAPI.Controllers
         private readonly EmailServiceInterface _email;
         private IAccountRepository _accountRepository;
 
-        public ToDoItemController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
+        public ToDoListItemController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
         {
             _context = context;
             _config = config;
@@ -40,21 +40,13 @@ namespace TodoWebAPI.Controllers
         {
             var todoListItemService = new TodoListItemService(_todoListRepository, _todoListItemRepository);
 
-            var todo = new TodoItemModel()
-            {
-                ToDoName = todos.ToDoName,
-                ParentId = todos.ParentId,
-                Notes = todos.Notes,
-                Completed = todos.Completed,
-                ListId = listId
-            };
 
             var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todos.ParentId, accountId, todos.Completed, todos.ToDoName, todos.Notes);
 
             if (!todoItem)
               return BadRequest("List doesn't exist");
 
-            return Ok(todoItem);
+            return Ok(todo);
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
