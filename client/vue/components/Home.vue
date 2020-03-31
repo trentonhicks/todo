@@ -4,8 +4,8 @@ b-container
   h1.mb-3 My Lists
 
   ul
-    li(v-for="item in todoLists" :key="item.todoList.id")
-      router-link(:to="'/lists/' + item.todoList.id") {{ item.todoList.listTitle }}
+    li(v-for="item in todoLists" :key="item.id")
+      router-link(:to="'/lists/' + item.id") {{ item.listTitle }}
       ul
         li(v-for="subitem in item.todoItemPreview") {{ subitem.toDoName }}
 
@@ -25,7 +25,7 @@ export default {
   created: function() {
     axios({
       method: 'get',
-      url: 'http://localhost:5000/accounts/1/lists',
+      url: 'http://localhost:5000/accounts/4/lists',
     })
     .then((response) => {
       console.log(response);

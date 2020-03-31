@@ -49,7 +49,7 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}/lists")]
         public async Task<IActionResult> GetLists(int accountId)
         {
-            using (var connection = new SqlConnection("Server=.;Database=ToDo;Integrated Security=True"))
+            using (var connection = new SqlConnection( _config.GetSection("ConnectionStrings")["Development"] ))
             {
                 await connection.OpenAsync();
 

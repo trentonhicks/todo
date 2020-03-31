@@ -25,11 +25,13 @@ namespace TodoWebAPI.Controllers
         private readonly ITodoListRepository _todoListRepository;
         private readonly ITodoListItemRepository _todoListItemRepository;
         private readonly IAccountProfileImageRepository _profileImageRepository;
+        private readonly IConfiguration _config;
         private readonly IAccountRepository _accountRepository;
-        public AccountsController(IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
+        public AccountsController(IConfiguration config, IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
         {
             _todoListRepository = todoListRepository;
             _todoListItemRepository = todoListItemRepository;
+            _config = config;
             _accountRepository = accountRepository;
             _profileImageRepository = accountProfileImageRepository;
         }
@@ -55,7 +57,7 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
-            using (var connection = new SqlConnection("Server=.;Database=ToDo;Integrated Security=True"))
+            using (var connection = new SqlConnection( _config.GetSection("ConnectionStrings")["Development"] ))
             {
                 await connection.OpenAsync();
 
