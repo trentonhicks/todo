@@ -7,7 +7,7 @@ using TodoWebAPI.Services;
 
 namespace TodoWebAPI.InMemory
 {
-    public class DebuggerWindowOutputEmailService : IEmailServiceRepository
+    public class DebuggerWindowOutputEmailService : EmailServiceInterface
     {
         public Task SendEmailAsync(Email email)
         {

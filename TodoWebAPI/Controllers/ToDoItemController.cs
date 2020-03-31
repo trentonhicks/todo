@@ -21,7 +21,7 @@ namespace TodoWebAPI.Controllers
         private readonly IConfiguration _config;
         private readonly ITodoListRepository _todoListRepository;
         private ITodoListItemRepository _todoListItemRepository;
-        private readonly IEmailServiceRepository _email;
+        private readonly EmailServiceInterface _email;
         private IAccountRepository _accountRepository;
 
         public ToDoItemController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
@@ -66,7 +66,7 @@ namespace TodoWebAPI.Controllers
             var emailService = new EmailService(_email, _accountRepository);
             var notification = _config.GetSection("Emails")["Notifications"];
             
-            await emailService.FormatEmailAsunc(notification, todo, accountId);
+            await emailService.CreateSendEmailFormatAsync(notification, todo, accountId);
 
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}, Status = {todo.Completed}");
         }
