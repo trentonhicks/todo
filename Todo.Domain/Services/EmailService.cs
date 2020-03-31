@@ -8,15 +8,15 @@ namespace Todo.Domain.Services
 {
     public class EmailService
     {
-        private readonly IEmailServiceRepository _email;
+        private readonly EmailServiceInterface _email;
         private readonly IAccountRepository _accountRepository;
 
-        public EmailService(IEmailServiceRepository emailServiceRepository, IAccountRepository accountRepository)
+        public EmailService(EmailServiceInterface emailServiceRepository, IAccountRepository accountRepository)
         {
             _email = emailServiceRepository;
             _accountRepository = accountRepository;
         }
-        public async Task FormatEmailAsunc(string notifications, TodoListItem todoListItem, int accountId)
+        public async Task CreateSendEmailFormatAsync(string notifications, TodoListItem todoListItem, int accountId)
         {
             var account = await _accountRepository.FindAccountByIdAsync(accountId);
             var email = new Email()

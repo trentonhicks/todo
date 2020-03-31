@@ -8,7 +8,7 @@ using TodoWebAPI.Repository;
 
 namespace TodoWebAPI.Services
 {
-    public class SendGridEmailService : IEmailServiceRepository
+    public class SendGridEmailService : EmailServiceInterface
     {
         public async Task SendEmailAsync(Email email)
         {

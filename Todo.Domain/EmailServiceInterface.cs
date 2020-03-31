@@ -5,7 +5,7 @@ using TodoWebAPI.Services;
 
 namespace TodoWebAPI.Repository
 {
-    public interface IEmailServiceRepository
+    public interface EmailServiceInterface
     {
         Task SendEmailAsync(Email email);
     }
