@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +15,9 @@ using Microsoft.Extensions.Logging;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using Todo.Infrastructure.EFRepositories;
+using Todo.Infrastructure.Email;
 using TodoWebAPI.Data;
-using TodoWebAPI.Models;
+
 
 namespace TodoWebAPI
 {
@@ -48,8 +51,10 @@ namespace TodoWebAPI
             services.AddScoped<ITodoListRepository, EFTodoListRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
+            services.AddSingleton<IEmailService, SendGridEmailService>();
             services.AddScoped<IAccountProfileImageRepository, AccountProfileImageRepository>((x) => new AccountProfileImageRepository(Configuration.GetConnectionString("Development")));
             services.AddControllers();
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

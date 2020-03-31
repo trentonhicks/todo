@@ -1,6 +1,6 @@
 using System;
 
-namespace TodoWebAPI.Services
+namespace Todo.Infrastructure.Email
 {
     public class Email
     {

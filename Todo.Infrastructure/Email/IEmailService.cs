@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using TodoWebAPI;
-using TodoWebAPI.Services;
 
-namespace TodoWebAPI.Repository
+namespace Todo.Infrastructure.Email
 {
-    public interface EmailServiceInterface
+    public interface IEmailService
     {
         Task SendEmailAsync(Email email);
     }

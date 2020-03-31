@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,13 @@ namespace Todo.Domain.Services
     {
         private readonly ITodoListRepository _listRepository;
         private readonly ITodoListItemRepository _listItemRepository;
+        private readonly IMediator _mediator;
 
-        public TodoListItemService(ITodoListRepository listRepository, ITodoListItemRepository todoListItemRepository )
+        public TodoListItemService(ITodoListRepository listRepository, ITodoListItemRepository todoListItemRepository, IMediator mediator)
         {
             _listRepository = listRepository;
             _listItemRepository = todoListItemRepository;
+            _mediator = mediator;
         }
 
         public async Task<bool> CreateTodoListItemAsync(int listId, int? parentId, int accountId, bool completed, string todoName, string notes)
@@ -47,6 +50,8 @@ namespace Todo.Domain.Services
             todoListItem.Completed = completed;
 
             await _listItemRepository.SaveChangesAsync();
+
+            await _mediator.Publish(new TodoListItemUpdated(){Item = todoListItem});
         }
 
         public async Task DeleteTodoListItem(int todoListItemId)
