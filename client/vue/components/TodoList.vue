@@ -31,7 +31,7 @@ export default {
     created: function() {
       axios({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists',
+        url: 'http://localhost:5000/accounts/4/lists',
       })
       .then((response) => {
         console.log(response);
