@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Todo.Domain;
 using Todo.Domain.Repositories;
-using Todo.Infrastructure;
-using ToDo.Domain.Services;
-using TodoWebAPI.Data;
-using TodoWebAPI.InMemory;
+using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
 
@@ -22,26 +14,19 @@ namespace TodoWebAPI.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly ITodoListRepository _todoListRepository;
-        private readonly ITodoListItemRepository _todoListItemRepository;
-        private readonly IAccountProfileImageRepository _profileImageRepository;
+        private readonly AccountsApplicationService _accountsApplicationService;
         private readonly IConfiguration _config;
-        private readonly IAccountRepository _accountRepository;
-        public AccountsController(IConfiguration config, IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
+        public AccountsController(IConfiguration config, AccountsApplicationService accountsApplicationService)
         {
-            _todoListRepository = todoListRepository;
-            _todoListItemRepository = todoListItemRepository;
             _config = config;
-            _accountRepository = accountRepository;
-            _profileImageRepository = accountProfileImageRepository;
+            _accountsApplicationService = accountsApplicationService;
         }
 
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel model)
         {
-            var service = new AccountService(_accountRepository, _profileImageRepository, _todoListRepository, _todoListItemRepository);
 
-            var account = await service.CreateAccountAsync(
+            var account = await _accountsApplicationService.CreateAccountAsync(
                 model.FullName,
                 model.UserName,
                 model.Password,
@@ -70,9 +55,7 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
-            var service = new AccountService(_accountRepository, _profileImageRepository, _todoListRepository, _todoListItemRepository);
-
-            await service.DeleteAccountAsync(accountId);
+            await _accountsApplicationService.DeleteAccountAsync(accountId);
 
             return Ok("account deleted!");
         }

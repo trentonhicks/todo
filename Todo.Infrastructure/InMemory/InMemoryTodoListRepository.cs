@@ -26,9 +26,9 @@ namespace TodoWebAPI.InMemory
             _lists.Add(new TodoList() { Id = 7, AccountId = 1, ListTitle = "List 7" });
 
             _todos = new List<TodoListItem>();
-            _todos.Add(new TodoListItem() { Id = 1, Completed = false, ListId = 1, ToDoName = "First Todo" });
-            _todos.Add(new TodoListItem() { Id = 2, Completed = false, ListId = 1, ToDoName = "Second Todo" });
-            _todos.Add(new TodoListItem() { Id = 3, Completed = false, ListId = 1, ToDoName = "Third Todo" });
+            _todos.Add(new TodoListItem() { Id = 1, ListId = 1, ToDoName = "First Todo" });
+            _todos.Add(new TodoListItem() { Id = 2, ListId = 1, ToDoName = "Second Todo" });
+            _todos.Add(new TodoListItem() { Id = 3, ListId = 1, ToDoName = "Third Todo" });
         }
         
         public Task<TodoList> CreateListAsync(TodoList list)

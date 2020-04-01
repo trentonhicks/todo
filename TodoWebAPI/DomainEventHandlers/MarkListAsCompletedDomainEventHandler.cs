@@ -1,26 +1,23 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
-using Todo.Domain.Repositories;
-using Todo.Domain.Services;
+using Todo.WebAPI.ApplicationServices;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
     public class MarkListAsCompletedDomainEventHandler : INotificationHandler<TodoListItemCompleted>
     {
-        private readonly TodoListService _todoListService;
+        private readonly TodoListApplicationService _todoListApplicationService;
 
-        public MarkListAsCompletedDomainEventHandler(TodoListService todoListService)
+        public MarkListAsCompletedDomainEventHandler(TodoListApplicationService todoListService)
         {
-            _todoListService = todoListService;
+            _todoListApplicationService = todoListService;
         }
         public Task Handle(TodoListItemCompleted notification, CancellationToken cancellationToken)
         {
-            return _todoListService.MarkTodoListAsCompletedAsync(notification.ListId);
+            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.ListItem.ListId);
         }
     }
 }

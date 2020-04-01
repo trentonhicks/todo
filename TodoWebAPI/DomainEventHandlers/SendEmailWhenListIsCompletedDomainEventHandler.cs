@@ -11,7 +11,7 @@ using Todo.Infrastructure.Email;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
-    public class SendEmailWhenListIsCompletedDomainEventHandler : INotificationHandler<TodoListCompleted>
+    public class SendEmailWhenListIsCompletedDomainEventHandler : INotificationHandler<TodoListCompletedStateChanged>
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ITodoListRepository _todoListRepository;
@@ -25,7 +25,7 @@ namespace TodoWebAPI.DomainEventHandlers
             _emailService = emailService;
             _config = config;
         }
-        public async Task Handle(TodoListCompleted notification, CancellationToken cancellationToken)
+        public async Task Handle(TodoListCompletedStateChanged notification, CancellationToken cancellationToken)
         {
             var list = notification.List;
 

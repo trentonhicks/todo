@@ -13,7 +13,7 @@ namespace TodoWebAPI.InMemory
         public InMemoryToDoItemRepository()
         {
             _todo = new List<TodoListItem>();
-            _todo.Add(new TodoListItem() { Id = 1, Completed = false, ListId = 1, Notes = "dude", ToDoName = "Clean" });
+            _todo.Add(new TodoListItem() { Id = 1, ListId = 1, Notes = "dude", ToDoName = "Clean" });
         }
         private List<TodoListItem> _todo;
 

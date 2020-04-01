@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ToDo.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.Configuration;

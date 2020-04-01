@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
 
-namespace ToDo.Domain.Services
+namespace Todo.WebAPI.ApplicationServices
 {
-    public class AccountService
+    public class AccountsApplicationService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IAccountProfileImageRepository _profileImageRepository;
 
-        public AccountService(IAccountRepository accountRepository, IAccountProfileImageRepository profileImageRepository, ITodoListRepository todoListRepository, ITodoListItemRepository todoListItemRepository)
+        public AccountsApplicationService(IAccountRepository accountRepository, IAccountProfileImageRepository profileImageRepository)
         {
             _accountRepository = accountRepository;
             _profileImageRepository = profileImageRepository;

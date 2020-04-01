@@ -3,18 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Todo.Domain;
 using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
 
-namespace Todo.Domain.Services
+namespace Todo.WebAPI.ApplicationServices
 {
-    public class TodoListItemService
+    public class TodoListItemApplicationService
     {
         private readonly ITodoListRepository _listRepository;
         private readonly ITodoListItemRepository _listItemRepository;
         private readonly IMediator _mediator;
 
-        public TodoListItemService(ITodoListRepository listRepository, ITodoListItemRepository todoListItemRepository, IMediator mediator)
+        public TodoListItemApplicationService(ITodoListRepository listRepository, ITodoListItemRepository todoListItemRepository, IMediator mediator)
         {
             _listRepository = listRepository;
             _listItemRepository = todoListItemRepository;
@@ -61,13 +62,23 @@ namespace Todo.Domain.Services
 
         public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool state)
         {
-            var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
+            var item = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
-            todoListItem.Completed = state;
+            if(state == true)
+            {
+                item.SetCompleted();
+            }
+            else if(state == false)
+            {
+                item.SetNotCompleted();
+            }
 
             await _listItemRepository.SaveChangesAsync();
-            
-            await _mediator.Publish(new TodoListItemCompleted { ListId = todoListItem.ListId });
+
+            foreach (var domainEvent in item.DomainEvents)
+            {
+                await _mediator.Publish(domainEvent);
+            }
         }
     }
 }

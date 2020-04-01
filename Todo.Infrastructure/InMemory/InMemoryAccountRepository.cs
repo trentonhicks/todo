@@ -19,7 +19,7 @@ namespace TodoWebAPI.InMemory
             _list = new List<TodoList>();
             _list.Add(new TodoList() { Id = 1, AccountId = 1, ListTitle = "New List" });
             _todo = new List<TodoListItem>();
-            _todo.Add(new TodoListItem() { Id = 1, Completed = false, ListId = 1, Notes = "", ToDoName = "yes" });
+            _todo.Add(new TodoListItem() { Id = 1, ListId = 1, Notes = "", ToDoName = "yes" });
         }
         private List<Account> _accounts;
         private List<TodoList> _list;

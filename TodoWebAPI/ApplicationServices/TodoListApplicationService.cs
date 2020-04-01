@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Todo.Domain;
 using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
 
-namespace Todo.Domain.Services
+namespace Todo.WebAPI.ApplicationServices
 {
-    public class TodoListService
+    public class TodoListApplicationService
     {
         private readonly ITodoListRepository _listRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly ITodoListItemRepository _todoListItemRepository;
         private readonly IMediator _mediator;
 
-        public TodoListService(
+        public TodoListApplicationService(
             ITodoListRepository listRepository,
             IAccountRepository accountRepository,
             ITodoListItemRepository todoListItemRepository,
@@ -66,14 +67,13 @@ namespace Todo.Domain.Services
             var items = await _todoListItemRepository.FindAllTodoListItemsByListIdAsync(listId);
             var list = await _listRepository.FindTodoListIdByIdAsync(listId);
 
-            if (list.Completed && items.All(item => item.Completed))
-                return;
-
-            list.Completed = items.All(item => item.Completed);
+            list.SetCompleted(items);
             await _listRepository.SaveChangesAsync();
 
-            if (list.Completed)
-                await _mediator.Publish(new TodoListCompleted { List = list });
+            foreach (var domainEvent in list.DomainEvents)
+            {
+                await _mediator.Publish(domainEvent);
+            }
         }
     }
 }
