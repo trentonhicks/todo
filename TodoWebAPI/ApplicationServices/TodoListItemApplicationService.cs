@@ -22,9 +22,9 @@ namespace Todo.WebAPI.ApplicationServices
 
         public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int? parentId, int accountId, string todoName, string notes)
         {
-            var doesListExist = await _listRepository.FindTodoListIdByIdAsync(listId);
+            var list = await _listRepository.FindTodoListIdByIdAsync(listId);
 
-            if (doesListExist == null)
+            if (list == null)
                 return null;
 
             var todoItem = new TodoListItem()
@@ -33,7 +33,8 @@ namespace Todo.WebAPI.ApplicationServices
                 ParentId = parentId,
                 ToDoName = todoName,
                 Notes = notes,
-                AccountId = accountId
+                AccountId = accountId,
+                Position = list.GetNextPosition()
             };
 
             await _listItemRepository.AddTodoListItemAsync(todoItem);

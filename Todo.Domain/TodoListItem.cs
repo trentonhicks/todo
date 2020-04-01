@@ -14,6 +14,7 @@ namespace Todo.Domain
         public bool Completed { get; private set; }
         public string ToDoName { get; set; }
         public int ListId { get; set; }
+        public int Position { get; set; }
 
         public void SetCompleted()
         {
