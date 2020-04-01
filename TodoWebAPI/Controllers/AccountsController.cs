@@ -28,7 +28,6 @@ namespace TodoWebAPI.Controllers
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel model)
         {
-
             var account = await _accountsApplicationService.CreateAccountAsync(
                 model.FullName,
                 model.UserName,

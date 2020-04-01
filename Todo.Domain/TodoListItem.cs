@@ -5,7 +5,7 @@ using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
-    public partial class TodoListItem
+    public partial class TodoListItem : Entity
     {
         public int Id { get; set; }
         public int AccountId { get; set; }
@@ -14,7 +14,6 @@ namespace Todo.Domain
         public bool Completed { get; private set; }
         public string ToDoName { get; set; }
         public int ListId { get; set; }
-        public List<INotification> DomainEvents { get; } = new List<INotification>();
 
         public void SetCompleted()
         {

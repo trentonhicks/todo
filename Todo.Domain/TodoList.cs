@@ -6,14 +6,13 @@ using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
-    public partial class TodoList
+    public partial class TodoList : Entity
     {
         public int Id { get; set; }
         public string ListTitle { get; set; }
         public int AccountId { get; set; }
         public bool Completed { get; private set; }
 
-        public List<INotification> DomainEvents { get; } = new List<INotification>();
         public void SetCompleted(List<TodoListItem> items)
         {
             if (!items.All(item => item.ListId == Id))

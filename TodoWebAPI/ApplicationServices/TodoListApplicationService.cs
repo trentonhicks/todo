@@ -15,18 +15,15 @@ namespace Todo.WebAPI.ApplicationServices
         private readonly ITodoListRepository _listRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly ITodoListItemRepository _todoListItemRepository;
-        private readonly IMediator _mediator;
 
         public TodoListApplicationService(
             ITodoListRepository listRepository,
             IAccountRepository accountRepository,
-            ITodoListItemRepository todoListItemRepository,
-            IMediator mediator)
+            ITodoListItemRepository todoListItemRepository)
         {
             _listRepository = listRepository;
             _accountRepository = accountRepository;
             _todoListItemRepository = todoListItemRepository;
-            _mediator = mediator;
         }
 
         public async Task<TodoList> CreateTodoListAsync(int accountId, string listTitle)
@@ -65,10 +62,6 @@ namespace Todo.WebAPI.ApplicationServices
             var list = await _listRepository.FindTodoListIdByIdAsync(listId);
 
             list.SetCompleted(items);
-            foreach (var domainEvent in list.DomainEvents)
-            {
-                await _mediator.Publish(domainEvent);
-            }
         }
     }
 }

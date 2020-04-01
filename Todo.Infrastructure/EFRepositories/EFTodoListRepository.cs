@@ -45,6 +45,5 @@ namespace TodoWebAPI.Data
 
             _context.TodoLists.RemoveRange(todoLists);
         }
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => _context.SaveChangesAsync(cancellationToken);
     }
 }

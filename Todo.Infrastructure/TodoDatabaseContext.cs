@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo.Domain;
 using Todo.Domain.Repositories;
@@ -9,6 +11,8 @@ namespace Todo.Infrastructure
 {
     public class TodoDatabaseContext : DbContext, IUnitOfWork
     {
+        private readonly IMediator _mediator;
+
         public TodoDatabaseContext()
         {
         }
@@ -16,14 +20,33 @@ namespace Todo.Infrastructure
            : base(options)
         {
         }
-       
+
+        public TodoDatabaseContext(DbContextOptions<TodoDatabaseContext> options, IMediator mediator)
+           : base(options)
+        {
+            _mediator = mediator;
+        }
+
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<TodoList> TodoLists { get; set; }
         public virtual DbSet<TodoListItem> TodoListItems { get; set; }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return base.SaveChangesAsync(cancellationToken);
+            var domainEntities = ChangeTracker
+                .Entries<Entity>()
+                .Where(x => x.Entity.DomainEvents.Count > 0).ToList();
+
+            var domainEvents = domainEntities
+                .SelectMany(x => x.Entity.DomainEvents)
+                .ToList();
+
+            domainEntities.ForEach(entity => entity.Entity.ClearDomainEvents());
+
+            foreach (var domainEvent in domainEvents)
+                await _mediator.Publish(domainEvent);
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
 

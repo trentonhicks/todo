@@ -51,7 +51,7 @@ namespace TodoWebAPI
             services.AddScoped<ITodoListRepository, EFTodoListRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
-            services.AddSingleton<IEmailService, SendGridEmailService>();
+            services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
             services.AddScoped<IAccountProfileImageRepository, AccountProfileImageRepository>((x) => new AccountProfileImageRepository(Configuration.GetConnectionString("Development")));
             services.AddScoped<TodoListApplicationService>();
             services.AddScoped<TodoListItemApplicationService>();
