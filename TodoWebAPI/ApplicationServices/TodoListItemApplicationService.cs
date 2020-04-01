@@ -49,15 +49,12 @@ namespace Todo.WebAPI.ApplicationServices
             todoListItem.Notes = notes;
             todoListItem.ToDoName = todoName;
 
-            await _listItemRepository.SaveChangesAsync();
-
             await _mediator.Publish(new TodoListItemUpdated{Item = todoListItem});
         }
 
         public async Task DeleteTodoListItem(int todoListItemId)
         {
             await _listItemRepository.RemoveTodoListItemAsync(todoListItemId);
-            await _listItemRepository.SaveChangesAsync();
         }
 
         public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool state)
@@ -72,8 +69,6 @@ namespace Todo.WebAPI.ApplicationServices
             {
                 item.SetNotCompleted();
             }
-
-            await _listItemRepository.SaveChangesAsync();
 
             foreach (var domainEvent in item.DomainEvents)
             {

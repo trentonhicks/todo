@@ -18,11 +18,9 @@ namespace TodoWebAPI.Data
         {
             _context = context;
         }
-
         public async Task AddTodoListAsync(TodoList todoList)
         {
             _context.TodoLists.Add(todoList);
-            await _context.SaveChangesAsync();
         }
 
         public Task<List<TodoList>> FindTodoListsByAccountIdAsync(int accountId, int pageSize)
@@ -34,7 +32,6 @@ namespace TodoWebAPI.Data
         {
             return await _context.TodoLists.FindAsync(listId);
         }
-
         public async Task RemoveTodoListAsync(int listId)
         {
             var list = await _context.TodoLists.FindAsync(listId);
@@ -47,12 +44,7 @@ namespace TodoWebAPI.Data
             var todoLists = await _context.TodoLists.Where(t => t.AccountId == accountId).ToListAsync();
 
             _context.TodoLists.RemoveRange(todoLists);
-            await _context.SaveChangesAsync();
         }
-
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            return _context.SaveChangesAsync(cancellationToken);
-        }
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => _context.SaveChangesAsync(cancellationToken);
     }
 }

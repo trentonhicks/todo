@@ -21,32 +21,14 @@ namespace Todo.Infrastructure.EFRepositories
             _context.Accounts.Add(account);
             return Task.CompletedTask;
         }
-
-        public async Task<Account> FindAccountByIdAsync(int id)
-        {
-            return await _context.Accounts.FindAsync(id);
-        }
-
-        public async Task<bool> DoesAccountWithUserNameExistAsync(string userName)
-        {
-            return await _context.Accounts.Where(a => a.UserName == userName).FirstOrDefaultAsync() != null;
-        }
-
-        public async Task<bool> DoesAccountWithAccountIdExistAsync(int accountId)
-        {
-            return await _context.Accounts.FindAsync(accountId) != null;
-        }
-
+        public async Task<Account> FindAccountByIdAsync(int id) => await _context.Accounts.FindAsync(id);
+        public async Task<bool> DoesAccountWithUserNameExistAsync(string userName) => await _context.Accounts.Where(a => a.UserName == userName).FirstOrDefaultAsync() != null;
+        public async Task<bool> DoesAccountWithAccountIdExistAsync(int accountId) => await _context.Accounts.FindAsync(accountId) != null;
         public async Task RemoveAccountAsync(int accountId)
         {
             var account = await _context.Accounts.FindAsync(accountId);
 
             _context.Accounts.Remove(account);
-        }
-
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            return _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

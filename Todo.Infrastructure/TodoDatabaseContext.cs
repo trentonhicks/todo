@@ -1,23 +1,30 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Todo.Domain;
+using Todo.Domain.Repositories;
 
 namespace Todo.Infrastructure
 {
-    public class TodoDatabaseContext : DbContext
+    public class TodoDatabaseContext : DbContext, IUnitOfWork
     {
         public TodoDatabaseContext()
         {
         }
-
         public TodoDatabaseContext(DbContextOptions<TodoDatabaseContext> options)
-            : base(options)
+           : base(options)
         {
         }
-
+       
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<TodoList> TodoLists { get; set; }
         public virtual DbSet<TodoListItem> TodoListItems { get; set; }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

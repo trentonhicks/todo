@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure;
 using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
@@ -15,11 +16,13 @@ namespace TodoWebAPI.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AccountsApplicationService _accountsApplicationService;
+        private readonly TodoDatabaseContext _todoDatabaseContext;
         private readonly IConfiguration _config;
-        public AccountsController(IConfiguration config, AccountsApplicationService accountsApplicationService)
+        public AccountsController(IConfiguration config, AccountsApplicationService accountsApplicationService, TodoDatabaseContext todoDatabaseContext)
         {
             _config = config;
             _accountsApplicationService = accountsApplicationService;
+            _todoDatabaseContext = todoDatabaseContext;
         }
 
         [HttpPost("accounts")]
@@ -32,9 +35,11 @@ namespace TodoWebAPI.Controllers
                 model.Password,
                 model.Email,
                 model.Picture);
-
+            
             if (account == null)
                 return BadRequest("Username already Exists.");
+
+            await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok(account);
         }
@@ -56,6 +61,8 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
             await _accountsApplicationService.DeleteAccountAsync(accountId);
+
+            await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok("account deleted!");
         }

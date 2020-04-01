@@ -33,7 +33,6 @@ namespace Todo.WebAPI.ApplicationServices
             };
 
             await _accountRepository.AddAccountAsync(account);
-            await _accountRepository.SaveChangesAsync();
 
             if (!string.IsNullOrEmpty(profileImage))
                 await _profileImageRepository.StoreImageProfileAsync(account.Id, profileImage);
@@ -44,7 +43,6 @@ namespace Todo.WebAPI.ApplicationServices
         public async Task DeleteAccountAsync(int accountId)
         {
             await _accountRepository.RemoveAccountAsync(accountId);
-            await _accountRepository.SaveChangesAsync();
         }
     }
 }

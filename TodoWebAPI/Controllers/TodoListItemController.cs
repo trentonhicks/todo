@@ -6,6 +6,8 @@ using TodoWebAPI.Models;
 using System.Data.SqlClient;
 using Dapper;
 using Todo.WebAPI.ApplicationServices;
+using Todo.Domain.Repositories;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.Controllers
 {
@@ -13,22 +15,25 @@ namespace TodoWebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly TodoListItemApplicationService _todoListItemApplicationService;
+        private readonly TodoDatabaseContext _todoDatabaseContext;
 
-        public TodoListItemController(IConfiguration config, TodoListItemApplicationService todoListItemApplicationService)
+        public TodoListItemController(IConfiguration config, TodoListItemApplicationService todoListItemApplicationService, TodoDatabaseContext todoDatabaseContext)
         {
             _config = config;
             _todoListItemApplicationService = todoListItemApplicationService;
+            _todoDatabaseContext = todoDatabaseContext;
         }
 
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
         public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todo)
         {
-
             var todoItem = await _todoListItemApplicationService.CreateTodoListItemAsync(listId, todo.ParentId, accountId, todo.ToDoName, todo.Notes);
             
             if (todoItem == null)
               return BadRequest("List doesn't exist");
+
+             await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok(new TodoListItemModel()
             {
@@ -57,6 +62,8 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItemModel todo)
         {
             await _todoListItemApplicationService.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName);
+
+            await _todoDatabaseContext.SaveChangesAsync();
             
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}");
         }
@@ -66,6 +73,8 @@ namespace TodoWebAPI.Controllers
         {
             await _todoListItemApplicationService.MarkTodoListItemAsCompletedAsync(todoId, completed);
 
+            await _todoDatabaseContext.SaveChangesAsync();
+
             return Ok();
         }
 
@@ -74,6 +83,9 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
         {
             await _todoListItemApplicationService.DeleteTodoListItem(todoId);
+
+            await _todoDatabaseContext.SaveChangesAsync();
+
             return Ok("Todo list item deleted.");
         }
     }

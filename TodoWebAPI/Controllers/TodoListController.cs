@@ -7,6 +7,8 @@ using TodoWebAPI.Presentation;
 using System.Data.SqlClient;
 using Dapper;
 using Todo.WebAPI.ApplicationServices;
+using Todo.Domain.Repositories;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.Controllers
 {
@@ -14,11 +16,13 @@ namespace TodoWebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly TodoListApplicationService _todoListApplicationService;
+        private readonly TodoDatabaseContext _todoDatabaseContext;
 
-        public TodoListController(IConfiguration config,  TodoListApplicationService todoListApplicationService)
+        public TodoListController(IConfiguration config, TodoListApplicationService todoListApplicationService, TodoDatabaseContext todoDatabaseContext)
         {
             _config = config;
             _todoListApplicationService = todoListApplicationService;
+            _todoDatabaseContext = todoDatabaseContext;
         }
 
         [HttpPost("accounts/{accountId}/lists")]
@@ -28,6 +32,8 @@ namespace TodoWebAPI.Controllers
 
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
+
+            await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
         }
@@ -64,6 +70,8 @@ namespace TodoWebAPI.Controllers
         {
             await _todoListApplicationService.RenameTodoListAsync(listId, updatedList.ListTitle);
 
+            await _todoDatabaseContext.SaveChangesAsync();
+
             return Ok($"List title changed to {updatedList.ListTitle}");
         }
 
@@ -71,6 +79,8 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
             await _todoListApplicationService.DeleteTodoList(listId);
+
+            await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok("List deleted");
         }
