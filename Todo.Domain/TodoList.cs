@@ -12,7 +12,12 @@ namespace Todo.Domain
         public string ListTitle { get; set; }
         public int AccountId { get; set; }
         public bool Completed { get; private set; }
+        public int NextListItemPosition { get; private set; }
 
+        public int GetNextPosition()
+        {
+            return NextListItemPosition++;
+        }
         public void SetCompleted(List<TodoListItem> items)
         {
             if (!items.All(item => item.ListId == Id))
