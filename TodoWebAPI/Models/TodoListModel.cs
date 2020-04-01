@@ -10,5 +10,6 @@ namespace TodoWebAPI.Models
         public int Id { get; set; }
         public string ListTitle { get; set; }
         public int AccountId { get; set; }
+        public bool Completed { get; set; }
     }
 }

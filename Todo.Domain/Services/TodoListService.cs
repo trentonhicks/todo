@@ -1,7 +1,10 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
 
 namespace Todo.Domain.Services
@@ -11,12 +14,18 @@ namespace Todo.Domain.Services
         private readonly ITodoListRepository _listRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly ITodoListItemRepository _todoListItemRepository;
+        private readonly IMediator _mediator;
 
-        public TodoListService(ITodoListRepository listRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
+        public TodoListService(
+            ITodoListRepository listRepository,
+            IAccountRepository accountRepository,
+            ITodoListItemRepository todoListItemRepository,
+            IMediator mediator)
         {
             _listRepository = listRepository;
             _accountRepository = accountRepository;
             _todoListItemRepository = todoListItemRepository;
+            _mediator = mediator;
         }
 
         public async Task<TodoList> CreateTodoListAsync(int accountId, string listTitle)
@@ -41,7 +50,7 @@ namespace Todo.Domain.Services
             var todoList = await _listRepository.FindTodoListIdByIdAsync(listId);
 
             todoList.ListTitle = listTitle;
-            
+
             await _listRepository.SaveChangesAsync();
         }
 
@@ -50,6 +59,21 @@ namespace Todo.Domain.Services
             await _todoListItemRepository.RemoveAllTodoListItemsFromAccountAsync(listId);
             await _listRepository.RemoveTodoListAsync(listId);
             await _listRepository.SaveChangesAsync();
+        }
+
+        public async Task MarkTodoListAsCompletedAsync(int listId)
+        {
+            var items = await _todoListItemRepository.FindAllTodoListItemsByListIdAsync(listId);
+            var list = await _listRepository.FindTodoListIdByIdAsync(listId);
+
+            if (list.Completed && items.All(item => item.Completed))
+                return;
+
+            list.Completed = items.All(item => item.Completed);
+            await _listRepository.SaveChangesAsync();
+
+            if (list.Completed)
+                await _mediator.Publish(new TodoListCompleted { List = list });
         }
     }
 }

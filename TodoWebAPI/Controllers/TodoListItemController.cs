@@ -11,6 +11,9 @@ using Todo.Domain;
 using Todo.Domain.Services;
 using Todo.Infrastructure;
 using MediatR;
+using System.Data.SqlClient;
+using Dapper;
+using System.Linq;
 
 namespace TodoWebAPI.Controllers
 {
@@ -40,36 +43,56 @@ namespace TodoWebAPI.Controllers
 
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todos)
+        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todo)
         {
             var todoListItemService = new TodoListItemService(_todoListRepository, _todoListItemRepository, _mediator);
 
-
-            var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todos.ParentId, accountId, todos.Completed, todos.ToDoName, todos.Notes);
+            var todoItem = await todoListItemService.CreateTodoListItemAsync(listId, todo.ParentId, accountId, todo.ToDoName, todo.Notes);
             
-            var todo = new TodoListItemModel()
-            {
-                ToDoName = todos.ToDoName,
-                ParentId = todos.ParentId,
-                Notes = todos.Notes,
-                Completed = todos.Completed,
-                ListId = listId
-            };
-
-            if (!todoItem)
+            if (todoItem == null)
               return BadRequest("List doesn't exist");
 
-            return Ok(todo);
+            return Ok(new TodoListItemModel()
+            {
+                Id = todoItem.Id,
+                ToDoName = todoItem.ToDoName,
+                ParentId = todoItem.ParentId,
+                Notes = todoItem.Notes,
+                ListId = listId
+            });
+        }
+
+        [HttpGet("accounts/{accountId}/lists/{listId}/todos")]
+        public async Task<IActionResult> GetAllTodoItemsAsync(int accountId, int listId)
+        {
+            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
+            {
+                await connection.OpenAsync();
+
+                var todoList = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems Where AccountID = @accountId AND ListID = @listId", new { accountId = accountId, listId = listId });
+
+                return Ok(todoList);
+            }
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItem todo)
+        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItemModel todo)
         {
             var service = new TodoListItemService(_todoListRepository, _todoListItemRepository, _mediator);
-            await service.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.Completed);
+            await service.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName);
             
-            return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}, Status = {todo.Completed}");
+            return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}");
         }
+
+        [HttpPut("accounts/{accountId}/todos/{todoId}/completed")]
+        public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] bool completed)
+        {
+            var service = new TodoListItemService(_todoListRepository, _todoListItemRepository, _mediator);
+            await service.MarkTodoListItemAsCompletedAsync(todoId, completed);
+
+            return Ok();
+        }
+
 
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> DeleteTodo(int accountId, int todoId)

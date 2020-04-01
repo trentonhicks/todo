@@ -13,32 +13,25 @@ using Todo.Infrastructure;
 using System.Data.SqlClient;
 using Dapper;
 using System.Collections.Generic;
+using MediatR;
 
 namespace TodoWebAPI.Controllers
 {
     public class TodoListController : ControllerBase
     {
-        private readonly TodoDatabaseContext _context;
+        private readonly TodoListService _todoListService;
         private readonly IConfiguration _config;
-        private readonly ITodoListRepository _todoListRepository;
-        private readonly IAccountRepository _accountRepository;
-        private readonly ITodoListItemRepository _todoListItemRepository;
 
-        public TodoListController(TodoDatabaseContext context, IConfiguration config, ITodoListRepository todoListRepository, IAccountRepository accountRepository, ITodoListItemRepository todoListItemRepository)
+        public TodoListController(IConfiguration config, TodoListService todoListService)
         {
-            _context = context;
             _config = config;
-            _todoListRepository = todoListRepository;
-            _accountRepository = accountRepository;
-            _todoListItemRepository = todoListItemRepository;
+            _todoListService = todoListService;
         }
 
         [HttpPost("accounts/{accountId}/lists")]
         public async Task<IActionResult> CreateList(int accountId, [FromBody] CreateListModel createTodoList)
         {
-            var todoListService = new TodoListService(_todoListRepository, _accountRepository, _todoListItemRepository);
-
-            var todoList = await todoListService.CreateTodoListAsync(accountId, createTodoList.ListTitle);
+            var todoList = await _todoListService.CreateTodoListAsync(accountId, createTodoList.ListTitle);
 
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
@@ -59,12 +52,24 @@ namespace TodoWebAPI.Controllers
             }
         }
 
+        [HttpGet("accounts/{accountId}/lists/{listId}")]
+
+        public async Task<IActionResult> GetList(int accountId, int listId)
+        {
+            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
+            {
+                await connection.OpenAsync();
+
+                var todoList = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId AND ID = @listId", new { accountId = accountId, listId = listId });
+
+                return Ok(todoList);
+            }
+        }
+
         [HttpPut("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> UpdateList(int accountId, int listId, [FromBody] UpdateListModel updatedList)
         {
-            var service = new TodoListService(_todoListRepository, _accountRepository, _todoListItemRepository);
-
-            await service.RenameTodoListAsync(listId, updatedList.ListTitle);
+            await _todoListService.RenameTodoListAsync(listId, updatedList.ListTitle);
 
             return Ok($"List title changed to {updatedList.ListTitle}");
         }
@@ -72,9 +77,7 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            var service = new TodoListService(_todoListRepository, _accountRepository, _todoListItemRepository);
-
-            await service.DeleteTodoList(listId);
+            await _todoListService.DeleteTodoList(listId);
 
             return Ok("List deleted");
         }

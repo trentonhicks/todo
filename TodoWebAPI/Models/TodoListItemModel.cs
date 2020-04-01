@@ -10,8 +10,8 @@ namespace TodoWebAPI.Models
         public int Id { get; set; }
         public int? ParentId { get; set; }
         public string Notes { get; set; }
-        public bool Completed { get; set; }
         public string ToDoName { get; set; }
         public int ListId { get; set; }
+        public bool Completed { get; set; }
     }
 }

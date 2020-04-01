@@ -49,5 +49,10 @@ namespace TodoWebAPI.Data
         {
             return await _context.TodoListItems.FindAsync(todoListItemId);
         }
+
+        public async Task<List<TodoListItem>> FindAllTodoListItemsByListIdAsync(int listId)
+        {
+            return await _context.TodoListItems.Where(x => x.ListId == listId).ToListAsync();
+        }
     }
 }

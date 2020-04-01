@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
-using Todo.Domain.Services;
 using Todo.Infrastructure.Email;
 
 namespace TodoWebAPI.DomainEventHandlers
@@ -35,6 +35,5 @@ namespace TodoWebAPI.DomainEventHandlers
             };
             await _emailService.SendEmailAsync(email);
         }
-
     }
 }

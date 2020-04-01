@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Todo.Domain.Repositories;
+using Todo.Domain.Services;
 using Todo.Infrastructure;
 using Todo.Infrastructure.EFRepositories;
 using Todo.Infrastructure.Email;
@@ -53,6 +54,7 @@ namespace TodoWebAPI
             services.AddScoped<IAccountRepository, EFAccountRepository>();
             services.AddSingleton<IEmailService, SendGridEmailService>();
             services.AddScoped<IAccountProfileImageRepository, AccountProfileImageRepository>((x) => new AccountProfileImageRepository(Configuration.GetConnectionString("Development")));
+            services.AddScoped<TodoListService>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
         }

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Todo.Domain.Services
+namespace Todo.Domain.DomainEvents
 {
     public class TodoListItemUpdated : INotification
     {

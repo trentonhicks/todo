@@ -13,7 +13,7 @@ namespace Todo.Domain
         public int Id { get; set; }
         public string ListTitle { get; set; }
         public int AccountId { get; set; }
-
+        public bool Completed { get; set; }
         public virtual Account Account { get; set; }
         public virtual ICollection<TodoListItem> ToDos { get; set; }
     }
