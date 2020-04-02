@@ -49,6 +49,18 @@ namespace Todo.WebAPI.ApplicationServices
             todoListItem.ToDoName = todoName;
         }
 
+        public async Task ChangeTodoListItemsPositionAsync(int todoListItem1Id, int todoListItem2Id)
+        {
+            var item1 = await _listItemRepository.FindToDoListItemByIdAsync(todoListItem1Id);
+            var item2 = await _listItemRepository.FindToDoListItemByIdAsync(todoListItem2Id);
+
+            var item1Position = item1.Position;
+            var item2Position = item2.Position;
+
+            item1.Position = item2Position;
+            item2.Position = item1Position;
+        }
+
         public async Task DeleteTodoListItem(int todoListItemId)
         {
             await _listItemRepository.RemoveTodoListItemAsync(todoListItemId);

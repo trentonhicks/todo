@@ -68,6 +68,16 @@ namespace TodoWebAPI.Controllers
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}");
         }
 
+        [HttpPut("accounts/{accountId}/lists/{listId}/todos/position")]
+        public async Task<IActionResult> SwapPositions([FromBody] TodoListItemPostionModel todoListItemPostionModel)
+        {
+            await _todoListItemApplicationService.ChangeTodoListItemsPositionAsync(todoListItemPostionModel.TodoListItemId1, todoListItemPostionModel.TodoListItemId2);
+
+            await _todoDatabaseContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
         [HttpPut("accounts/{accountId}/todos/{todoId}/completed")]
         public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] bool completed)
         {
