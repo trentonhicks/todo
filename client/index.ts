@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import App from './vue/App.vue';
-import Home from './vue/components/Home.vue';
+import Home from './vue/pages/Home.vue';
 import TodoList from './vue/components/TodoList.vue';
 
 // Bootstrap CSS

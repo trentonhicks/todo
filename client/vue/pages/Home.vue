@@ -21,17 +21,21 @@ export default {
       todoLists: []
     };
   },
+  methods: {
+    getTodoLists() {
+      axios({
+        method: 'get',
+        url: 'http://localhost:5000/accounts/1/lists',
+      })
+      .then((response) => {
+        this.todoLists = response.data
+      }).catch((e) => {
+        console.log(e);
+      });
+    }
+  },
   created: function() {
-    axios({
-      method: 'get',
-      url: 'http://localhost:5000/accounts/1/lists',
-    })
-    .then((response) => {
-      console.log(response);
-      this.todoLists = response.data
-    }).catch((e) => {
-      console.log(e);
-    });
+    this.getTodoLists();
   }
 };
 

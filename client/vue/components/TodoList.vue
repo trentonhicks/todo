@@ -4,14 +4,21 @@ b-container
   b-button(class="back-button" variant="link" to="/")
     b-icon(icon="chevron-left")
     | Lists
-  h1.mb-3 {{ todolist.listTitle }}
+  h1.mb-3 {{ todoList.listTitle }}
 
   .todos-wrapper
-    todo-item(v-for="todo in todos" :key="todo.id" :name="todo.toDoName")
+    todo-item(
+      v-for="todo in todoListItems"
+      :key="todo.id"
+      :id="todo.id"
+      :toDoName="todo.toDoName"
+      :notes="todo.notes"
+      :completed="todo.completed")
 
 </template>
 
 <script lang="ts">
+
 import axios from 'axios';
 import TodoItem from './TodoItem.vue';
 
@@ -20,8 +27,8 @@ export default {
   props: ['id'],
   data() {
     return {
-      todolist: {},
-      todos: []
+      todoList: {},
+      todoListItems: []
     };
   },
   created: function() {
@@ -34,7 +41,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id
       }).then((response) => {
-        this.todolist = response.data[0]
+        console.log(response);
+        this.todoList = response.data[0];
       }).catch((e) => {
         console.log(e);
       });
@@ -44,7 +52,7 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
       }).then((response) => {
-        this.todos = response.data;
+        this.todoListItems = response.data;
         console.log(response.data);
       }).catch((e) => {
         console.log(e);
@@ -67,12 +75,6 @@ export default {
   position: relative;
   left: -7px;
   margin-bottom: 10px;
-}
-
-.todo-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 </style>

@@ -1,21 +1,49 @@
 <template lang="pug">
 
-b-list-group-item.todo-item(button :click="showItemDetails()")
-    | {{ name }}
+b-list-group-item.todo-item
+  b-form-checkbox(v-model="item.completed")
+    .todo-item-name {{ item.toDoName }}
+    .todo-item-notes: small.text-muted {{ item.notes }}
 
 </template>
 
 <script lang="ts">
 
+import axios from 'axios';
+
 export default {
   name: 'TodoItem',
-  props: ['name'],
+  props: ['id', 'toDoName', 'notes', 'completed'],
   data() {
-    return {};
+    return {
+      item: {
+        id: this.id,
+        toDoName: this.toDoName,
+        notes: this.notes,
+        completed: this.completed
+      },
+    };
   },
   methods: {
-    showItemDetails() {
-
+    toggleCompleted() {
+      axios({
+        method: 'put',
+        url: `http://localhost:5000/accounts/1/todos/${this.item.id}/completed`,
+        data: this.item.completed,
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+    }
+  },
+  watch: {
+    checkboxToggle: function() {
+      this.toggleCompleted();
+    }
+  },
+  computed: {
+    checkboxToggle() {
+      return this.item.completed;
     }
   },
 };
@@ -25,10 +53,11 @@ export default {
 <style lang="scss" scoped>
 
 .todo-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  outline: none !important;
+  padding: 10px 12px 14px 12px;
+
+  .todo-item-notes {
+    line-height: 1;
+  }
 }
 
 </style>

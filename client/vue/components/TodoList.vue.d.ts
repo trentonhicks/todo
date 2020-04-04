@@ -2,13 +2,13 @@ declare const _default: {
     name: string;
     props: string[];
     data(): {
-        todos: {
-            id: number;
-            name: string;
-        }[];
+        todolist: {};
+        todos: any[];
     };
+    created: () => void;
     methods: {
-        showItemDetails(): void;
+        getTodoList(id: number): void;
+        getTodoListItems(id: number): void;
     };
     components: {
         TodoItem: {

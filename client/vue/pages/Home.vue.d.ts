@@ -1,5 +1,8 @@
 declare const _default: {
     name: string;
-    data(): {};
+    data(): {
+        todoLists: any[];
+    };
+    created: () => void;
 };
 export default _default;
