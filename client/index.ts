@@ -22,7 +22,7 @@ import { CardPlugin } from 'bootstrap-vue';
 Vue.use(CardPlugin);
 
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+Vue.use(BootstrapVueIcons);
 Vue.use(VueRouter);
 
 const router = new VueRouter({

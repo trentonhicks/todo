@@ -1,6 +1,6 @@
 <template lang="pug">
 
-b-list-group-item.todo-item
+b-list-group-item.todo-item.bg-light
   b-form-checkbox(v-model="item.completed")
     .todo-item-name {{ item.toDoName }}
     .todo-item-notes: small.text-muted {{ item.notes }}
@@ -54,6 +54,11 @@ export default {
 
 .todo-item {
   padding: 10px 12px 14px 12px;
+  font-family: 'Nunito', sans-serif;
+
+  .todo-item-name {
+    font-weight: bold;
+  }
 
   .todo-item-notes {
     line-height: 1;

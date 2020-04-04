@@ -3,10 +3,11 @@
 b-container
   b-button(class="back-button" variant="link" to="/")
     b-icon(icon="chevron-left")
-    | Lists
+    | My Lists
   h1.mb-3 {{ todoList.listTitle }}
 
-  .todos-wrapper
+  draggable(v-model="todoListItems").todos-wrapper.mb-3
+  
     todo-item(
       v-for="todo in todoListItems"
       :key="todo.id"
@@ -14,6 +15,8 @@ b-container
       :toDoName="todo.toDoName"
       :notes="todo.notes"
       :completed="todo.completed")
+    
+  b-button(@click="") Add list item
 
 </template>
 
@@ -21,6 +24,7 @@ b-container
 
 import axios from 'axios';
 import TodoItem from './TodoItem.vue';
+import draggable from 'vuedraggable';
 
 export default {
   name: 'TodoList',
@@ -60,7 +64,8 @@ export default {
     }
   },
   components: {
-    TodoItem
+    TodoItem,
+    draggable
   }
 };
 

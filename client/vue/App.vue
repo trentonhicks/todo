@@ -20,15 +20,32 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 * {
   box-sizing: border-box;
 }
 
 #content {
-  padding: 50px 20px;
+  padding: 75px 20px;
   height: 100vh;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+  }
+}
+
+h1 {
+  font-size: 40px;
+}
+
+.btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: bold;
 }
 
 </style>
