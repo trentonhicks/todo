@@ -1,14 +1,13 @@
 <template lang="pug">
 
 b-container
-  h1.mb-3 My Lists
+  h1.mb-4 My Lists
 
-  ul
-    li(v-for="item in todoLists" :key="item.id")
-      router-link(:to="'/lists/' + item.id") {{ item.listTitle }}
-      ul
-        li(v-for="subitem in item.todoItemPreview") {{ subitem.toDoName }}
-
+  .todo-lists
+    b-card(v-for="item in todoLists" :key="item.id" :title="item.listTitle" class="mb-3")
+      b-button(variant="primary" size="sm" :to="'/lists/' + item.id").mr-2 View
+      b-button(variant="danger" size="sm") Delete
+      
 </template>
 
 <script lang="ts">
@@ -25,7 +24,7 @@ export default {
   created: function() {
     axios({
       method: 'get',
-      url: 'http://localhost:5000/accounts/4/lists',
+      url: 'http://localhost:5000/accounts/1/lists',
     })
     .then((response) => {
       console.log(response);

@@ -4,10 +4,10 @@ b-container
   b-button(class="back-button" variant="link" to="/")
     b-icon(icon="chevron-left")
     | Lists
-  h1.mb-3 List {{ id }}
+  h1.mb-3 {{ todolist.listTitle }}
 
-  b-list-group
-    todo-item(v-for="todo in todos" :key="todo.id" :name="todo.name")
+  .todos-wrapper
+    todo-item(v-for="todo in todos" :key="todo.id" :name="todo.toDoName")
 
 </template>
 
@@ -20,22 +20,32 @@ export default {
   props: ['id'],
   data() {
     return {
-      todos: [
-        { id: 1, name: "Do something" },
-        { id: 2, name: "Do another thing" },
-        { id: 3, name: "Do something else" },
-      ]
+      todolist: {},
+      todos: []
     };
   },
+  created: function() {
+    this.getTodoList(this.id);
+    this.getTodoListItems(this.id);
+  },
   methods: {
-    created: function() {
+    getTodoList(id : number) : void {
       axios({
         method: 'get',
-        url: 'http://localhost:5000/accounts/4/lists',
-      })
-      .then((response) => {
-        console.log(response);
-        this.todoLists = response.data
+        url: 'http://localhost:5000/accounts/1/lists/' + id
+      }).then((response) => {
+        this.todolist = response.data[0]
+      }).catch((e) => {
+        console.log(e);
+      });
+    },
+    getTodoListItems(id : number) {
+      axios({
+        method: 'get',
+        url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+      }).then((response) => {
+        this.todos = response.data;
+        console.log(response.data);
       }).catch((e) => {
         console.log(e);
       });

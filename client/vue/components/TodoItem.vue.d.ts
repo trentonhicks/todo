@@ -1,9 +1,7 @@
 declare const _default: {
     name: string;
     props: string[];
-    data(): {
-        list: {};
-    };
+    data(): {};
     methods: {
         showItemDetails(): void;
     };
