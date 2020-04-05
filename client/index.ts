@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import App from './vue/App.vue';
-import Home from './vue/pages/Home.vue';
-import TodoList from './vue/components/TodoList.vue';
+import Home from './vue/views/Home.vue';
+import TodoListDetails from './vue/views/TodoListDetails.vue';
 
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -29,7 +29,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: Home },
     { path: '/lists', component: Home, props: true },
-    { path: '/lists/:id', component: TodoList, props: true },
+    { path: '/lists/:id', component: TodoListDetails, props: true },
   ],
   mode: 'history'
 });

@@ -1,22 +1,39 @@
 <template lang="pug">
 
-b-container
-  b-button(class="back-button" variant="link" to="/")
-    b-icon(icon="chevron-left")
-    | My Lists
-  h1.mb-3 {{ todoList.listTitle }}
+  .todo-list
+    h1.mb-3 {{ todoList.listTitle }}
 
-  draggable(v-model="todoListItems").todos-wrapper.mb-3
-  
-    todo-item(
-      v-for="todo in todoListItems"
-      :key="todo.id"
-      :id="todo.id"
-      :toDoName="todo.toDoName"
-      :notes="todo.notes"
-      :completed="todo.completed")
-    
-  b-button(@click="") Add list item
+    draggable(v-model="todoListItems").todos-wrapper.mb-3
+
+      todo-item(
+        v-for="todo in todoListItems"
+        :key="todo.id"
+        :id="todo.id"
+        :toDoName="todo.toDoName"
+        :notes="todo.notes"
+        :completed="todo.completed")
+      
+    b-button(id="add-list-item-btn" @click="$bvModal.show('modal-add')") Add list item
+
+    b-modal(id="modal-add" title="Add new list item")
+      b-form(id="add-list-item-form")
+        b-form-group
+          b-form-input(
+            type="text"
+            placeholder="List item name"
+            v-model="form.toDoName"
+            required
+          )
+        b-form-group
+          b-form-input(
+            type="text"
+            placeholder="Notes"
+            v-model="form.notes"
+          )
+      
+      template(v-slot:modal-footer="{ ok, cancel, hide }")
+        b-button(@click="addTodoListItem(form.toDoName, form.notes)" variant="primary") Add
+        b-button(variant="secondary" @click="$bvModal.hide('modal-add')") Cancel
 
 </template>
 
@@ -32,8 +49,12 @@ export default {
   data() {
     return {
       todoList: {},
-      todoListItems: []
-    };
+      todoListItems: [],
+      form: {
+        toDoName: '',
+        notes: ''
+      }
+    }
   },
   created: function() {
     this.getTodoList(this.id);
@@ -51,7 +72,7 @@ export default {
         console.log(e);
       });
     },
-    getTodoListItems(id : number) {
+    getTodoListItems(id : number) : void {
       axios({
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
@@ -60,6 +81,29 @@ export default {
         console.log(response.data);
       }).catch((e) => {
         console.log(e);
+      });
+    },
+    addTodoListItem(toDoName : string, notes : string) : void {
+      this.$bvModal.hide('modal-add');
+
+      let data = JSON.stringify({
+        toDoName,
+        notes
+      });
+
+      axios({
+        url: `http://localhost:5000/accounts/1/lists/${this.id}/todos`,
+        method: 'POST',
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      }).then((response) => {
+        if(response.status == 200) {
+          this.todoListItems.push(response.data);
+          this.form.toDoName = '',
+          this.form.notes = ''
+        }
       });
     }
   },
@@ -70,16 +114,3 @@ export default {
 };
 
 </script>
-
-<style lang="scss" scoped>
-
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 0px;
-  position: relative;
-  left: -7px;
-  margin-bottom: 10px;
-}
-
-</style>
