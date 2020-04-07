@@ -18,7 +18,7 @@
     b-button(id="add-list-item-btn" @click="$bvModal.show('modal-add')") Add list item
 
     b-modal(id="modal-add" title="Add new list item")
-      b-form(@submit="addTodoListItem(form.toDoName, form.notes)" id="add-list-item-form")
+      b-form(v-on:submit.prevent="addTodoListItem(form.toDoName, form.notes)" id="add-list-item-form")
         b-form-group
           b-form-input(
             type="text"
