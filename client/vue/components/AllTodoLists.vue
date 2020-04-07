@@ -3,6 +3,7 @@
 .all-todo-lists
     todo-list-summary(
         v-for="item in todoLists"
+        v-on:delete-list="deleteList"
         :key="item.id"
         :id="item.id"
         :accountId="item.accountId"
@@ -71,6 +72,29 @@ export default {
                     this.form.listTitle = ''
                 }
             });
+        },
+        deleteList(list) : void {
+            this.$bvModal.msgBoxConfirm(`Are you sure you want to delete ${list.listTitle}?`, {
+            size: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Delete',
+            cancelTitle: 'Cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            })
+            .then(choseToDelete => {
+                if(choseToDelete) {
+                    axios({
+                        method: 'DELETE',
+                        url: `http://localhost:5000/accounts/1/lists/${list.id}`
+                    }).then((response) => {
+                        let index = this.todoLists.findIndex(({id}) => id === list.id);
+                        if(index !== -1) {
+                            this.todoLists.splice(index, 1);
+                        }
+                    });
+                }
+            })
         }
     },
     created: function() {
@@ -83,7 +107,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .modal-footer {
     display: none !important;

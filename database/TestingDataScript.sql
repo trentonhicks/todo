@@ -43,4 +43,4 @@ VALUES
 
 --LIST HOMEWORK 
 ('Math','Work on fractions',6,3,1),
-('Spanish','Dónde está el baño',6,3,2);
+('Spanish','Dï¿½nde estï¿½ el baï¿½o',6,3,2);

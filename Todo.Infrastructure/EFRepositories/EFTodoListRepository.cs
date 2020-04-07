@@ -18,9 +18,10 @@ namespace TodoWebAPI.Data
         {
             _context = context;
         }
-        public async Task AddTodoListAsync(TodoList todoList)
+        public Task AddTodoListAsync(TodoList todoList)
         {
             _context.TodoLists.Add(todoList);
+            return Task.CompletedTask;
         }
 
         public Task<List<TodoList>> FindTodoListsByAccountIdAsync(int accountId, int pageSize)

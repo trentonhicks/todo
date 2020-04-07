@@ -1,30 +1,29 @@
 <template lang="pug">
     
+.todo-list-summary
     b-card(class="mb-3 bg-light")
       b-button(:to="'/lists/'+ item.id").card-title {{item.listTitle}}
       .todo-list-options
         b-button(variant="info" size="sm" :to="'/lists/'+ item.id").mr-2: b-icon-list-ul
-        b-button(variant="danger" size="sm"): b-icon-trash
+        b-button(variant="danger" size="sm"  @click="$emit('delete-list', item)"): b-icon-trash
 
 </template>
 
 <script lang="ts">
 
-    export default {
-        name: 'TodoListSummary',
-        props: ['id', 'accountId', 'listTitle'],
-        data() {
-            return {
-                item: {
-                    id: this.id,
-                    accountId: this.accountId,
-                    listTitle: this.listTitle
-                }
-            };
-        },
-        methods: {
-        },
-    };
+export default {
+    name: 'TodoListSummary',
+    props: ['id', 'accountId', 'listTitle'],
+    data() {
+        return {
+            item: {
+                id: this.id,
+                accountId: this.accountId,
+                listTitle: this.listTitle
+            }
+        };
+    }
+};
 
 </script>
 

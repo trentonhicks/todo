@@ -18,9 +18,10 @@ namespace TodoWebAPI.Data
         {
             _context = context;
         }
-        public async Task AddTodoListItemAsync(TodoListItem todo)
+        public Task AddTodoListItemAsync(TodoListItem todo)
         {
             _context.TodoListItems.Add(todo);
+            return Task.CompletedTask;
         }
         public async Task RemoveTodoListItemAsync(int todo)
         {
