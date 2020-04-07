@@ -1,0 +1,92 @@
+<template lang="pug">
+
+.all-todo-lists
+    todo-list-summary(
+        v-for="item in todoLists"
+        :key="item.id"
+        :id="item.id"
+        :accountId="item.accountId"
+        :listTitle="item.listTitle"
+        )
+
+    b-button(@click="$bvModal.show('modal-add')" id="add-list-btn") Add list
+
+    b-modal(id="modal-add" title="Add new list")
+        b-form(@submit="addTodoList(form.listTitle)" id="add-list-form")
+            b-form-group
+                b-form-input(
+                type="text"
+                placeholder="List name"
+                v-model="form.listTitle"
+                required)
+            b-button(type="submit" variant="primary" class="mr-2") Add
+            b-button(variant="secondary" @click="$bvModal.hide('modal-add')") Cancel
+
+</template>
+
+<script lang="ts">
+    
+import axios from 'axios';
+import TodoListSummary from '../components/TodoListSummary.vue';
+
+export default {
+    name: 'AllTodoLists',
+    data() {
+        return {
+            todoLists: [],
+            form: {
+                listTitle: ''
+            }
+        }
+    },
+    methods: {
+        getTodoLists() : void {
+            axios({
+                method: 'get',
+                url: 'http://localhost:5000/accounts/1/lists',
+            })
+            .then((response) => {
+                this.todoLists = response.data;
+            }).catch((e) => {
+                console.log(e);
+            });
+        },
+        addTodoList(listTitle : string) : void {
+            this.$bvModal.hide('modal-add');
+
+            let data = JSON.stringify({
+                listTitle
+            });
+
+            axios({
+                url: 'http://localhost:5000/accounts/1/lists',
+                method: 'POST',
+                data,
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then((response) => {
+                if(response.status == 200) {
+                    this.todoLists.push(response.data);
+                    this.form.listTitle = ''
+                }
+            });
+        }
+    },
+    created: function() {
+        this.getTodoLists();
+    },
+    components: {
+        TodoListSummary
+    }
+}
+
+</script>
+
+<style lang="scss">
+
+.modal-footer {
+    display: none !important;
+}
+
+</style>

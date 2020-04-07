@@ -12,11 +12,13 @@
         :toDoName="todo.toDoName"
         :notes="todo.notes"
         :completed="todo.completed")
+
+      b-list-group-item.no-items.bg-light(v-if="listIsEmpty") Your list is empty. Add a new item to get started.
       
     b-button(id="add-list-item-btn" @click="$bvModal.show('modal-add')") Add list item
 
     b-modal(id="modal-add" title="Add new list item")
-      b-form(id="add-list-item-form")
+      b-form(@submit="addTodoListItem(form.toDoName, form.notes)" id="add-list-item-form")
         b-form-group
           b-form-input(
             type="text"
@@ -30,9 +32,7 @@
             placeholder="Notes"
             v-model="form.notes"
           )
-      
-      template(v-slot:modal-footer="{ ok, cancel, hide }")
-        b-button(@click="addTodoListItem(form.toDoName, form.notes)" variant="primary") Add
+        b-button(type="submit" variant="primary" class="mr-2") Add
         b-button(variant="secondary" @click="$bvModal.hide('modal-add')") Cancel
 
 </template>
@@ -53,7 +53,8 @@ export default {
       form: {
         toDoName: '',
         notes: ''
-      }
+      },
+      listIsEmpty: false
     }
   },
   created: function() {
@@ -78,7 +79,13 @@ export default {
         url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
       }).then((response) => {
         this.todoListItems = response.data;
-        console.log(response.data);
+
+        if(this.todoListItems.length < 1) {
+          this.listIsEmpty = true;
+        }
+        else {
+          this.listIsEmpty = false;
+        }
       }).catch((e) => {
         console.log(e);
       });
@@ -101,8 +108,9 @@ export default {
       }).then((response) => {
         if(response.status == 200) {
           this.todoListItems.push(response.data);
-          this.form.toDoName = '',
-          this.form.notes = ''
+          this.form.toDoName = '';
+          this.form.notes = '';
+          this.listIsEmpty = false;
         }
       });
     }

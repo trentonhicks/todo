@@ -28,9 +28,7 @@ namespace Todo.WebAPI.ApplicationServices
 
         public async Task<TodoList> CreateTodoListAsync(int accountId, string listTitle)
         {
-            var doesAccountExist = await _accountRepository.DoesAccountWithAccountIdExistAsync(accountId);
-
-            if (!doesAccountExist)
+            if (String.IsNullOrEmpty(listTitle))
                 return null;
 
             var todoList = new TodoList()
