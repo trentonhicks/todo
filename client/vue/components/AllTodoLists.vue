@@ -107,10 +107,12 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
-.modal-footer {
-    display: none !important;
+#modal-add {
+    .modal-footer {
+        display: none;
+    }
 }
 
 </style>
