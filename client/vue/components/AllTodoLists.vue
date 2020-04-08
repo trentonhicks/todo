@@ -75,12 +75,12 @@ export default {
         },
         deleteList(list) : void {
             this.$bvModal.msgBoxConfirm(`Are you sure you want to delete ${list.listTitle}?`, {
-            size: 'sm',
-            okVariant: 'danger',
-            okTitle: 'Delete',
-            cancelTitle: 'Cancel',
-            footerClass: 'p-2',
-            hideHeaderClose: false,
+                size: 'sm',
+                okVariant: 'danger',
+                okTitle: 'Delete',
+                cancelTitle: 'Cancel',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
             })
             .then(choseToDelete => {
                 if(choseToDelete) {

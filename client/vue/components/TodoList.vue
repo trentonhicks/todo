@@ -1,7 +1,16 @@
 <template lang="pug">
 
   .todo-list
-    h1.mb-3 {{ todoList.listTitle }}
+    .list-title.mb-3
+      h1(v-if="!editingTitle" @click="editingTitle = true") {{ todoList.listTitle }}
+      input(
+        v-if="editingTitle"
+        type="text"
+        v-model="todoList.listTitle" 
+        class="form-control" 
+        @keydown.enter="editingTitle = false"
+        @blur="editingTitle = false; updateListTitle(todoList.listTitle)"
+        v-focus="")
 
     draggable(v-model="todoListItems").todos-wrapper.mb-3
 
@@ -54,7 +63,8 @@ export default {
         toDoName: '',
         notes: ''
       },
-      listIsEmpty: false
+      listIsEmpty: false,
+      editingTitle: false
     }
   },
   created: function() {
@@ -67,7 +77,6 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id
       }).then((response) => {
-        console.log(response);
         this.todoList = response.data[0];
       }).catch((e) => {
         console.log(e);
@@ -106,11 +115,21 @@ export default {
           'content-type': 'application/json'
         }
       }).then((response) => {
-        if(response.status == 200) {
           this.todoListItems.push(response.data);
           this.form.toDoName = '';
           this.form.notes = '';
           this.listIsEmpty = false;
+      });
+    },
+    updateListTitle(listTitle : string) {
+      let data = JSON.stringify({ listTitle });
+
+      axios({
+        url: `http://localhost:5000/accounts/1/lists/${this.id}`,
+        method: 'PUT',
+        data,
+        headers: {
+          'content-type': 'application/json'
         }
       });
     }
@@ -118,6 +137,13 @@ export default {
   components: {
     TodoItem,
     draggable
+  },
+  directives: {
+    focus: {
+      inserted (el) {
+        el.focus()
+      }
+    }
   }
 };
 
