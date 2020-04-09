@@ -26,14 +26,15 @@ namespace Todo.Domain
         public int AccountId { get; private set; }
         public bool Completed { get; private set; }
 
-        public TodoListItem CreateListItem(string name, string notes)
+        public TodoListItem CreateListItem(string name, string notes, DateTime? dueDate)
         {
             var todoItem = new TodoListItem()
             {
                 ListId = Id,
                 ToDoName = name,
                 Notes = notes,
-                AccountId = AccountId
+                AccountId = AccountId,
+                DueDate = dueDate
             };
 
             DomainEvents.Add(new TodoListItemCreated { Item = todoItem, List = this });

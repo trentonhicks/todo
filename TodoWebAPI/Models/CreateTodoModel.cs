@@ -8,8 +8,8 @@ namespace TodoWebAPI.Models
 {
     public class CreateToDoModel
     {
-        public int? ParentId { get; set; }
         public string Notes { get; set; }
         public string ToDoName { get; set; }
+        public DateTime? DueDate { get; set; }
     }
 }

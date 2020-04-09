@@ -12,5 +12,6 @@ namespace TodoWebAPI.Models
         public string ToDoName { get; set; }
         public int ListId { get; set; }
         public bool Completed { get; set; }
+        public DateTime? DueDate { get; set; }
     }
 }

@@ -104,6 +104,9 @@ namespace Todo.Infrastructure
                 entity.Property(e => e.ToDoName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.DueDate)
+                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<TodoListLayout>(entity =>

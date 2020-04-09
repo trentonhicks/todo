@@ -13,6 +13,7 @@ namespace Todo.Domain
         public bool Completed { get; private set; }
         public string ToDoName { get; set; }
         public int ListId { get; set; }
+        public DateTime? DueDate { get; set; }
 
         public void SetCompleted()
         {
