@@ -46,14 +46,11 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
-            using (var connection = new SqlConnection( _config.GetSection("ConnectionStrings")["Development"] ))
-            {
-                await connection.OpenAsync();
+           var dapper = new DapperQuery(_config);
 
-                var account = await connection.QueryAsync<AccountPresentation>("SELECT * From Accounts Where ID = @accountId", new { accountId = accountId });
+           var account = await dapper.GetAccountAsync(accountId);
 
-                return Ok(account);
-            }
+           return Ok(account);
         }
 
         [HttpDelete("accounts/{accountId}")]

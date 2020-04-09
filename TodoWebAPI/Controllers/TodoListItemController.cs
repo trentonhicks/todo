@@ -48,14 +48,11 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}/lists/{listId}/todos")]
         public async Task<IActionResult> GetAllTodoItemsAsync(int accountId, int listId)
         {
-            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
-            {
-                await connection.OpenAsync();
+            var dapper = new DapperQuery(_config);
 
-                var todoList = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems Where AccountID = @accountId AND ListID = @listId", new { accountId = accountId, listId = listId });
+            var items = await dapper.GetAllTodoItemAsync(accountId, listId);
 
-                return Ok(todoList);
-            }
+            return Ok(items);
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]

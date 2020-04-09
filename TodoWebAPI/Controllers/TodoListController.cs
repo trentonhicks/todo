@@ -41,28 +41,22 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}/lists")]
         public async Task<IActionResult> GetLists(int accountId)
         {
-            using (var connection = new SqlConnection( _config.GetSection("ConnectionStrings")["Development"] ))
-            {
-                await connection.OpenAsync();
+            var dapper = new DapperQuery(_config);
 
-                var todoLists = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId", new { accountId = accountId });
+            var lists = await dapper.GetListsAsync(accountId);
 
-                return Ok(todoLists);
-            }
+            return Ok(lists);
         }
 
         [HttpGet("accounts/{accountId}/lists/{listId}")]
 
         public async Task<IActionResult> GetList(int accountId, int listId)
         {
-            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
-            {
-                await connection.OpenAsync();
+            var dapper = new DapperQuery(_config);
 
-                var todoList = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId AND ID = @listId", new { accountId = accountId, listId = listId });
+            var list = await dapper.GetListAsync(accountId, listId);
 
-                return Ok(todoList);
-            }
+            return Ok(list);
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
