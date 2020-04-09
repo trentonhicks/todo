@@ -9,6 +9,7 @@ using Dapper;
 using Todo.WebAPI.ApplicationServices;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
+using TodoWebAPI.ApplicationServices;
 
 namespace TodoWebAPI.Controllers
 {
@@ -17,12 +18,17 @@ namespace TodoWebAPI.Controllers
         private readonly IConfiguration _config;
         private readonly TodoListApplicationService _todoListApplicationService;
         private readonly TodoDatabaseContext _todoDatabaseContext;
+        private readonly TodoListLayoutApplicationService _todoListLayoutApplicationService;
 
-        public TodoListController(IConfiguration config, TodoListApplicationService todoListApplicationService, TodoDatabaseContext todoDatabaseContext)
+        public TodoListController(IConfiguration config,
+            TodoListApplicationService todoListApplicationService,
+            TodoDatabaseContext todoDatabaseContext,
+            TodoListLayoutApplicationService todoListLayoutApplicationService)
         {
             _config = config;
             _todoListApplicationService = todoListApplicationService;
             _todoDatabaseContext = todoDatabaseContext;
+            _todoListLayoutApplicationService = todoListLayoutApplicationService;
         }
 
         [HttpPost("accounts/{accountId}/lists")]
@@ -67,6 +73,14 @@ namespace TodoWebAPI.Controllers
             await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok($"List title changed to {updatedList.ListTitle}");
+        }
+
+        [HttpPut("accounts/{accountId}/lists/{listId}/layout")]
+        public async Task<IActionResult> UpdateLayout(int accountId, int listId, [FromBody] TodoListLayoutModel todoListLayoutModel)
+        {
+            await _todoListLayoutApplicationService.UpdateLayoutAsync(todoListLayoutModel.ItemId, todoListLayoutModel.Position, listId);
+
+            return Ok();
         }
 
         [HttpDelete("accounts/{accountId}/lists/{listId}")]

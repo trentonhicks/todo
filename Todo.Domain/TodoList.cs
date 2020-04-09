@@ -8,15 +8,37 @@ namespace Todo.Domain
 {
     public partial class TodoList : Entity
     {
+        public TodoList()
+        {
+
+        }
+
+        public TodoList(int accountId, string title)
+        {
+            AccountId = accountId;
+            ListTitle = title;
+
+            DomainEvents.Add(new TodoListCreated { List = this });
+        }
+
         public int Id { get; set; }
         public string ListTitle { get; set; }
-        public int AccountId { get; set; }
+        public int AccountId { get; private set; }
         public bool Completed { get; private set; }
-        public int NextListItemPosition { get; private set; }
 
-        public int GetNextPosition()
+        public TodoListItem CreateListItem(string name, string notes)
         {
-            return NextListItemPosition++;
+            var todoItem = new TodoListItem()
+            {
+                ListId = Id,
+                ToDoName = name,
+                Notes = notes,
+                AccountId = AccountId
+            };
+
+            DomainEvents.Add(new TodoListItemCreated { Item = todoItem, List = this });
+
+            return todoItem;
         }
         public void SetCompleted(List<TodoListItem> items)
         {

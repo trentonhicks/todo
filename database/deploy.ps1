@@ -3,3 +3,4 @@ Invoke-Sqlcmd -InputFile ToDo.sql
 Invoke-Sqlcmd -InputFile Account.sql
 Invoke-Sqlcmd -InputFile TodoLists.sql
 Invoke-Sqlcmd -InputFile TodoListItems.sql
+Invoke-Sqlcmd -InputFile TodoListLayouts.sql

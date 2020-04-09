@@ -6,6 +6,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Todo.Infrastructure
 {
@@ -30,9 +32,12 @@ namespace Todo.Infrastructure
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<TodoList> TodoLists { get; set; }
         public virtual DbSet<TodoListItem> TodoListItems { get; set; }
+        public virtual DbSet<TodoListLayout> TodoListLayouts { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            var saveChanges = await base.SaveChangesAsync(cancellationToken);
+
             var domainEntities = ChangeTracker
                 .Entries<Entity>()
                 .Where(x => x.Entity.DomainEvents.Count > 0).ToList();
@@ -46,7 +51,7 @@ namespace Todo.Infrastructure
             foreach (var domainEvent in domainEvents)
                 await _mediator.Publish(domainEvent);
 
-            return await base.SaveChangesAsync(cancellationToken);
+            return saveChanges;
         }
 
 
@@ -96,11 +101,19 @@ namespace Todo.Infrastructure
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ParentId).HasColumnName("ParentID");
-
                 entity.Property(e => e.ToDoName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TodoListLayout>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ListId).HasColumnName("ListID");
+
+                entity.Property(e => e.Layout).HasColumnName("Layout")
+                    .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<int>>(v));
             });
         }
     }

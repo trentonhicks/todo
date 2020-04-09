@@ -18,6 +18,7 @@ using Todo.Infrastructure.EFRepositories;
 using Todo.Infrastructure.Email;
 using TodoWebAPI.Data;
 using Todo.WebAPI.ApplicationServices;
+using TodoWebAPI.ApplicationServices;
 
 namespace TodoWebAPI
 {
@@ -49,6 +50,7 @@ namespace TodoWebAPI
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
             services.AddScoped<ITodoListRepository, EFTodoListRepository>();
+            services.AddScoped<ITodoListLayoutRepository, EFTodoListLayoutRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
             services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
@@ -56,6 +58,7 @@ namespace TodoWebAPI
             services.AddScoped<TodoListApplicationService>();
             services.AddScoped<TodoListItemApplicationService>();
             services.AddScoped<AccountsApplicationService>();
+            services.AddScoped<TodoListLayoutApplicationService>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
         }
