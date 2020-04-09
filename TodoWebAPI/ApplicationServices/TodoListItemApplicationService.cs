@@ -27,17 +27,12 @@ namespace Todo.WebAPI.ApplicationServices
             if (list == null)
                 return null;
 
-            var todoItem = new TodoListItem()
-            {
-                ListId = listId,
-                ParentId = parentId,
-                ToDoName = todoName,
-                Notes = notes,
-                AccountId = accountId,
-                Position = list.GetNextPosition()
-            };
+            var todoItem = list.CreateListItem(todoName, notes);
 
             await _listItemRepository.AddTodoListItemAsync(todoItem);
+
+            await _listItemRepository.SaveChangesAsync();
+
             return todoItem;
         }
 
@@ -47,18 +42,6 @@ namespace Todo.WebAPI.ApplicationServices
 
             todoListItem.Notes = notes;
             todoListItem.ToDoName = todoName;
-        }
-
-        public async Task ChangeTodoListItemsPositionAsync(int todoListItem1Id, int todoListItem2Id)
-        {
-            var item1 = await _listItemRepository.FindToDoListItemByIdAsync(todoListItem1Id);
-            var item2 = await _listItemRepository.FindToDoListItemByIdAsync(todoListItem2Id);
-
-            var item1Position = item1.Position;
-            var item2Position = item2.Position;
-
-            item1.Position = item2Position;
-            item2.Position = item1Position;
         }
 
         public async Task DeleteTodoListItem(int todoListItemId)

@@ -1,0 +1,13 @@
+USE ToDO
+
+GO
+
+Create TABLE [TodoListLayouts](
+    ID int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    ListId int UNIQUE NOT NULL,
+    Layout VARCHAR(max) NOT NULL,
+    FOREIGN KEY (ListId)
+    REFERENCES TodoLists (ID) ON DELETE CASCADE
+)
+
+GO

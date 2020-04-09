@@ -9,12 +9,10 @@ namespace Todo.Domain
     {
         public int Id { get; set; }
         public int AccountId { get; set; }
-        public int? ParentId { get; set; }
         public string Notes { get; set; }
         public bool Completed { get; private set; }
         public string ToDoName { get; set; }
         public int ListId { get; set; }
-        public int Position { get; set; }
 
         public void SetCompleted()
         {

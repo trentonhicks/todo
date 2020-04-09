@@ -31,12 +31,11 @@ namespace Todo.WebAPI.ApplicationServices
             if (String.IsNullOrEmpty(listTitle))
                 return null;
 
-            var todoList = new TodoList()
-            {
-                AccountId = accountId,
-                ListTitle = listTitle
-            };
+            var todoList = new TodoList(accountId, listTitle);
+           
             await _listRepository.AddTodoListAsync(todoList);
+
+            await _listRepository.SaveChangesAsync();
 
             return todoList;
         }
