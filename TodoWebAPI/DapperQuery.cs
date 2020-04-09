@@ -37,7 +37,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<TodoListItemModel> GetAllTodoItemAsync(int accountId, int listId)
+        public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(int accountId, int listId)
         {
             using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
             {
@@ -45,7 +45,7 @@ namespace TodoWebAPI
 
                 var result = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems Where AccountID = @accountId AND ListID = @listId", new { accountId = accountId, listId = listId });
 
-                return result.FirstOrDefault();
+                return result.ToList();
             }
         }
 
@@ -59,13 +59,13 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<TodoListModel> GetListsAsync(int accountId)
+        public async Task<List<TodoListModel>> GetListsAsync(int accountId)
         {
             using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
             {
                 await connection.OpenAsync();
-               var result = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId", new { accountId = accountId });
-                return result.FirstOrDefault();
+                var result = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId", new { accountId = accountId });
+                return result.ToList();
             }
         }
 

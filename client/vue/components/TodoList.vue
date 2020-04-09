@@ -77,7 +77,7 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id
       }).then((response) => {
-        this.todoList = response.data[0];
+        this.todoList = response.data;
       }).catch((e) => {
         console.log(e);
       });
