@@ -64,7 +64,7 @@ export default {
         headers: {
           'content-type': 'application/json'
         }
-      })
+      });
     },
     editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);

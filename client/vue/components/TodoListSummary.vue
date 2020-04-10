@@ -2,10 +2,12 @@
     
 .todo-list-summary
     b-card(class="mb-3 bg-light")
-      b-button(:to="'/lists/'+ item.id").card-title {{item.listTitle}}
-      .todo-list-options
-        b-button(variant="info" size="sm" :to="'/lists/'+ item.id").mr-2: b-icon-list-ul
-        b-button(variant="danger" size="sm"  @click="$emit('delete-list', item)"): b-icon-trash
+        b-button(:to="'/lists/'+ item.id").card-title
+            | {{item.listTitle}}
+        b-badge(:class="{ 'badge-success': item.completed }") {{ item.completed ? 'Completed' : 'In progress' }}
+        .todo-list-options
+            b-button(variant="info" size="sm" :to="'/lists/'+ item.id").mr-2: b-icon-list-ul
+            b-button(variant="danger" size="sm"  @click="$emit('delete-list', item)"): b-icon-trash
 
 </template>
 
@@ -13,13 +15,14 @@
 
 export default {
     name: 'TodoListSummary',
-    props: ['id', 'accountId', 'listTitle'],
+    props: ['id', 'accountId', 'listTitle', 'completed'],
     data() {
         return {
             item: {
                 id: this.id,
                 accountId: this.accountId,
-                listTitle: this.listTitle
+                listTitle: this.listTitle,
+                completed: this.completed
             }
         };
     }
