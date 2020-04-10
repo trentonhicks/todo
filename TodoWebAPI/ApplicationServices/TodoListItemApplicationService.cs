@@ -54,15 +54,20 @@ namespace Todo.WebAPI.ApplicationServices
             await _listItemRepository.RemoveTodoListItemAsync(todoListItemId);
         }
 
-        public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool state)
+        public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool completed)
         {
+            var subItemCount = await _listItemRepository.GetSubItemCountAsync(todoListItemId);
+
+            if (subItemCount > 0)
+                return;
+
             var item = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
-            if(state == true)
+            if(completed == true)
             {
                 item.SetCompleted();
             }
-            else if(state == false)
+            else if(completed == false)
             {
                 item.SetNotCompleted();
             }

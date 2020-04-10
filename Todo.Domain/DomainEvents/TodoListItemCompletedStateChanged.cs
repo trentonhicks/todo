@@ -7,6 +7,6 @@ namespace Todo.Domain.DomainEvents
 {
     public class TodoListItemCompletedStateChanged : INotification
     {
-        public TodoListItem List { get; set; }
+        public TodoListItem Item { get; set; }
     }
 }

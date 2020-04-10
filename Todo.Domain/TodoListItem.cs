@@ -18,12 +18,12 @@ namespace Todo.Domain
             if (Completed && !itemsCompleted)
             {
                 Completed = false;
-                DomainEvents.Add(new TodoListItemCompletedStateChanged { List = this });
+                DomainEvents.Add(new TodoListItemCompletedStateChanged { Item = this });
             }
             else if (!Completed && itemsCompleted)
             {
                 Completed = true;
-                DomainEvents.Add(new TodoListItemCompletedStateChanged { List = this });
+                DomainEvents.Add(new TodoListItemCompletedStateChanged { Item = this });
             }
         }
 
@@ -33,7 +33,7 @@ namespace Todo.Domain
                 return;
 
             Completed = true;
-            DomainEvents.Add(new TodoListItemCompleted { ListItem = this });
+            DomainEvents.Add(new TodoListItemCompletedStateChanged { Item = this });
         }
 
         public override void SetNotCompleted()
@@ -42,7 +42,7 @@ namespace Todo.Domain
                 return;
 
             Completed = false;
-            DomainEvents.Add(new TodoListItemCompleted { ListItem = this });
+            DomainEvents.Add(new TodoListItemCompletedStateChanged { Item = this });
         }
 
         public SubItem CreateSubItem(string name, string notes, DateTime? dueDate)

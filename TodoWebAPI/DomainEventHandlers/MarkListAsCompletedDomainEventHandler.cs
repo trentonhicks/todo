@@ -17,7 +17,7 @@ namespace TodoWebAPI.DomainEventHandlers
         }
         public Task Handle(TodoListItemCompletedStateChanged notification, CancellationToken cancellationToken)
         {
-            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.List.ListId);
+            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.Item.ListId);
         }
     }
 }

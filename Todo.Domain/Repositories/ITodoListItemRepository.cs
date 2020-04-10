@@ -12,5 +12,6 @@ namespace Todo.Domain.Repositories
         Task RemoveTodoListItemAsync(int todo);
         Task RemoveAllTodoListItemsFromAccountAsync(int listId);
         Task<List<TodoListItem>> FindAllTodoListItemsByListIdAsync(int listId);
+        Task<int> GetSubItemCountAsync(int listItemId);
     }
 }
