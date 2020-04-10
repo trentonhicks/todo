@@ -33,6 +33,8 @@ namespace Todo.Infrastructure
         public virtual DbSet<TodoList> TodoLists { get; set; }
         public virtual DbSet<TodoListItem> TodoListItems { get; set; }
         public virtual DbSet<TodoListLayout> TodoListLayouts { get; set; }
+        public virtual DbSet<SubItem> SubItems { get; set; }
+        public virtual DbSet<SubItemLayout> GetSubItemLayouts {get; set;}
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -101,7 +103,7 @@ namespace Todo.Infrastructure
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ToDoName)
+                entity.Property(e => e.Name).HasColumnName("ToDoName")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -117,6 +119,38 @@ namespace Todo.Infrastructure
 
                 entity.Property(e => e.Layout).HasColumnName("Layout")
                     .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<int>>(v));
+            });
+
+            modelBuilder.Entity<SubItemLayout>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ListId).HasColumnName("ListID");
+
+                entity.Property(e => e.ItemId);
+
+                entity.Property(e => e.Layout).HasColumnName("Layout")
+                    .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<int>>(v));
+            });
+
+            modelBuilder.Entity<SubItem>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ListId).HasColumnName("ListID");
+
+                entity.Property(e => e.Notes)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ListItemId);
+
+                entity.Property(e => e.Name).HasColumnName("ToDoName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DueDate)
+                    .HasColumnType("datetime");
             });
         }
     }

@@ -31,7 +31,7 @@ namespace Todo.Domain
             var todoItem = new TodoListItem()
             {
                 ListId = Id,
-                ToDoName = name,
+                Name = name,
                 Notes = notes,
                 AccountId = AccountId,
                 DueDate = dueDate

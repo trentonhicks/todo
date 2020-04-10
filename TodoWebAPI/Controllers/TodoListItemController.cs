@@ -37,7 +37,7 @@ namespace TodoWebAPI.Controllers
             return Ok(new TodoListItemModel()
             {
                 Id = todoItem.Id,
-                ToDoName = todoItem.ToDoName,
+                ToDoName = todoItem.Name,
                 Notes = todoItem.Notes,
                 ListId = listId
             });

@@ -15,7 +15,7 @@ namespace TodoWebAPI.Presentation
             Id = todo.Id;
             Notes = todo.Notes;
             Completed = todo.Completed;
-            ToDoName = todo.ToDoName;
+            ToDoName = todo.Name;
         }
         public int Id { get; set; }
         public string Notes { get; set; }

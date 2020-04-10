@@ -5,17 +5,9 @@ using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
-    public partial class TodoListItem : Entity
+    public partial class TodoListItem : TodoListItemBase
     {
-        public int Id { get; set; }
-        public int AccountId { get; set; }
-        public string Notes { get; set; }
-        public bool Completed { get; private set; }
-        public string ToDoName { get; set; }
-        public int ListId { get; set; }
-        public DateTime? DueDate { get; set; }
-
-        public void SetCompleted()
+        public override void SetCompleted()
         {
             if (Completed)
                 return;
@@ -24,13 +16,30 @@ namespace Todo.Domain
             DomainEvents.Add(new TodoListItemCompleted { ListItem = this });
         }
 
-        public void SetNotCompleted()
+        public override void SetNotCompleted()
         {
             if (!Completed)
                 return;
 
             Completed = false;
             DomainEvents.Add(new TodoListItemCompleted { ListItem = this });
+        }
+
+        public SubItem CreateSubItem(string name, string notes, DateTime? dueDate)
+        {
+            var item = new SubItem
+            {
+              AccountId = this.AccountId,
+              DueDate = dueDate,
+              ListId = this.ListId,
+              ListItemId = this.Id,
+              Name = name,
+              Notes = notes
+            };
+
+            DomainEvents.Add(new SubItemCreated { SubItem = item });
+
+            return item;
         }
     }
 }
