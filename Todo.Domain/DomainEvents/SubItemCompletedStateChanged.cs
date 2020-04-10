@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Todo.Domain.DomainEvents
 {
-    public class SubItemCompleted : INotification
+    public class SubItemCompletedStateChanged : INotification
     {
         public SubItem SubItem { get; set; }
     }

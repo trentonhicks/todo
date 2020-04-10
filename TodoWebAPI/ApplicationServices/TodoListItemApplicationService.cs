@@ -13,11 +13,15 @@ namespace Todo.WebAPI.ApplicationServices
     {
         private readonly ITodoListRepository _listRepository;
         private readonly ITodoListItemRepository _listItemRepository;
+        private readonly ISubItemRepository _subItemRepository;
 
-        public TodoListItemApplicationService(ITodoListRepository listRepository, ITodoListItemRepository todoListItemRepository)
+        public TodoListItemApplicationService(ITodoListRepository listRepository,
+            ITodoListItemRepository todoListItemRepository,
+            ISubItemRepository subItemRepository)
         {
             _listRepository = listRepository;
             _listItemRepository = todoListItemRepository;
+            _subItemRepository = subItemRepository;
         }
 
         public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int accountId, string todoName, string notes, DateTime? dueDate)
@@ -62,6 +66,16 @@ namespace Todo.WebAPI.ApplicationServices
             {
                 item.SetNotCompleted();
             }
+
+            await _listItemRepository.SaveChangesAsync();
+        }
+
+        public async Task MarkTodoListItemAsCompletedAsync(int listItemId)
+        {
+            var subItems = await _subItemRepository.FindAllSubItemsByListItemIdAsync(listItemId);
+            var listItem = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
+
+            listItem.SetCompleted(subItems);
 
             await _listItemRepository.SaveChangesAsync();
         }

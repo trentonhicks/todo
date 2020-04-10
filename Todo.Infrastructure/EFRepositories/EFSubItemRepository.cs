@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +21,16 @@ namespace Todo.Infrastructure.EFRepositories
         public void Add(SubItem subItem)
         {
             _context.SubItems.Add(subItem);
+        }
+
+        public async Task<List<SubItem>> FindAllSubItemsByListItemIdAsync(int listItemId)
+        {
+            return await _context.SubItems.Where(x => x.ListItemId == listItemId).ToListAsync();
+        }
+
+        public async Task<SubItem> FindByIdAsync(int subItemId)
+        {
+            return await _context.SubItems.FindAsync(subItemId);
         }
 
         public async Task<SubItem> FindByListItemId(int listItemId)

@@ -14,7 +14,7 @@ namespace Todo.Domain
                 return;
 
             Completed = true;
-            DomainEvents.Add(new SubItemCompleted { SubItem = this });
+            DomainEvents.Add(new SubItemCompletedStateChanged { SubItem = this });
         }
 
         public override void SetNotCompleted()
@@ -23,7 +23,7 @@ namespace Todo.Domain
                 return;
 
             Completed = false;
-            DomainEvents.Add(new SubItemCompleted { SubItem = this });
+            DomainEvents.Add(new SubItemCompletedStateChanged { SubItem = this });
         }
     }
 }

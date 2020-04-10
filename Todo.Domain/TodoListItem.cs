@@ -1,12 +1,32 @@
 ﻿using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
-    public partial class TodoListItem : TodoListItemBase
+    public class TodoListItem : TodoListItemBase
     {
+        public void SetCompleted(List<SubItem> items)
+        {
+            if (!items.All(item => item.ListItemId == Id))
+                return;
+
+            var itemsCompleted = items.All(item => item.Completed);
+
+            if (Completed && !itemsCompleted)
+            {
+                Completed = false;
+                DomainEvents.Add(new TodoListItemCompletedStateChanged { List = this });
+            }
+            else if (!Completed && itemsCompleted)
+            {
+                Completed = true;
+                DomainEvents.Add(new TodoListItemCompletedStateChanged { List = this });
+            }
+        }
+
         public override void SetCompleted()
         {
             if (Completed)

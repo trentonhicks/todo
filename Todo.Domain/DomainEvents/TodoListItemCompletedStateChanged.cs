@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Todo.Domain.DomainEvents
 {
-    public class TodoListItemCompleted : INotification
+    public class TodoListItemCompletedStateChanged : INotification
     {
-        public TodoListItem ListItem { get; set; }
+        public TodoListItem List { get; set; }
     }
 }

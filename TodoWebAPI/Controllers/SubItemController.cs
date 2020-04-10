@@ -19,7 +19,7 @@ namespace TodoWebAPI.Controllers
             _service = service;
         }
         [HttpPost("accounts/{accountId}/lists/{listId}/todos/{todoId}/subitems")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, int todoId, [FromBody] CreateSubItemModel todo)
+        public async Task<IActionResult> CreateSubItem(int accountId, int listId, int todoId, [FromBody] CreateSubItemModel todo)
         {
             var todoItem = await _service.CreateSubItemAsync(todoId, todo.TodoName, todo.Notes, todo.DueDate);
 
@@ -31,6 +31,14 @@ namespace TodoWebAPI.Controllers
                 ListId = listId,
                 ListItemId = todoId
             });
+        }
+
+        [HttpPut("accounts/{accountId}/subitems/{subitemId}/completed")]
+        public async Task<IActionResult> ToggleCompletedState(int accountId, int subItemId, [FromBody] bool completed)
+        {
+            await _service.ChangeCompletedStateAsync(subItemId, completed);
+
+            return Ok();
         }
     }
 }

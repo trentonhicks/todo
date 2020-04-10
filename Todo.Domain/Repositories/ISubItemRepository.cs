@@ -9,5 +9,7 @@ namespace Todo.Domain.Repositories
     {
         void Add(SubItem subItem);
         Task<SubItem> FindByListItemId(int listItemId);
+        Task<List<SubItem>> FindAllSubItemsByListItemIdAsync(int listItemId);
+        Task<SubItem> FindByIdAsync(int subItemId);
     }
 }
