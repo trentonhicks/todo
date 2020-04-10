@@ -26,9 +26,9 @@ namespace TodoWebAPI.Controllers
 
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateToDoModel todo)
+        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateTodoListItemModel todo)
         {
-            var todoItem = await _todoListItemApplicationService.CreateTodoListItemAsync(listId, todo.ParentId, accountId, todo.ToDoName, todo.Notes);
+            var todoItem = await _todoListItemApplicationService.CreateTodoListItemAsync(listId,  accountId, todo.TodoName, todo.Notes, todo.DueDate);
             
             if (todoItem == null)
               return BadRequest("List doesn't exist");
@@ -56,7 +56,7 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItemModel todo)
         {
-            await _todoListItemApplicationService.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName);
+            await _todoListItemApplicationService.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.DueDate);
 
             await _todoDatabaseContext.SaveChangesAsync();
             

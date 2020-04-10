@@ -20,14 +20,14 @@ namespace Todo.WebAPI.ApplicationServices
             _listItemRepository = todoListItemRepository;
         }
 
-        public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int? parentId, int accountId, string todoName, string notes)
+        public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int accountId, string todoName, string notes, DateTime? dueDate)
         {
             var list = await _listRepository.FindTodoListIdByIdAsync(listId);
 
             if (list == null)
                 return null;
 
-            var todoItem = list.CreateListItem(todoName, notes);
+            var todoItem = list.CreateListItem(todoName, notes, dueDate);
 
             await _listItemRepository.AddTodoListItemAsync(todoItem);
 
@@ -36,12 +36,13 @@ namespace Todo.WebAPI.ApplicationServices
             return todoItem;
         }
 
-        public async Task UpdateTodoListItemAsync(int todoListItemId, string notes, string todoName)
+        public async Task UpdateTodoListItemAsync(int todoListItemId, string notes, string todoName, DateTime? dueDate)
         {
             var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
             todoListItem.Notes = notes;
             todoListItem.ToDoName = todoName;
+            todoListItem.DueDate = dueDate;
         }
 
         public async Task DeleteTodoListItem(int todoListItemId)

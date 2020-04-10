@@ -4,10 +4,10 @@ GO
 
 CREATE TABLE [TodoListItems](
     [ID] INT PRIMARY KEY IDENTITY(1,1),
-    [ParentID] INT NULL,
     [Notes] VARCHAR(200),
     [Completed] BIT NOT NULL DEFAULT(0),
     [ToDoName] VARCHAR(50),
+	[DueDate] DATETIME NULL,
     [ListID] INT NOT NULL,
 	[AccountID] INT NOT NULL
 
