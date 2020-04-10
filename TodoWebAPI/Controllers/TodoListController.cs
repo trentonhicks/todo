@@ -13,6 +13,7 @@ using TodoWebAPI.ApplicationServices;
 
 namespace TodoWebAPI.Controllers
 {
+    [ApiController]
     public class TodoListController : ControllerBase
     {
         private readonly IConfiguration _config;

@@ -7,7 +7,7 @@ using Todo.WebAPI.ApplicationServices;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
-    public class MarkListAsCompletedDomainEventHandler : INotificationHandler<TodoListItemCompleted>
+    public class MarkListAsCompletedDomainEventHandler : INotificationHandler<TodoListItemCompletedStateChanged>
     {
         private readonly TodoListApplicationService _todoListApplicationService;
 
@@ -15,9 +15,9 @@ namespace TodoWebAPI.DomainEventHandlers
         {
             _todoListApplicationService = todoListService;
         }
-        public Task Handle(TodoListItemCompleted notification, CancellationToken cancellationToken)
+        public Task Handle(TodoListItemCompletedStateChanged notification, CancellationToken cancellationToken)
         {
-            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.ListItem.ListId);
+            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.Item.ListId);
         }
     }
 }

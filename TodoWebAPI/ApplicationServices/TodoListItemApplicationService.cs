@@ -13,11 +13,15 @@ namespace Todo.WebAPI.ApplicationServices
     {
         private readonly ITodoListRepository _listRepository;
         private readonly ITodoListItemRepository _listItemRepository;
+        private readonly ISubItemRepository _subItemRepository;
 
-        public TodoListItemApplicationService(ITodoListRepository listRepository, ITodoListItemRepository todoListItemRepository)
+        public TodoListItemApplicationService(ITodoListRepository listRepository,
+            ITodoListItemRepository todoListItemRepository,
+            ISubItemRepository subItemRepository)
         {
             _listRepository = listRepository;
             _listItemRepository = todoListItemRepository;
+            _subItemRepository = subItemRepository;
         }
 
         public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int accountId, string todoName, string notes, DateTime? dueDate)
@@ -41,7 +45,7 @@ namespace Todo.WebAPI.ApplicationServices
             var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
             todoListItem.Notes = notes;
-            todoListItem.ToDoName = todoName;
+            todoListItem.Name = todoName;
             todoListItem.DueDate = dueDate;
         }
 
@@ -50,18 +54,33 @@ namespace Todo.WebAPI.ApplicationServices
             await _listItemRepository.RemoveTodoListItemAsync(todoListItemId);
         }
 
-        public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool state)
+        public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool completed)
         {
+            var subItemCount = await _listItemRepository.GetSubItemCountAsync(todoListItemId);
+
+            if (subItemCount > 0)
+                return;
+
             var item = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
-            if(state == true)
+            if(completed == true)
             {
                 item.SetCompleted();
             }
-            else if(state == false)
+            else if(completed == false)
             {
                 item.SetNotCompleted();
             }
+
+            await _listItemRepository.SaveChangesAsync();
+        }
+
+        public async Task MarkTodoListItemAsCompletedAsync(int listItemId)
+        {
+            var subItems = await _subItemRepository.FindAllSubItemsByListItemIdAsync(listItemId);
+            var listItem = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
+
+            listItem.SetCompleted(subItems);
 
             await _listItemRepository.SaveChangesAsync();
         }
