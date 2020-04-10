@@ -12,36 +12,40 @@
         @blur="editingTitle = false; updateListTitle(todoList.listTitle)"
         v-focus="")
 
-    draggable(v-model="todoListItems").todos-wrapper.mb-3
+    draggable(v-model="todoListItems").todo-list-items.mb-3
 
       todo-item(
-        v-for="todo in todoListItems"
+        v-for="(todo, index) in todoListItems"
         v-on:delete-list-item="deleteTodoListItem"
         :key="todo.id"
         :id="todo.id"
         :toDoName="todo.toDoName"
         :notes="todo.notes"
-        :completed="todo.completed")
+        :dueDate="todo.dueDate"
+        :completed="todo.completed"
+        :class="`item-${index}`")
 
       b-list-group-item.no-items.bg-light(v-if="listIsEmpty") Your list is empty. Add a new item to get started.
       
     b-button(id="add-list-item-btn" @click="$bvModal.show('modal-add')") Add list item
 
     b-modal(id="modal-add" title="Add new list item")
-      b-form(v-on:submit.prevent="addTodoListItem(form.toDoName, form.notes)" id="add-list-item-form")
-        b-form-group
+      b-form(v-on:submit.prevent="addTodoListItem(form.toDoName, form.notes, form.dueDate)" id="add-list-item-form")
+
+        b-form-group(label="Name")
           b-form-input(
             type="text"
-            placeholder="List item name"
+            placeholder="Name"
             v-model="form.toDoName"
-            required
-          )
-        b-form-group
-          b-form-input(
-            type="text"
+            required)
+        b-form-group(label="Notes")
+          b-form-textarea(
             placeholder="Notes"
-            v-model="form.notes"
-          )
+            rows="3"
+            v-model="form.notes")
+        b-form-group(label="Due Date")
+          b-form-datepicker(v-model="form.dueDate")
+
         b-button(type="submit" variant="primary" class="mr-2") Add
         b-button(variant="secondary" @click="$bvModal.hide('modal-add')") Cancel
 
@@ -60,10 +64,7 @@ export default {
     return {
       todoList: {},
       todoListItems: [],
-      form: {
-        toDoName: '',
-        notes: ''
-      },
+      form: {},
       listIsEmpty: false,
       editingTitle: false
     }
@@ -112,12 +113,13 @@ export default {
         }
       });
     },
-    addTodoListItem(toDoName : string, notes : string) : void {
+    addTodoListItem(toDoName : string, notes : string, dueDate : Date) : void {
       this.$bvModal.hide('modal-add');
 
       let data = JSON.stringify({
         toDoName,
-        notes
+        notes,
+        dueDate
       });
 
       axios({

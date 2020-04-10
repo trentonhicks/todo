@@ -64,4 +64,27 @@ h1 {
   font-weight: bold;
 }
 
+.modal-hide-footer .modal-footer {
+  display: none;
+}
+
+.item-0 {
+    .todo-item.list-group-item {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+}
+
+.todo-item-wrapper:not(.item-0) {
+  .todo-item.list-group-item {
+      border-radius: 0;
+      border-top: none;
+    }
+}
+
+.todo-item-wrapper:not(.item-0):last-child .todo-item {
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+}
+
 </style>
