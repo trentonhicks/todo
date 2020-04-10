@@ -47,5 +47,10 @@ namespace TodoWebAPI.Data
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task<int> GetSubItemCountAsync(int listItemId)
+        {
+            return await _context.SubItems.CountAsync(x => x.ListItemId == listItemId);
+        }
     }
 }

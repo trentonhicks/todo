@@ -1,0 +1,20 @@
+USE [ToDo]
+
+GO
+
+CREATE TABLE [SubItems](
+    [ID] INT PRIMARY KEY IDENTITY(1,1),
+    [Notes] VARCHAR(200),
+    [Completed] BIT NOT NULL DEFAULT(0),
+    [ToDoName] VARCHAR(50),
+	[DueDate] DATETIME NULL,
+    [ListID] INT NOT NULL,
+    [ListItemID] INT NOT NULL,
+	[AccountID] INT NOT NULL
+
+    FOREIGN KEY (AccountID) REFERENCES Accounts (ID),
+    FOREIGN KEY (ListID) REFERENCES TodoLists (ID),
+    FOREIGN KEY (ListItemID) REFERENCES TodoListItems (ID) ON DELETE CASCADE
+)
+
+GO
