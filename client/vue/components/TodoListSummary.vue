@@ -36,9 +36,15 @@ export default {
     
         .card-body {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
+            flex-direction: column;
             padding: 0px;
+
+            @media screen and (min-width: 540px) {
+                flex-direction: row;
+                align-items: center;
+            }
         }
 
         .card-title {
@@ -51,12 +57,22 @@ export default {
             border: none;
             font-weight: bold;
             padding: 20px;
+            padding-bottom: 0px;
+
+            @media screen and (min-width: 540px) {
+                padding-bottom: 20px;
+            }
 
             &:focus, &:hover, &:not(:disabled):not(.disabled):active {
                 background-color: transparent;
                 border: none;
                 color: #212529;
             }
+        }
+
+        .badge {
+            margin-top: 3px;
+            margin-left: 20px;
         }
 
         .todo-list-options {
