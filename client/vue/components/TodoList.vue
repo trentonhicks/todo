@@ -16,7 +16,7 @@
 
       todo-item(
         v-for="(todo, index) in todoListItems"
-        v-on:delete-list-item="deleteTodoListItem"
+        v-on:deleted-list-item="deleteTodoListItem"
         :key="todo.id"
         :id="todo.id"
         :toDoName="todo.toDoName"

@@ -39,7 +39,8 @@ namespace TodoWebAPI.Controllers
                 Id = todoItem.Id,
                 ToDoName = todoItem.Name,
                 Notes = todoItem.Notes,
-                ListId = listId
+                ListId = listId,
+                DueDate = todoItem.DueDate
             });
         }
 

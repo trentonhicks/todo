@@ -4,10 +4,13 @@
   b-list-group-item.todo-item.bg-light
     b-form-checkbox(v-model="item.completed")
       .todo-item-name {{ item.toDoName }}
+      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !dueSoon, 'text-warning': dueSoon }")
+        b-icon-clock
+        | {{ item.dueDate | monthDay }}
       .todo-item-notes(v-if="item.notes"): small.text-muted {{ item.notes }}
     .todo-item-options
       b-button(variant="info" size="sm"  @click="$bvModal.show('modal-edit-' + item.id)"): b-icon-three-dots
-      b-button(variant="danger" size="sm"  @click="$emit('delete-list-item', item)"): b-icon-trash
+      b-button(variant="danger" size="sm"  @click="$emit('deleted-list-item', item)"): b-icon-trash
 
   b-modal(:id="'modal-edit-' + item.id" :title="`Edit todo item`" modal-class="modal-hide-footer")
     b-form(v-on:submit.prevent="editTodoItem" id="edit-item-form")
@@ -25,7 +28,7 @@
             v-model="item.notes")
         b-form-group(label="Due Date")
           b-form-datepicker(v-model="item.dueDate").mb-2
-          label(v-if="item.dueDate") Current due date: {{ item.dueDate | formatDate }}
+          label(v-if="item.dueDate != ''") {{ item.dueDate | formatDate }}
 
         b-button(type="submit" variant="primary" class="mr-2") Save Changes
         b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
@@ -48,7 +51,8 @@ export default {
         notes: this.notes,
         completed: this.completed,
         dueDate: this.dueDate
-      }
+      },
+      dueSoon: false
     };
   },
   methods: {
@@ -77,6 +81,17 @@ export default {
       });
     }
   },
+  created: function() {
+    let today = new Date();
+    let dueDate = new Date(this.item.dueDate);
+
+    if(dueDate.getTime() >= today.getTime()) {
+      this.dueSoon = false;
+    }
+    else {
+      this.dueSoon = true;
+    }
+  },
   watch: {
     checkboxToggle: function() {
       this.toggleCompleted();
@@ -90,6 +105,9 @@ export default {
   filters: {
     formatDate: function(value) : string {
       return moment(value).format('dddd, MMMM Do YYYY');
+    },
+    monthDay: function(value) : string {
+      return moment(value).format('MMMM Do');
     }
   }
 };
@@ -110,6 +128,17 @@ export default {
     font-weight: bold;
     line-height: 1.1;
     max-width: 160px;
+  }
+
+  .todo-item-date {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 4px;
+
+    svg {
+      margin-right: 3px;
+    }
   }
 
   .todo-item-notes {
