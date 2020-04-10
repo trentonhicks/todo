@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace TodoWebAPI.Models
 {
-    public class CreateToDoModel
+    public class CreateTodoListItemModel
     {
         public string Notes { get; set; }
-        public string ToDoName { get; set; }
+        public string TodoName { get; set; }
         public DateTime? DueDate { get; set; }
     }
 }
