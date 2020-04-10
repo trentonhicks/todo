@@ -16,6 +16,7 @@
 
       todo-item(
         v-for="todo in todoListItems"
+        v-on:delete-list-item="deleteTodoListItem"
         :key="todo.id"
         :id="todo.id"
         :toDoName="todo.toDoName"
@@ -99,6 +100,18 @@ export default {
         console.log(e);
       });
     },
+    updateListTitle(listTitle : string) {
+      let data = JSON.stringify({ listTitle });
+
+      axios({
+        url: `http://localhost:5000/accounts/1/lists/${this.id}`,
+        method: 'PUT',
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+    },
     addTodoListItem(toDoName : string, notes : string) : void {
       this.$bvModal.hide('modal-add');
 
@@ -121,16 +134,27 @@ export default {
           this.listIsEmpty = false;
       });
     },
-    updateListTitle(listTitle : string) {
-      let data = JSON.stringify({ listTitle });
-
-      axios({
-        url: `http://localhost:5000/accounts/1/lists/${this.id}`,
-        method: 'PUT',
-        data,
-        headers: {
-          'content-type': 'application/json'
-        }
+    deleteTodoListItem(item) : void {
+      this.$bvModal.msgBoxConfirm(`Are you sure you want to delete ${item.toDoName}?`, {
+          size: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Delete',
+          cancelTitle: 'Cancel',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+      })
+      .then(choseToDelete => {
+          if(choseToDelete) {
+              axios({
+                url: `http://localhost:5000/accounts/1/todos/${item.id}`,
+                method: 'DELETE'
+              }).then((response) => {
+                  let index = this.todoListItems.findIndex(({id}) => id === item.id);
+                  if(index !== -1) {
+                      this.todoListItems.splice(index, 1);
+                  }
+              });
+          }
       });
     }
   },
