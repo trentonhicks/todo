@@ -8,7 +8,6 @@ namespace Todo.Domain
     public class SubItemLayout : Entity
     {
         public int Id { get; set; }
-        public int ListId { get; set; }
         public int ItemId { get; set; }
         public List<int> Layout { get; set; } = new List<int>();
         public void UpdateLayout(int subItemId, int position)

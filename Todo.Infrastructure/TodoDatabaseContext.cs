@@ -34,7 +34,7 @@ namespace Todo.Infrastructure
         public virtual DbSet<TodoListItem> TodoListItems { get; set; }
         public virtual DbSet<TodoListLayout> TodoListLayouts { get; set; }
         public virtual DbSet<SubItem> SubItems { get; set; }
-        public virtual DbSet<SubItemLayout> GetSubItemLayouts {get; set;}
+        public virtual DbSet<SubItemLayout> SubItemLayouts {get; set;}
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -124,8 +124,6 @@ namespace Todo.Infrastructure
             modelBuilder.Entity<SubItemLayout>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.ListId).HasColumnName("ListID");
 
                 entity.Property(e => e.ItemId);
 
