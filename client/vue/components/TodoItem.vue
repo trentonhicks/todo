@@ -64,6 +64,8 @@ export default {
         headers: {
           'content-type': 'application/json'
         }
+      }).then(() => {
+        this.$emit('toggled-list-item');
       });
     },
     editTodoItem() {

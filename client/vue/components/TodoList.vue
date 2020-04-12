@@ -1,6 +1,9 @@
 <template lang="pug">
 
   .todo-list
+
+    canvas(v-show="confetti")#confetti
+
     .list-title.mb-3
       h1(v-if="!editingTitle" @click="editingTitle = true") {{ todoList.listTitle }}
       input(
@@ -17,6 +20,7 @@
       todo-item(
         v-for="(todo, index) in todoListItems"
         v-on:deleted-list-item="deleteTodoListItem"
+        v-on:toggled-list-item="checkIfListCompleted"
         :key="todo.id"
         :id="todo.id"
         :toDoName="todo.toDoName"
@@ -56,6 +60,7 @@
 import axios from 'axios';
 import TodoItem from './TodoItem.vue';
 import draggable from 'vuedraggable';
+import ConfettiGenerator from "confetti-js";
 
 export default {
   name: 'TodoList',
@@ -66,7 +71,8 @@ export default {
       todoListItems: [],
       form: {},
       listIsEmpty: false,
-      editingTitle: false
+      editingTitle: false,
+      confetti: false
     }
   },
   created: function() {
@@ -158,6 +164,22 @@ export default {
               });
           }
       });
+    },
+    checkIfListCompleted() {
+      axios({
+        method: 'get',
+        url: 'http://localhost:5000/accounts/1/lists/' + this.id
+      }).then((response) => {
+        if(response.data.completed === true) {
+          this.confetti = true;
+          var confettiSettings = { target: 'confetti' };
+          var confetti = new ConfettiGenerator(confettiSettings);
+          confetti.render();
+        }
+        else {
+          this.confetti = false;
+        }
+      })
     }
   },
   components: {
@@ -174,3 +196,17 @@ export default {
 };
 
 </script>
+
+<style lang="scss" scoped>
+
+#confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 500;
+}
+
+</style>
