@@ -20,16 +20,19 @@ namespace TodoWebAPI.Controllers
         private readonly TodoListApplicationService _todoListApplicationService;
         private readonly TodoDatabaseContext _todoDatabaseContext;
         private readonly TodoListLayoutApplicationService _todoListLayoutApplicationService;
+        private readonly DapperQuery _dapperQuery;
 
         public TodoListController(IConfiguration config,
             TodoListApplicationService todoListApplicationService,
             TodoDatabaseContext todoDatabaseContext,
-            TodoListLayoutApplicationService todoListLayoutApplicationService)
+            TodoListLayoutApplicationService todoListLayoutApplicationService,
+            DapperQuery dapperQuery)
         {
             _config = config;
             _todoListApplicationService = todoListApplicationService;
             _todoDatabaseContext = todoDatabaseContext;
             _todoListLayoutApplicationService = todoListLayoutApplicationService;
+            _dapperQuery = dapperQuery;
         }
 
         [HttpPost("accounts/{accountId}/lists")]
@@ -48,9 +51,7 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}/lists")]
         public async Task<IActionResult> GetLists(int accountId)
         {
-            var dapper = new DapperQuery(_config);
-
-            var lists = await dapper.GetListsAsync(accountId);
+            var lists = await _dapperQuery.GetListsAsync(accountId);
 
             return Ok(lists);
         }
@@ -59,9 +60,7 @@ namespace TodoWebAPI.Controllers
 
         public async Task<IActionResult> GetList(int accountId, int listId)
         {
-            var dapper = new DapperQuery(_config);
-
-            var list = await dapper.GetListAsync(accountId, listId);
+            var list = await _dapperQuery.GetListAsync(accountId, listId);
 
             return Ok(list);
         }
@@ -75,6 +74,16 @@ namespace TodoWebAPI.Controllers
 
             return Ok($"List title changed to {updatedList.ListTitle}");
         }
+        
+        [HttpDelete("accounts/{accountId}/lists/{listId}")]
+        public async Task<IActionResult> DeleteList(int accountId, int listId)
+        {
+            await _todoListApplicationService.DeleteTodoList(listId);
+
+            await _todoDatabaseContext.SaveChangesAsync();
+
+            return Ok("List deleted");
+        }
 
         [HttpPut("accounts/{accountId}/lists/{listId}/layout")]
         public async Task<IActionResult> UpdateLayout(int accountId, int listId, [FromBody] TodoListLayoutModel todoListLayoutModel)
@@ -84,14 +93,11 @@ namespace TodoWebAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("accounts/{accountId}/lists/{listId}")]
-        public async Task<IActionResult> DeleteList(int accountId, int listId)
+        [HttpGet("accounts/{accountId}/lists/{listId}/layout")]
+        public async Task<IActionResult> GetTodoListLayout(int listId)
         {
-            await _todoListApplicationService.DeleteTodoList(listId);
-
-            await _todoDatabaseContext.SaveChangesAsync();
-
-            return Ok("List deleted");
+            var layout = await _dapperQuery.GetTodoListLayoutAsync(listId);
+            return Ok();
         }
 
     }
