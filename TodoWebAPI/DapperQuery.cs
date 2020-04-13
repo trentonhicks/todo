@@ -69,12 +69,12 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<TodoListLayout> GetTodoListLayoutAsync(int listId)
+        public async Task<TodoListLayoutPresentation> GetTodoListLayoutAsync(int listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<TodoListLayout>("SELECT * FROM TodoListLayouts WHERE ListId = @listId", new { listId = listId });
+                var result = await connection.QueryAsync<TodoListLayoutPresentation>("SELECT * FROM TodoListLayouts WHERE ListId = @listId", new { listId = listId });
                 return result.FirstOrDefault();
             }
         }

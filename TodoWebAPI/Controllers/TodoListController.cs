@@ -97,7 +97,7 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> GetTodoListLayout(int listId)
         {
             var layout = await _dapperQuery.GetTodoListLayoutAsync(listId);
-            return Ok();
+            return Ok(layout.Layout);
         }
 
     }

@@ -68,6 +68,7 @@ export default {
   data() {
     return {
       todoList: {},
+      todoListLayout: [],
       todoListItems: [],
       form: {},
       listIsEmpty: false,
@@ -77,10 +78,10 @@ export default {
   },
   created: function() {
     this.getTodoList(this.id);
-    this.getTodoListItems(this.id);
   },
   methods: {
     getTodoList(id : number) : void {
+      // Get list
       axios({
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id
@@ -89,22 +90,35 @@ export default {
       }).catch((e) => {
         console.log(e);
       });
-    },
-    getTodoListItems(id : number) : void {
+
+      // Get list layout
       axios({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+        url: `http://localhost:5000/accounts/1/lists/${id}/layout`
       }).then((response) => {
-        this.todoListItems = response.data;
+        this.todoListLayout = response.data;
 
-        if(this.todoListItems.length < 1) {
-          this.listIsEmpty = true;
-        }
-        else {
-          this.listIsEmpty = false;
-        }
-      }).catch((e) => {
-        console.log(e);
+        // Get todo list items
+        axios({
+          method: 'get',
+          url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+        }).then((response) => {
+
+          this.todoListLayout.forEach(position => {
+            let index = response.data.findIndex(item => item.id === position);
+
+            if(index !== -1) {
+              this.todoListItems.push(response.data[index]);
+            }
+          });
+
+          if(this.todoListItems.length < 1) {
+            this.listIsEmpty = true;
+          }
+          else {
+            this.listIsEmpty = false;
+          }
+        });
       });
     },
     updateListTitle(listTitle : string) {
@@ -136,7 +150,7 @@ export default {
           'content-type': 'application/json'
         }
       }).then((response) => {
-          this.todoListItems.push(response.data);
+          this.todoListItems.unshift(response.data);
           this.form.toDoName = '';
           this.form.notes = '';
           this.listIsEmpty = false;
