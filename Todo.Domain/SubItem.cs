@@ -8,6 +8,12 @@ namespace Todo.Domain
     public class SubItem : TodoListItemBase
     {
         public int ListItemId { get; set; }
+
+        public override void MoveToTrash()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void SetCompleted()
         {
             if (Completed)

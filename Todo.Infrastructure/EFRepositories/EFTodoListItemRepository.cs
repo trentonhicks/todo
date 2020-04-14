@@ -23,10 +23,9 @@ namespace TodoWebAPI.Data
             _context.TodoListItems.Add(todo);
             return Task.CompletedTask;
         }
-        public async Task RemoveTodoListItemAsync(int todo)
+        public void RemoveTodoListItemAsync(TodoListItem todo)
         {
-           var todoListItem =  await _context.TodoListItems.FindAsync(todo);
-            _context.Remove(todoListItem);
+            _context.Remove(todo);
         }
         public async Task RemoveAllTodoListItemsFromAccountAsync(int accountId)
         {

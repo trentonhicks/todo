@@ -11,10 +11,11 @@ namespace Todo.Domain
         public string Notes { get; set; }
         public bool Completed { get; protected set; }
         public string Name { get; set; }
-        public int ListId { get; set; }
+        public int? ListId { get; set; }
         public DateTime? DueDate { get; set; }
 
         public abstract void SetCompleted();
         public abstract void SetNotCompleted();
+        public abstract void MoveToTrash();
     }
 }

@@ -29,6 +29,8 @@ namespace Todo.Domain
 
         public override void SetCompleted()
         {
+            CheckIfListItemIsTrashed();
+            
             if (Completed)
                 return;
 
@@ -38,6 +40,8 @@ namespace Todo.Domain
 
         public override void SetNotCompleted()
         {
+            CheckIfListItemIsTrashed();
+
             if (!Completed)
                 return;
 
@@ -60,6 +64,20 @@ namespace Todo.Domain
             DomainEvents.Add(new SubItemCreated { SubItem = item });
 
             return item;
+        }
+
+        public override void MoveToTrash()
+        {
+            var listId = this.ListId;
+            this.ListId = null;
+
+            DomainEvents.Add(new ItemMovedToTrash { ListId = listId, Item = this });
+        }
+
+        private void CheckIfListItemIsTrashed()
+        {
+            if(this.ListId == null)
+                throw new InvalidOperationException("Item is in the trash!");
         }
     }
 }
