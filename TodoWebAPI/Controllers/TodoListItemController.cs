@@ -8,6 +8,7 @@ using Dapper;
 using Todo.WebAPI.ApplicationServices;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
+using TodoWebAPI.ApplicationServices;
 
 namespace TodoWebAPI.Controllers
 {
@@ -16,12 +17,17 @@ namespace TodoWebAPI.Controllers
         private readonly IConfiguration _config;
         private readonly TodoListItemApplicationService _todoListItemApplicationService;
         private readonly TodoDatabaseContext _todoDatabaseContext;
+        private readonly SubItemLayoutApplicationService _subItemLayoutApplicationService;
 
-        public TodoListItemController(IConfiguration config, TodoListItemApplicationService todoListItemApplicationService, TodoDatabaseContext todoDatabaseContext)
+        public TodoListItemController(IConfiguration config,
+            TodoListItemApplicationService todoListItemApplicationService,
+            TodoDatabaseContext todoDatabaseContext,
+            SubItemLayoutApplicationService subItemLayoutApplicationService)
         {
             _config = config;
             _todoListItemApplicationService = todoListItemApplicationService;
             _todoDatabaseContext = todoDatabaseContext;
+            _subItemLayoutApplicationService = subItemLayoutApplicationService;
         }
 
 
@@ -72,6 +78,13 @@ namespace TodoWebAPI.Controllers
             return Ok();
         }
 
+        [HttpPut("accounts/{accountId}/todos/{todoId}/layout")]
+        public async Task<IActionResult> UpdateLayout(int accountId, int todoId, [FromBody] TodoListItemLayoutModel todoListItemLayoutModel)
+        {
+            await _subItemLayoutApplicationService.UpdateLayoutAsync(todoListItemLayoutModel.SubItemId, todoListItemLayoutModel.Position, todoId);
+
+            return Ok();
+        }
 
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
