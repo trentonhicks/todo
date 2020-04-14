@@ -87,13 +87,11 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> DeleteTodo(int accountId, int todoId)
+        public async Task<IActionResult> TrashItem(int accountId, int todoId)
         {
-            await _todoListItemApplicationService.DeleteTodoListItem(todoId);
+            await _todoListItemApplicationService.TrashItemAsync(todoId);
 
-            await _todoDatabaseContext.SaveChangesAsync();
-
-            return Ok("Todo list item deleted.");
+            return Ok("Item has been trashed!");
         }
     }
 }

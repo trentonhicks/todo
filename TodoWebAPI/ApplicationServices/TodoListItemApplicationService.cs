@@ -49,11 +49,6 @@ namespace Todo.WebAPI.ApplicationServices
             todoListItem.DueDate = dueDate;
         }
 
-        public async Task DeleteTodoListItem(int todoListItemId)
-        {
-            await _listItemRepository.RemoveTodoListItemAsync(todoListItemId);
-        }
-
         public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool completed)
         {
             var subItemCount = await _listItemRepository.GetSubItemCountAsync(todoListItemId);
@@ -81,6 +76,15 @@ namespace Todo.WebAPI.ApplicationServices
             var listItem = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
 
             listItem.SetCompleted(subItems);
+
+            await _listItemRepository.SaveChangesAsync();
+        }
+
+        public async Task TrashItemAsync(int listItemId)
+        {
+            var item = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
+
+            item.MoveToTrash();
 
             await _listItemRepository.SaveChangesAsync();
         }

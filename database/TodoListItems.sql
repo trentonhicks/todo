@@ -7,8 +7,8 @@ CREATE TABLE [TodoListItems](
     [Notes] VARCHAR(200),
     [Completed] BIT NOT NULL DEFAULT(0),
     [ToDoName] VARCHAR(50),
-	[DueDate] DATETIME NULL,
-    [ListID] INT NOT NULL,
+	[DueDate] DATETIME,
+    [ListID] INT,
 	[AccountID] INT NOT NULL
 
     FOREIGN KEY (AccountID) REFERENCES Accounts (ID),

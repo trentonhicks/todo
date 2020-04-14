@@ -20,5 +20,10 @@ namespace Todo.Domain
                 throw new ArgumentException("Layout contains duplicate Id.");
             }
         }
+        
+        public void RemoveItemFromLayout(int todoListItemId)
+        {
+            Layout.Remove(todoListItemId);
+        }
     }
 }

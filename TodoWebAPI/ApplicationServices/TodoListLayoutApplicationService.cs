@@ -31,5 +31,14 @@ namespace TodoWebAPI.ApplicationServices
             _todoListLayoutRepository.Update(todoListLayout);
             await _todoListLayoutRepository.SaveChangesAsync();
         }
+
+        public async Task DeleteLayoutAsync(int todoListItemId, int listId)
+        {
+            var todoListLayout = await _todoListLayoutRepository.FindLayoutByListIdAsync(listId);
+
+            todoListLayout.RemoveItemFromLayout(todoListItemId);
+            _todoListLayoutRepository.Update(todoListLayout);
+            await _todoListLayoutRepository.SaveChangesAsync();
+        }
     }
 }
