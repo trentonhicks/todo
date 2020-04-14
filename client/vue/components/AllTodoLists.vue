@@ -8,6 +8,7 @@
         :id="item.id"
         :accountId="item.accountId"
         :listTitle="item.listTitle"
+        :completed="item.completed"
         )
 
     b-button(@click="$bvModal.show('modal-add')" id="add-list-btn") Add list

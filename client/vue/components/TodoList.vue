@@ -1,6 +1,9 @@
 <template lang="pug">
 
   .todo-list
+
+    canvas(v-show="confetti")#confetti
+
     .list-title.mb-3
       h1(v-if="!editingTitle" @click="editingTitle = true") {{ todoList.listTitle }}
       input(
@@ -17,6 +20,7 @@
       todo-item(
         v-for="(todo, index) in todoListItems"
         v-on:deleted-list-item="deleteTodoListItem"
+        v-on:toggled-list-item="checkIfListCompleted"
         :key="todo.id"
         :id="todo.id"
         :toDoName="todo.toDoName"
@@ -56,6 +60,7 @@
 import axios from 'axios';
 import TodoItem from './TodoItem.vue';
 import draggable from 'vuedraggable';
+import ConfettiGenerator from "confetti-js";
 
 export default {
   name: 'TodoList',
@@ -63,18 +68,20 @@ export default {
   data() {
     return {
       todoList: {},
+      todoListLayout: [],
       todoListItems: [],
       form: {},
       listIsEmpty: false,
-      editingTitle: false
+      editingTitle: false,
+      confetti: false
     }
   },
   created: function() {
     this.getTodoList(this.id);
-    this.getTodoListItems(this.id);
   },
   methods: {
     getTodoList(id : number) : void {
+      // Get list
       axios({
         method: 'get',
         url: 'http://localhost:5000/accounts/1/lists/' + id
@@ -83,22 +90,35 @@ export default {
       }).catch((e) => {
         console.log(e);
       });
-    },
-    getTodoListItems(id : number) : void {
+
+      // Get list layout
       axios({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+        url: `http://localhost:5000/accounts/1/lists/${id}/layout`
       }).then((response) => {
-        this.todoListItems = response.data;
+        this.todoListLayout = response.data;
 
-        if(this.todoListItems.length < 1) {
-          this.listIsEmpty = true;
-        }
-        else {
-          this.listIsEmpty = false;
-        }
-      }).catch((e) => {
-        console.log(e);
+        // Get todo list items
+        axios({
+          method: 'get',
+          url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+        }).then((response) => {
+
+          this.todoListLayout.forEach(position => {
+            let index = response.data.findIndex(item => item.id === position);
+
+            if(index !== -1) {
+              this.todoListItems.push(response.data[index]);
+            }
+          });
+
+          if(this.todoListItems.length < 1) {
+            this.listIsEmpty = true;
+          }
+          else {
+            this.listIsEmpty = false;
+          }
+        });
       });
     },
     updateListTitle(listTitle : string) {
@@ -130,7 +150,7 @@ export default {
           'content-type': 'application/json'
         }
       }).then((response) => {
-          this.todoListItems.push(response.data);
+          this.todoListItems.unshift(response.data);
           this.form.toDoName = '';
           this.form.notes = '';
           this.listIsEmpty = false;
@@ -158,6 +178,22 @@ export default {
               });
           }
       });
+    },
+    checkIfListCompleted() {
+      axios({
+        method: 'get',
+        url: 'http://localhost:5000/accounts/1/lists/' + this.id
+      }).then((response) => {
+        if(response.data.completed === true) {
+          this.confetti = true;
+          var confettiSettings = { target: 'confetti' };
+          var confetti = new ConfettiGenerator(confettiSettings);
+          confetti.render();
+        }
+        else {
+          this.confetti = false;
+        }
+      })
     }
   },
   components: {
@@ -174,3 +210,17 @@ export default {
 };
 
 </script>
+
+<style lang="scss" scoped>
+
+#confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 500;
+}
+
+</style>

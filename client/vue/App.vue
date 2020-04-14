@@ -87,4 +87,8 @@ h1 {
   border-bottom-right-radius: .25rem;
 }
 
+.navbar.fixed-top {
+  z-index: 400;
+}
+
 </style>
