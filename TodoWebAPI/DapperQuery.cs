@@ -19,15 +19,15 @@ namespace TodoWebAPI
 {
     public class DapperQuery
     {
-        private readonly IConfiguration _config;
+        private readonly string _connectionString;
 
         public DapperQuery(IConfiguration config)
         {
-            _config = config;
+            _connectionString = config.GetSection("ConnectionStrings")["Development"];
         }
         public async Task<AccountPresentation> GetAccountAsync(int accountId)
         {
-            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
@@ -39,7 +39,7 @@ namespace TodoWebAPI
 
         public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(int accountId, int listId)
         {
-            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
@@ -51,7 +51,7 @@ namespace TodoWebAPI
 
         public async Task<TodoListModel> GetListAsync(int accountId, int listId)
         {
-            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var result = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId AND ID = @listId", new { accountId = accountId, listId = listId });
@@ -61,7 +61,7 @@ namespace TodoWebAPI
 
         public async Task<List<TodoListModel>> GetListsAsync(int accountId)
         {
-            using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var result = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId", new { accountId = accountId });
@@ -69,22 +69,14 @@ namespace TodoWebAPI
             }
         }
 
-        //public async Task StoreImageProfileQueryAsync(int accountId, string profileImage)
-        //{
-        //    using (var connection = new SqlConnection(_config.GetSection("ConnectionStrings")["Development"]))
-        //    {
-        //        var foo = new AccountProfileImageRepository(profileImage);
-
-        //        await connection.OpenAsync();
-        //        using (var command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = @"Update Accounts SET Picture = @pic WHERE ID = @id";
-        //            var byteArray = foo.ConvertStringToByteArray(profileImage);
-        //            command.Parameters.AddWithValue(@"pic", byteArray);
-        //            command.Parameters.AddWithValue(@"id", accountId);
-        //            await command.ExecuteNonQueryAsync();
-        //        }
-        //    }
-        //}
+        public async Task<TodoListLayoutPresentation> GetTodoListLayoutAsync(int listId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryAsync<TodoListLayoutPresentation>("SELECT * FROM TodoListLayouts WHERE ListId = @listId", new { listId = listId });
+                return result.FirstOrDefault();
+            }
+        }
     }
 }

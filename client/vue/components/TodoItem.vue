@@ -64,7 +64,9 @@ export default {
         headers: {
           'content-type': 'application/json'
         }
-      })
+      }).then(() => {
+        this.$emit('toggled-list-item');
+      });
     },
     editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
