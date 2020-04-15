@@ -9,6 +9,8 @@ using Todo.WebAPI.ApplicationServices;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using TodoWebAPI.ApplicationServices;
+using TodoWebAPI.UserStories.CreateItem;
+using MediatR;
 
 namespace TodoWebAPI.Controllers
 {
@@ -18,30 +20,35 @@ namespace TodoWebAPI.Controllers
         private readonly TodoListItemApplicationService _todoListItemApplicationService;
         private readonly TodoDatabaseContext _todoDatabaseContext;
         private readonly SubItemLayoutApplicationService _subItemLayoutApplicationService;
+        private readonly IMediator _mediator;
 
         public TodoListItemController(IConfiguration config,
             TodoListItemApplicationService todoListItemApplicationService,
             TodoDatabaseContext todoDatabaseContext,
-            SubItemLayoutApplicationService subItemLayoutApplicationService)
+            SubItemLayoutApplicationService subItemLayoutApplicationService,
+            IMediator mediator)
         {
             _config = config;
             _todoListItemApplicationService = todoListItemApplicationService;
             _todoDatabaseContext = todoDatabaseContext;
             _subItemLayoutApplicationService = subItemLayoutApplicationService;
+            _mediator = mediator;
         }
 
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateTodoListItemModel todo)
+        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateItem todo)
         {
-            var todoItem = await _todoListItemApplicationService.CreateTodoListItemAsync(listId,  accountId, todo.TodoName, todo.Notes, todo.DueDate);
+            todo.AccountId = accountId;
+            todo.ListId = listId;
+
+            var todoItem = await _mediator.Send(todo);
             
             if (todoItem == null)
               return BadRequest("List doesn't exist");
 
 
-            return Ok(new TodoListItemModel()
-            {
+            return Ok(new {
                 Id = todoItem.Id,
                 ToDoName = todoItem.Name,
                 Notes = todoItem.Notes,

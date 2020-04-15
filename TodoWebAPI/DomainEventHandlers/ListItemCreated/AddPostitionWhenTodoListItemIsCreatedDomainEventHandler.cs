@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
 using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.Models;
+using TodoWebAPI.UserStories.ListLayout;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
@@ -22,7 +23,7 @@ namespace TodoWebAPI.DomainEventHandlers
         }
         public Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
         {
-            return _mediator.Send(new TodoListLayout { ItemId = notification.Item.Id, Position = 0, ListId = notification.List.Id });
+            return _mediator.Send(new ListLayout { ItemId = notification.Item.Id, Position = 0, ListId = notification.List.Id });
         }
     }
 }

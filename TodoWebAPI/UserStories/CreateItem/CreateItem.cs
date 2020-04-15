@@ -1,13 +1,16 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Todo.Domain;
 
-namespace TodoWebAPI.Models
+namespace TodoWebAPI.UserStories.CreateItem
 {
-    public class CreateTodoListItemModel
+    public class CreateItem : IRequest<TodoListItem>
     {
+        public int AccountId { get; set; }
+        public int ListId { get; set; }
         public string Notes { get; set; }
         public string TodoName { get; set; }
         public DateTime? DueDate { get; set; }

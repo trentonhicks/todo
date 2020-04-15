@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Todo.Domain;
 
-namespace TodoWebAPI.Models
+namespace TodoWebAPI.UserStories.ListLayout
 {
-    public class TodoListLayout : IRequest
+    public class ListLayout : IRequest
     {
         public int ItemId { get; set; }
         public int Position { get; set; }

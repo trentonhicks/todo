@@ -11,6 +11,7 @@ using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using TodoWebAPI.ApplicationServices;
 using MediatR;
+using TodoWebAPI.UserStories.ListLayout;
 
 namespace TodoWebAPI.Controllers
 {
@@ -79,7 +80,7 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}/layout")]
-        public async Task<IActionResult> UpdateLayout(int accountId, int listId, [FromBody] TodoListLayout todoListLayoutModel)
+        public async Task<IActionResult> UpdateLayout(int accountId, int listId, [FromBody] ListLayout todoListLayoutModel)
         {
             todoListLayoutModel.AccountId = accountId;
             todoListLayoutModel.ListId = listId;

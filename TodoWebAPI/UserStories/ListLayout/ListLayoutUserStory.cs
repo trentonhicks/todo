@@ -4,20 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Todo.Domain;
 using Todo.Domain.Repositories;
 using TodoWebAPI.Models;
 
-namespace TodoWebAPI.UserStories
+namespace TodoWebAPI.UserStories.ListLayout
 {
-    public class TodoListLayoutUserStory : IRequestHandler<Models.TodoListLayout>
+    public class ListLayoutUserStory : IRequestHandler<ListLayout>
     {
         private readonly ITodoListLayoutRepository _todoListLayout;
-        public TodoListLayoutUserStory(ITodoListLayoutRepository todoListLayout)
+        public ListLayoutUserStory(ITodoListLayoutRepository todoListLayout)
         {
             _todoListLayout = todoListLayout;
         }
-        public async Task<Unit> Handle(Models.TodoListLayout request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ListLayout request, CancellationToken cancellationToken)
         {
             var todoListLayout = await _todoListLayout.FindLayoutByListIdAsync(request.ListId);
 
