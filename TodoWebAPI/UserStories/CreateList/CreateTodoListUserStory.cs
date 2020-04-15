@@ -10,7 +10,7 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories
 {
-    public class CreateTodoListUserStory : IRequestHandler<CreateListModel, TodoList>
+    public class CreateTodoListUserStory : IRequestHandler<CreateList, TodoList>
     {
         private readonly ITodoListRepository _repository;
 
@@ -18,7 +18,7 @@ namespace TodoWebAPI.UserStories
         {
             _repository = repository;
         }
-        public async Task<TodoList> Handle(CreateListModel request, CancellationToken cancellationToken)
+        public async Task<TodoList> Handle(CreateList request, CancellationToken cancellationToken)
         {
             if (String.IsNullOrEmpty(request.ListTitle))
                 return null;

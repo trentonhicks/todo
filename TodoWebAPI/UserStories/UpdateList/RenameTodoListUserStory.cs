@@ -10,7 +10,7 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories
 {
-    public class RenameTodoListUserStory : IRequestHandler<UpdateListModel, TodoList>
+    public class RenameTodoListUserStory : IRequestHandler<UpdateList, TodoList>
     {
         private readonly ITodoListRepository _repository;
 
@@ -18,7 +18,7 @@ namespace TodoWebAPI.UserStories
         {
             _repository = repository;
         }
-        public async Task<TodoList> Handle(UpdateListModel request, CancellationToken cancellationToken)
+        public async Task<TodoList> Handle(UpdateList request, CancellationToken cancellationToken)
         {
             var todoList = await _repository.FindTodoListIdByIdAsync(request.ListId);
 

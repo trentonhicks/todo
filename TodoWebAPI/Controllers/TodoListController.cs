@@ -17,27 +17,18 @@ namespace TodoWebAPI.Controllers
     [ApiController]
     public class TodoListController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IMediator _mediator;
-        private readonly TodoDatabaseContext _todoDatabaseContext;
-        private readonly TodoListLayoutApplicationService _todoListLayoutApplicationService;
         private readonly DapperQuery _dapperQuery;
 
-        public TodoListController(IConfiguration config,
-            IMediator mediator,
-            TodoDatabaseContext todoDatabaseContext,
-            TodoListLayoutApplicationService todoListLayoutApplicationService,
+        public TodoListController(IMediator mediator,
             DapperQuery dapperQuery)
         {
-            _config = config;
             _mediator = mediator;
-            _todoDatabaseContext = todoDatabaseContext;
-            _todoListLayoutApplicationService = todoListLayoutApplicationService;
             _dapperQuery = dapperQuery;
         }
 
         [HttpPost("accounts/{AccountId}/lists")]
-        public async Task<IActionResult> CreateList(int accountId, CreateListModel createTodoList)
+        public async Task<IActionResult> CreateList(int accountId, CreateList createTodoList)
         {
            createTodoList.AccountId = accountId;
            var todoList = await _mediator.Send(createTodoList);
@@ -65,7 +56,7 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}")]
-        public async Task<IActionResult> UpdateList(int accountId, int listId, UpdateListModel updatedList)
+        public async Task<IActionResult> UpdateList(int accountId, int listId, UpdateList updatedList)
         {
             updatedList.ListId = listId;
 
@@ -77,7 +68,7 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/lists/{listId}")]
         public async Task<IActionResult> DeleteList(int accountId, int listId)
         {
-            var deleteTodoModel = new DeleteTodoModel();
+            var deleteTodoModel = new DeleteList();
 
             deleteTodoModel.AccountId = accountId;
             deleteTodoModel.ListId = listId;
@@ -88,7 +79,7 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/lists/{listId}/layout")]
-        public async Task<IActionResult> UpdateLayout(int accountId, int listId, [FromBody] TodoListLayoutModel todoListLayoutModel)
+        public async Task<IActionResult> UpdateLayout(int accountId, int listId, [FromBody] TodoListLayout todoListLayoutModel)
         {
             todoListLayoutModel.AccountId = accountId;
             todoListLayoutModel.ListId = listId;

@@ -7,10 +7,8 @@ using Todo.Domain;
 
 namespace TodoWebAPI.Models
 {
-    public class TodoListLayoutModel : IRequest
+    public class DeleteList : IRequest
     {
-        public int ItemId { get; set; }
-        public int Position { get; set; }
         public int ListId { get; set; }
         public int AccountId { get; set; }
     }

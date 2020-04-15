@@ -22,7 +22,7 @@ namespace TodoWebAPI.DomainEventHandlers
         }
         public Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
         {
-            return _mediator.Send(new TodoListLayoutModel { ItemId = notification.Item.Id, Position = 0, ListId = notification.List.Id });
+            return _mediator.Send(new TodoListLayout { ItemId = notification.Item.Id, Position = 0, ListId = notification.List.Id });
         }
     }
 }

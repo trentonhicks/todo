@@ -9,11 +9,12 @@ using Todo.Domain;
 
 namespace TodoWebAPI.Models
 {
-    public class UpdateListModel : IRequest <TodoList>
+    public class CreateList : IRequest<TodoList>
     {
         [Required]
         [FromBody]
         public string ListTitle { get; set; }
-        public int ListId { get; set; }
+        [FromRoute]
+        public int AccountId { get; set; }
     }
 }

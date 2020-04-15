@@ -10,14 +10,14 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories
 {
-    public class TodoListLayoutUserStory : IRequestHandler<TodoListLayoutModel>
+    public class TodoListLayoutUserStory : IRequestHandler<Models.TodoListLayout>
     {
         private readonly ITodoListLayoutRepository _todoListLayout;
         public TodoListLayoutUserStory(ITodoListLayoutRepository todoListLayout)
         {
             _todoListLayout = todoListLayout;
         }
-        public async Task<Unit> Handle(TodoListLayoutModel request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Models.TodoListLayout request, CancellationToken cancellationToken)
         {
             var todoListLayout = await _todoListLayout.FindLayoutByListIdAsync(request.ListId);
 

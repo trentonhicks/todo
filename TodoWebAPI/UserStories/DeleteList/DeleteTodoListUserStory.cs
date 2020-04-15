@@ -10,7 +10,7 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories
 {
-    public class DeleteTodoListUserStory : IRequestHandler<DeleteTodoModel>
+    public class DeleteTodoListUserStory : IRequestHandler<DeleteList>
     {
         private readonly ITodoListItemRepository _todoListItem;
         private readonly ITodoListRepository _listRepository;
@@ -20,7 +20,7 @@ namespace TodoWebAPI.UserStories
             _todoListItem = todoListItem;
             _listRepository = listRepository;
         }
-        public async Task<Unit> Handle(DeleteTodoModel request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteList request, CancellationToken cancellationToken)
         {
             await _todoListItem.RemoveAllTodoListItemsFromAccountAsync(request.ListId);
 
