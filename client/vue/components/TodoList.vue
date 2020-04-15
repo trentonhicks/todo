@@ -15,7 +15,7 @@
         @blur="editingTitle = false; updateListTitle(todoList.listTitle)"
         v-focus="")
 
-    draggable(v-model="todoListItems").todo-list-items.mb-3
+    draggable(v-model="todoListItems" @end="updateItemPosition").todo-list-items.mb-3
 
       todo-item(
         v-for="(todo, index) in todoListItems"
@@ -194,6 +194,23 @@ export default {
           this.confetti = false;
         }
       })
+    },
+    updateItemPosition(e) {
+      let position = e.newIndex;
+      let itemId = parseInt(e.item.dataset.id);
+      let data = JSON.stringify({
+        position,
+        itemId
+      });
+      
+      axios({
+        method: 'PUT',
+        url: `http://localhost:5000/accounts/1/lists/${this.id}/layout`,
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
     }
   },
   components: {

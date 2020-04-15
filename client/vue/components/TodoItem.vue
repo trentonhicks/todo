@@ -1,6 +1,6 @@
 <template lang="pug">
 
-.todo-item-wrapper
+.todo-item-wrapper(:data-id="item.id")
   b-list-group-item.todo-item.bg-light
     b-form-checkbox(v-model="item.completed")
       .todo-item-name {{ item.toDoName }}
