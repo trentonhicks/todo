@@ -13,6 +13,7 @@ using TodoWebAPI.UserStories.CreateItem;
 using MediatR;
 using TodoWebAPI.UserStories.EditItem;
 using TodoWebAPI.UserStories.ListCompletedState.cs;
+using TodoWebAPI.UserStories.ItemLayout;
 
 namespace TodoWebAPI.Controllers
 {
@@ -91,9 +92,11 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}/layout")]
-        public async Task<IActionResult> UpdateLayout(int accountId, int todoId, [FromBody] TodoListItemLayoutModel todoListItemLayoutModel)
+        public async Task<IActionResult> UpdateLayout(int accountId, int todoId, [FromBody] ItemLayout  itemLayout)
         {
-            await _subItemLayoutApplicationService.UpdateLayoutAsync(todoListItemLayoutModel.SubItemId, todoListItemLayoutModel.Position, todoId);
+            itemLayout.AccountId = accountId;
+            itemLayout.ItemId = todoId;
+            await _mediator.Send(itemLayout);
 
             return Ok();
         }
