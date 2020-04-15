@@ -6,7 +6,7 @@ using Todo.Domain;
 
 namespace Todo.Domain.Repositories
 {
-    public interface IAccountRepository
+    public interface IAccountRepository : IUnitOfWork
     {
         Task AddAccountAsync(Account account);
         Task<Account> FindAccountByIdAsync(int id);

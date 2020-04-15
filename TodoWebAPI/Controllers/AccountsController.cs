@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Todo.Domain.Repositories;
@@ -16,29 +17,25 @@ namespace TodoWebAPI.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AccountsApplicationService _accountsApplicationService;
+        private readonly IMediator _mediator;
         private readonly TodoDatabaseContext _todoDatabaseContext;
         private readonly IConfiguration _config;
-        public AccountsController(IConfiguration config, AccountsApplicationService accountsApplicationService, TodoDatabaseContext todoDatabaseContext)
+        public AccountsController(IConfiguration config, AccountsApplicationService accountsApplicationService,
+            IMediator mediator, TodoDatabaseContext todoDatabaseContext)
         {
             _config = config;
             _accountsApplicationService = accountsApplicationService;
+            _mediator = mediator;
             _todoDatabaseContext = todoDatabaseContext;
         }
 
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel model)
         {
-            var account = await _accountsApplicationService.CreateAccountAsync(
-                model.FullName,
-                model.UserName,
-                model.Password,
-                model.Email,
-                model.Picture);
-            
+            var account = await _mediator.Send(model);
             if (account == null)
                 return BadRequest("Username already Exists.");
 
-            await _todoDatabaseContext.SaveChangesAsync();
 
             return Ok(account);
         }

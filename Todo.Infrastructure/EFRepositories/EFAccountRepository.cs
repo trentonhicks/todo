@@ -30,5 +30,10 @@ namespace Todo.Infrastructure.EFRepositories
 
             _context.Accounts.Remove(account);
         }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }
