@@ -60,7 +60,7 @@ export default {
       axios({
         method: 'PUT',
         url: `http://localhost:5000/accounts/1/todos/${this.item.id}/completed`,
-        data: this.item.completed,
+        data: JSON.stringify({ completed: this.item.completed }),
         headers: {
           'content-type': 'application/json'
         }
