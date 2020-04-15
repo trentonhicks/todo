@@ -42,14 +42,5 @@ namespace Todo.WebAPI.ApplicationServices
 
             await _listItemRepository.SaveChangesAsync();
         }
-
-        public async Task TrashItemAsync(int listItemId)
-        {
-            var item = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
-
-            item.MoveToTrash();
-
-            await _listItemRepository.SaveChangesAsync();
-        }
     }
 }

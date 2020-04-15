@@ -14,6 +14,7 @@ using MediatR;
 using TodoWebAPI.UserStories.EditItem;
 using TodoWebAPI.UserStories.ListCompletedState.cs;
 using TodoWebAPI.UserStories.ItemLayout;
+using TodoWebAPI.UserStories.TrashItem;
 
 namespace TodoWebAPI.Controllers
 {
@@ -104,7 +105,12 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> TrashItem(int accountId, int todoId)
         {
-            await _todoListItemApplicationService.TrashItemAsync(todoId);
+            var trashItem = new TrashItem
+            {
+                AccountId = accountId,
+                ItemId = todoId
+            };
+            await _mediator.Send(trashItem);
 
             return Ok("Item has been trashed!");
         }
