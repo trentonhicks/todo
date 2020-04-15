@@ -12,6 +12,7 @@ using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.UserStories.CreateItem;
 using MediatR;
 using TodoWebAPI.UserStories.EditItem;
+using TodoWebAPI.UserStories.ListCompletedState.cs;
 
 namespace TodoWebAPI.Controllers
 {
@@ -80,9 +81,11 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}/completed")]
-        public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] bool completed)
+        public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] ItemCompletedState itemCompletedState)
         {
-            await _todoListItemApplicationService.MarkTodoListItemAsCompletedAsync(todoId, completed);
+            itemCompletedState.AccountId = accountId;
+            itemCompletedState.ItemId = todoId;
+            await _mediator.Send(itemCompletedState);
 
             return Ok();
         }

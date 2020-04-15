@@ -33,27 +33,6 @@ namespace Todo.WebAPI.ApplicationServices
             todoListItem.DueDate = dueDate;
         }
 
-        public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool completed)
-        {
-            var subItemCount = await _listItemRepository.GetSubItemCountAsync(todoListItemId);
-
-            if (subItemCount > 0)
-                return;
-
-            var item = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
-
-            if(completed == true)
-            {
-                item.SetCompleted();
-            }
-            else if(completed == false)
-            {
-                item.SetNotCompleted();
-            }
-
-            await _listItemRepository.SaveChangesAsync();
-        }
-
         public async Task MarkTodoListItemAsCompletedAsync(int listItemId)
         {
             var subItems = await _subItemRepository.FindAllSubItemsByListItemIdAsync(listItemId);
