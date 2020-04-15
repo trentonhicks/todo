@@ -19,7 +19,7 @@ namespace TodoWebAPI.ApplicationServices
        
         public Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
         {
-            return _service.CreateTodoListLayoutAsync(notification.Item.Id);
+            return _service.CreateTodoListItemLayoutAsync(notification.Item.Id);
         }
     }
 }

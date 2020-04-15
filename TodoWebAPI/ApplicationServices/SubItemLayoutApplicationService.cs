@@ -16,7 +16,7 @@ namespace TodoWebAPI.ApplicationServices
             _subLayout = subLayout;
         }
 
-        public async Task CreateTodoListLayoutAsync(int itemId)
+        public async Task CreateTodoListItemLayoutAsync(int itemId)
         {
             var layout = new SubItemLayout { ItemId = itemId };
 
@@ -24,15 +24,5 @@ namespace TodoWebAPI.ApplicationServices
 
             await _subLayout.SaveChangesAsync();
         }
-        public async Task UpdateLayoutAsync(int subItemId, int subItemPosition, int itemId)
-        {
-            var layout = await _subLayout.FindLayoutByListItemIdAsync(itemId);
-
-            layout.UpdateLayout(subItemId, subItemPosition);
-
-            _subLayout.Update(layout);
-            await _subLayout.SaveChangesAsync();
-
-        }   
     }
 }

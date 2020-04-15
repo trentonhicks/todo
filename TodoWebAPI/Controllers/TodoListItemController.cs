@@ -9,6 +9,12 @@ using Todo.WebAPI.ApplicationServices;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using TodoWebAPI.ApplicationServices;
+using TodoWebAPI.UserStories.CreateItem;
+using MediatR;
+using TodoWebAPI.UserStories.EditItem;
+using TodoWebAPI.UserStories.ListCompletedState.cs;
+using TodoWebAPI.UserStories.ItemLayout;
+using TodoWebAPI.UserStories.TrashItem;
 
 namespace TodoWebAPI.Controllers
 {
@@ -18,30 +24,35 @@ namespace TodoWebAPI.Controllers
         private readonly TodoListItemApplicationService _todoListItemApplicationService;
         private readonly TodoDatabaseContext _todoDatabaseContext;
         private readonly SubItemLayoutApplicationService _subItemLayoutApplicationService;
+        private readonly IMediator _mediator;
 
         public TodoListItemController(IConfiguration config,
             TodoListItemApplicationService todoListItemApplicationService,
             TodoDatabaseContext todoDatabaseContext,
-            SubItemLayoutApplicationService subItemLayoutApplicationService)
+            SubItemLayoutApplicationService subItemLayoutApplicationService,
+            IMediator mediator)
         {
             _config = config;
             _todoListItemApplicationService = todoListItemApplicationService;
             _todoDatabaseContext = todoDatabaseContext;
             _subItemLayoutApplicationService = subItemLayoutApplicationService;
+            _mediator = mediator;
         }
 
 
         [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateTodoListItemModel todo)
+        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateItem todo)
         {
-            var todoItem = await _todoListItemApplicationService.CreateTodoListItemAsync(listId,  accountId, todo.TodoName, todo.Notes, todo.DueDate);
+            todo.AccountId = accountId;
+            todo.ListId = listId;
+
+            var todoItem = await _mediator.Send(todo);
             
             if (todoItem == null)
               return BadRequest("List doesn't exist");
 
 
-            return Ok(new TodoListItemModel()
-            {
+            return Ok(new {
                 Id = todoItem.Id,
                 ToDoName = todoItem.Name,
                 Notes = todoItem.Notes,
@@ -61,27 +72,32 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItemModel todo)
+        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] EditItem todo)
         {
-            await _todoListItemApplicationService.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.DueDate);
+            todo.AccountId = accountId;
+            todo.Id = todoId;
 
-            await _todoDatabaseContext.SaveChangesAsync();
-            
+            await _mediator.Send(todo);
+
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}");
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}/completed")]
-        public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] bool completed)
+        public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] ItemCompletedState itemCompletedState)
         {
-            await _todoListItemApplicationService.MarkTodoListItemAsCompletedAsync(todoId, completed);
+            itemCompletedState.AccountId = accountId;
+            itemCompletedState.ItemId = todoId;
+            await _mediator.Send(itemCompletedState);
 
             return Ok();
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}/layout")]
-        public async Task<IActionResult> UpdateLayout(int accountId, int todoId, [FromBody] TodoListItemLayoutModel todoListItemLayoutModel)
+        public async Task<IActionResult> UpdateLayout(int accountId, int todoId, [FromBody] ItemLayout  itemLayout)
         {
-            await _subItemLayoutApplicationService.UpdateLayoutAsync(todoListItemLayoutModel.SubItemId, todoListItemLayoutModel.Position, todoId);
+            itemLayout.AccountId = accountId;
+            itemLayout.ItemId = todoId;
+            await _mediator.Send(itemLayout);
 
             return Ok();
         }
@@ -89,7 +105,12 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}/todos/{todoId}")]
         public async Task<IActionResult> TrashItem(int accountId, int todoId)
         {
-            await _todoListItemApplicationService.TrashItemAsync(todoId);
+            var trashItem = new TrashItem
+            {
+                AccountId = accountId,
+                ItemId = todoId
+            };
+            await _mediator.Send(trashItem);
 
             return Ok("Item has been trashed!");
         }

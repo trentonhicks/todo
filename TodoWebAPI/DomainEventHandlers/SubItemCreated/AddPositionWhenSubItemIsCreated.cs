@@ -6,20 +6,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
 using TodoWebAPI.ApplicationServices;
+using TodoWebAPI.UserStories.ItemLayout;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
     public class AddPositionWhenSubItemIsCreated : INotificationHandler<SubItemCreated>
     {
         private readonly SubItemLayoutApplicationService _service;
+        private readonly IMediator _mediator;
 
-        public AddPositionWhenSubItemIsCreated(SubItemLayoutApplicationService service)
+        public AddPositionWhenSubItemIsCreated(IMediator mediator)
         {
-            _service = service;
+            _mediator = mediator;
         }
         public Task Handle(SubItemCreated notification, CancellationToken cancellationToken)
         {
-            return _service.UpdateLayoutAsync(notification.SubItem.Id, 0, notification.SubItem.ListItemId);
+            return _mediator.Send(new ItemLayout { SubItemId = notification.SubItem.Id, Position = 0, ItemId = notification.SubItem.ListItemId });
         }
     }
 }

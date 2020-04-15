@@ -24,22 +24,6 @@ namespace Todo.WebAPI.ApplicationServices
             _subItemRepository = subItemRepository;
         }
 
-        public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int accountId, string todoName, string notes, DateTime? dueDate)
-        {
-            var list = await _listRepository.FindTodoListIdByIdAsync(listId);
-
-            if (list == null)
-                return null;
-
-            var todoItem = list.CreateListItem(todoName, notes, dueDate);
-
-            await _listItemRepository.AddTodoListItemAsync(todoItem);
-
-            await _listItemRepository.SaveChangesAsync();
-
-            return todoItem;
-        }
-
         public async Task UpdateTodoListItemAsync(int todoListItemId, string notes, string todoName, DateTime? dueDate)
         {
             var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
@@ -49,42 +33,12 @@ namespace Todo.WebAPI.ApplicationServices
             todoListItem.DueDate = dueDate;
         }
 
-        public async Task MarkTodoListItemAsCompletedAsync(int todoListItemId, bool completed)
-        {
-            var subItemCount = await _listItemRepository.GetSubItemCountAsync(todoListItemId);
-
-            if (subItemCount > 0)
-                return;
-
-            var item = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
-
-            if(completed == true)
-            {
-                item.SetCompleted();
-            }
-            else if(completed == false)
-            {
-                item.SetNotCompleted();
-            }
-
-            await _listItemRepository.SaveChangesAsync();
-        }
-
         public async Task MarkTodoListItemAsCompletedAsync(int listItemId)
         {
             var subItems = await _subItemRepository.FindAllSubItemsByListItemIdAsync(listItemId);
             var listItem = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
 
             listItem.SetCompleted(subItems);
-
-            await _listItemRepository.SaveChangesAsync();
-        }
-
-        public async Task TrashItemAsync(int listItemId)
-        {
-            var item = await _listItemRepository.FindToDoListItemByIdAsync(listItemId);
-
-            item.MoveToTrash();
 
             await _listItemRepository.SaveChangesAsync();
         }
