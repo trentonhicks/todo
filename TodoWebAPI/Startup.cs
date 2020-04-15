@@ -58,7 +58,6 @@ namespace TodoWebAPI
             services.AddScoped<TodoListApplicationService>();
             services.AddScoped<TodoListItemApplicationService>();
             services.AddScoped<TodoListLayoutApplicationService>();
-            services.AddScoped<SubItemApplicationService>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
             services.AddScoped<ISubItemLayout, EFSubItemLayout>();
             services.AddScoped<SubItemLayoutApplicationService>();

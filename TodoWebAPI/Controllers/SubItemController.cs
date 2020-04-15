@@ -8,18 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using TodoWebAPI.UserStories.CreateSubItem;
+using TodoWebAPI.UserStories.SubItemCompletedState;
 
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
     public class SubItemController : ControllerBase
     {
-        private readonly SubItemApplicationService _service;
         private readonly IMediator _mediator;
 
-        public SubItemController(SubItemApplicationService service, IMediator mediator)
+        public SubItemController(IMediator mediator)
         {
-            _service = service;
             _mediator = mediator;
         }
         [HttpPost("accounts/{accountId}/lists/{listId}/todos/{todoId}/subitems")]
@@ -42,8 +41,13 @@ namespace TodoWebAPI.Controllers
         [HttpPut("accounts/{accountId}/subitems/{subitemId}/completed")]
         public async Task<IActionResult> ToggleCompletedState(int accountId, int subItemId, [FromBody] bool completed)
         {
-            await _service.ChangeCompletedStateAsync(subItemId, completed);
-
+            var subItemCompleted = new SubItemCompletedState
+            {
+                AccountId = accountId,
+                SubItemId = subItemId,
+                Completed = completed
+            };
+            await _mediator.Send(subItemCompleted);
             return Ok();
         }
     }
