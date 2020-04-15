@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
 using Todo.WebAPI.ApplicationServices;
+using TodoWebAPI.ApplicationServices;
 
 namespace TodoWebAPI.DomainEventHandlers.ListItemCreated
 {
