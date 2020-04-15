@@ -10,21 +10,20 @@ using Todo.Infrastructure;
 using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
+using TodoWebAPI.UserStories.DeleteAccount;
 
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly AccountsApplicationService _accountsApplicationService;
         private readonly IMediator _mediator;
         private readonly TodoDatabaseContext _todoDatabaseContext;
         private readonly IConfiguration _config;
-        public AccountsController(IConfiguration config, AccountsApplicationService accountsApplicationService,
+        public AccountsController(IConfiguration config,
             IMediator mediator, TodoDatabaseContext todoDatabaseContext)
         {
             _config = config;
-            _accountsApplicationService = accountsApplicationService;
             _mediator = mediator;
             _todoDatabaseContext = todoDatabaseContext;
         }
@@ -53,7 +52,12 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("accounts/{accountId}")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId)
         {
-            await _accountsApplicationService.DeleteAccountAsync(accountId);
+            var deleteAccount = new DeleteAccount
+            {
+                AccountId = accountId
+            };
+
+            await _mediator.Send(deleteAccount);
 
             await _todoDatabaseContext.SaveChangesAsync();
 
