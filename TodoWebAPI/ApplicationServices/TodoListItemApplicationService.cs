@@ -24,22 +24,6 @@ namespace Todo.WebAPI.ApplicationServices
             _subItemRepository = subItemRepository;
         }
 
-        public async Task<TodoListItem> CreateTodoListItemAsync(int listId, int accountId, string todoName, string notes, DateTime? dueDate)
-        {
-            var list = await _listRepository.FindTodoListIdByIdAsync(listId);
-
-            if (list == null)
-                return null;
-
-            var todoItem = list.CreateListItem(todoName, notes, dueDate);
-
-            await _listItemRepository.AddTodoListItemAsync(todoItem);
-
-            await _listItemRepository.SaveChangesAsync();
-
-            return todoItem;
-        }
-
         public async Task UpdateTodoListItemAsync(int todoListItemId, string notes, string todoName, DateTime? dueDate)
         {
             var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);

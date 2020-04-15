@@ -11,6 +11,7 @@ using Todo.Infrastructure;
 using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.UserStories.CreateItem;
 using MediatR;
+using TodoWebAPI.UserStories.EditItem;
 
 namespace TodoWebAPI.Controllers
 {
@@ -68,12 +69,13 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] TodoListItemModel todo)
+        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] EditItem todo)
         {
-            await _todoListItemApplicationService.UpdateTodoListItemAsync(todoId, todo.Notes, todo.ToDoName, todo.DueDate);
+            todo.AccountId = accountId;
+            todo.Id = todoId;
 
-            await _todoDatabaseContext.SaveChangesAsync();
-            
+            await _mediator.Send(todo);
+
             return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}");
         }
 
