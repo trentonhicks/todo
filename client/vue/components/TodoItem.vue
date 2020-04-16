@@ -28,7 +28,16 @@
             v-model="item.notes")
         b-form-group(label="Due Date")
           b-form-datepicker(v-model="item.dueDate").mb-2
-          label(v-if="item.dueDate != ''") {{ item.dueDate | formatDate }}
+        b-form-group(label="Sub-items")
+          b-list-group-item
+            b-form-checkbox Item 1
+          b-list-group-item
+            b-form-checkbox Item 2
+          b-list-group-item
+            b-form-checkbox Item 3
+          b-list-group-item
+            b-form-checkbox Item 4
+          b-button(variant="secondary" class="btn-block" style="border-top-left-radius: 0px; border-top-right-radius: 0px;") Add sub-item
 
         b-button(type="submit" variant="primary" class="mr-2") Save Changes
         b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
