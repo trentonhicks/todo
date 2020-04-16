@@ -29,7 +29,7 @@ namespace Todo.WebAPI.ApplicationServices
             var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
 
             todoListItem.Notes = notes;
-            todoListItem.Name = todoName;
+            todoListItem.ToDoName = todoName;
             todoListItem.DueDate = dueDate;
         }
 

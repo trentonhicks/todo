@@ -10,7 +10,7 @@ namespace Todo.Domain
         public int AccountId { get; set; }
         public string Notes { get; set; }
         public bool Completed { get; protected set; }
-        public string Name { get; set; }
+        public string ToDoName { get; set; }
         public int? ListId { get; set; }
         public DateTime? DueDate { get; set; }
 

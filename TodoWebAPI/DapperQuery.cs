@@ -78,5 +78,15 @@ namespace TodoWebAPI
                 return result.FirstOrDefault();
             }
         }
+
+        public async Task<List<TodoListItem>> GetDueDatesFromListItemsAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryAsync<TodoListItem>("SELECT * FROM TodoListItems WHERE DueDate IS NOT NULL");
+                return result.ToList();
+            }
+        }
     }
 }

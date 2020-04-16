@@ -19,6 +19,7 @@ using Todo.Infrastructure.Email;
 using TodoWebAPI.Data;
 using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.ApplicationServices;
+using TodoWebAPI.CronJob;
 
 namespace TodoWebAPI
 {
@@ -61,9 +62,15 @@ namespace TodoWebAPI
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
             services.AddScoped<ISubItemLayout, EFSubItemLayout>();
             services.AddScoped<SubItemLayoutApplicationService>();
-            services.AddScoped<DapperQuery>();
+            services.AddSingleton<DapperQuery>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+
+            services.AddCronJob<DueDateJob>(c =>
+            {
+                c.TimeZoneInfo = TimeZoneInfo.Local;
+                c.CronExpression = @"00 12 * * *";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

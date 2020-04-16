@@ -57,7 +57,7 @@ namespace Todo.Domain
               DueDate = dueDate,
               ListId = this.ListId,
               ListItemId = this.Id,
-              Name = name,
+              ToDoName = name,
               Notes = notes
             };
 

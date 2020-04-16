@@ -103,7 +103,7 @@ namespace Todo.Infrastructure
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name).HasColumnName("ToDoName")
+                entity.Property(e => e.ToDoName).HasColumnName("ToDoName")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -143,7 +143,7 @@ namespace Todo.Infrastructure
 
                 entity.Property(e => e.ListItemId);
 
-                entity.Property(e => e.Name).HasColumnName("ToDoName")
+                entity.Property(e => e.ToDoName).HasColumnName("ToDoName")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

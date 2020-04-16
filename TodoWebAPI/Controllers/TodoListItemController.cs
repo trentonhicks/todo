@@ -45,7 +45,7 @@ namespace TodoWebAPI.Controllers
 
             return Ok(new {
                 Id = todoItem.Id,
-                ToDoName = todoItem.Name,
+                ToDoName = todoItem.ToDoName,
                 Notes = todoItem.Notes,
                 ListId = listId,
                 DueDate = todoItem.DueDate

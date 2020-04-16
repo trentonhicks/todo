@@ -31,7 +31,7 @@ namespace TodoWebAPI.Controllers
             return Ok(new SubItemModel()
             {
                 Id = subItem.Id,
-                ToDoName = subItem.Name,
+                ToDoName = subItem.ToDoName,
                 Notes = subItem.Notes,
                 ListId = listId,
                 ListItemId = todoId
