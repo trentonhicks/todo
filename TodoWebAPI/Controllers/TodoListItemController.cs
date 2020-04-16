@@ -21,21 +21,12 @@ namespace TodoWebAPI.Controllers
     public class TodoListItemController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly TodoListItemApplicationService _todoListItemApplicationService;
-        private readonly TodoDatabaseContext _todoDatabaseContext;
-        private readonly SubItemLayoutApplicationService _subItemLayoutApplicationService;
         private readonly IMediator _mediator;
 
         public TodoListItemController(IConfiguration config,
-            TodoListItemApplicationService todoListItemApplicationService,
-            TodoDatabaseContext todoDatabaseContext,
-            SubItemLayoutApplicationService subItemLayoutApplicationService,
             IMediator mediator)
         {
             _config = config;
-            _todoListItemApplicationService = todoListItemApplicationService;
-            _todoDatabaseContext = todoDatabaseContext;
-            _subItemLayoutApplicationService = subItemLayoutApplicationService;
             _mediator = mediator;
         }
 
