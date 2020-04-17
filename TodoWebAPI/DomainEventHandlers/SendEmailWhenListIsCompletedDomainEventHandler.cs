@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure.Email;
+using TodoWebAPI.ServiceBusRabbitmq;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
@@ -16,13 +17,15 @@ namespace TodoWebAPI.DomainEventHandlers
         private readonly IAccountRepository _accountRepository;
         private readonly ITodoListRepository _todoListRepository;
         private readonly IEmailService _emailService;
+        private readonly IServiceBusEmail _serviceBusEmail;
         private readonly IConfiguration _config;
 
-        public SendEmailWhenListIsCompletedDomainEventHandler(IAccountRepository accountRepository, ITodoListRepository todoListRepository, IEmailService emailService, IConfiguration config)
+        public SendEmailWhenListIsCompletedDomainEventHandler(IAccountRepository accountRepository, ITodoListRepository todoListRepository, IEmailService emailService, IServiceBusEmail serviceBusEmail,IConfiguration config)
         {
             _accountRepository = accountRepository;
             _todoListRepository = todoListRepository;
             _emailService = emailService;
+            _serviceBusEmail = serviceBusEmail;
             _config = config;
         }
         public async Task Handle(TodoListCompletedStateChanged notification, CancellationToken cancellationToken)
@@ -41,7 +44,7 @@ namespace TodoWebAPI.DomainEventHandlers
                     Body = $"List {list.ListTitle} is finished! Nice work!"
                 };
 
-                await _emailService.SendEmailAsync(email);
+                _serviceBusEmail.SendServiceBusEmail(email);
             }
         }
     }

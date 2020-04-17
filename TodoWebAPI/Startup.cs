@@ -20,6 +20,7 @@ using TodoWebAPI.Data;
 using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.CronJob;
+using TodoWebAPI.ServiceBusRabbitmq;
 
 namespace TodoWebAPI
 {
@@ -55,6 +56,7 @@ namespace TodoWebAPI
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
             services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
+            services.AddScoped<IServiceBusEmail, ServiceBusEmail>();
             services.AddScoped<IAccountProfileImageRepository, AccountProfileImageRepository>((x) => new AccountProfileImageRepository(Configuration.GetConnectionString("Development")));
             services.AddScoped<TodoListApplicationService>();
             services.AddScoped<TodoListItemApplicationService>();
