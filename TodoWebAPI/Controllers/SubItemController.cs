@@ -42,6 +42,7 @@ namespace TodoWebAPI.Controllers
             createSubItem.ListId = listId;
             createSubItem.ListItemId = todoItemId;
             var subItem = await _mediator.Send(createSubItem);
+
             return Ok(subItem);
         }
 

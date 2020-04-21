@@ -79,12 +79,26 @@ namespace TodoWebAPI
             }
         }
 
+
         public async Task<List<SubItemModel>> GetSubItems(int listItemId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
+
                 var result = await connection.QueryAsync<SubItemModel>("SELECT * FROM SubItems WHERE ListItemID = @listItemId", new { listItemId = listItemId });
+                
+                return result.ToList();
+            }
+        }
+
+        public async Task<List<TodoListItem>> GetDueDatesFromListItemsAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<TodoListItem>("SELECT * FROM TodoListItems WHERE DueDate IS NOT NULL");
                 return result.ToList();
             }
         }

@@ -15,11 +15,11 @@ namespace TodoWebAPI.Presentation
             Id = todo.Id;
             Notes = todo.Notes;
             Completed = todo.Completed;
-            ToDoName = todo.Name;
+            Name = todo.Name;
         }
         public int Id { get; set; }
         public string Notes { get; set; }
         public bool Completed { get; set; }
-        public string ToDoName { get; set; }
+        public string Name { get; set; }
     }
 }
