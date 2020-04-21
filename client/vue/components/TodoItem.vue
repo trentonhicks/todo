@@ -6,7 +6,7 @@
   b-list-group-item.todo-item.bg-light
 
     //- Item Info
-    b-form-checkbox(v-model="item.completed")
+    b-form-checkbox(v-model="item.completed" :disabled="hasSubItems")
       .todo-item-name {{ item.name }}
       .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !dueSoon, 'text-danger': dueSoon }")
         b-icon-clock
@@ -170,6 +170,9 @@ export default {
   computed: {
     checkboxToggle() {
       return this.item.completed;
+    },
+    hasSubItems() {
+      return this.subItems.length > 0;
     }
   },
   filters: {

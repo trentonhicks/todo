@@ -12,9 +12,9 @@ using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.UserStories.CreateItem;
 using MediatR;
 using TodoWebAPI.UserStories.EditItem;
-using TodoWebAPI.UserStories.ListCompletedState.cs;
 using TodoWebAPI.UserStories.ItemLayout;
 using TodoWebAPI.UserStories.TrashItem;
+using TodoWebAPI.UserStories.ItemCompletedState;
 
 namespace TodoWebAPI.Controllers
 {

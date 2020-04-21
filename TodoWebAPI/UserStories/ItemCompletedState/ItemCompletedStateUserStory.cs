@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.Repositories;
-using TodoWebAPI.UserStories.ListCompletedState.cs;
 
-namespace TodoWebAPI.UserStories.ListCompletedState
+namespace TodoWebAPI.UserStories.ItemCompletedState
 {
     public class ItemCompletedStateUserStory : IRequestHandler<ItemCompletedState>
     {
