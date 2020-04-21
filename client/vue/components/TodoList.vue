@@ -22,8 +22,9 @@
         v-on:deleted-list-item="deleteTodoListItem"
         v-on:toggled-list-item="checkIfListCompleted"
         :key="todo.id"
+        :listId="id"
         :id="todo.id"
-        :toDoName="todo.toDoName"
+        :name="todo.name"
         :notes="todo.notes"
         :dueDate="todo.dueDate"
         :completed="todo.completed"
@@ -34,13 +35,13 @@
     b-button(id="add-list-item-btn" @click="$bvModal.show('modal-add')") Add list item
 
     b-modal(id="modal-add" title="Add new list item")
-      b-form(v-on:submit.prevent="addTodoListItem(form.toDoName, form.notes, form.dueDate)" id="add-list-item-form")
+      b-form(v-on:submit.prevent="addTodoListItem(form.name, form.notes, form.dueDate)" id="add-list-item-form")
 
         b-form-group(label="Name")
           b-form-input(
             type="text"
             placeholder="Name"
-            v-model="form.toDoName"
+            v-model="form.name"
             required)
         b-form-group(label="Notes")
           b-form-textarea(
@@ -133,11 +134,11 @@ export default {
         }
       });
     },
-    addTodoListItem(toDoName : string, notes : string, dueDate : Date) : void {
+    addTodoListItem(name : string, notes : string, dueDate : Date) : void {
       this.$bvModal.hide('modal-add');
 
       let data = JSON.stringify({
-        toDoName,
+        name,
         notes,
         dueDate
       });
@@ -151,13 +152,13 @@ export default {
         }
       }).then((response) => {
           this.todoListItems.unshift(response.data);
-          this.form.toDoName = '';
+          this.form.name = '';
           this.form.notes = '';
           this.listIsEmpty = false;
       });
     },
     deleteTodoListItem(item) : void {
-      this.$bvModal.msgBoxConfirm(`Are you sure you want to delete ${item.toDoName}?`, {
+      this.$bvModal.msgBoxConfirm(`Are you sure you want to delete ${item.name}?`, {
           size: 'sm',
           okVariant: 'danger',
           okTitle: 'Delete',

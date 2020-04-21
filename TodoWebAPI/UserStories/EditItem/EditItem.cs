@@ -11,7 +11,7 @@ namespace TodoWebAPI.UserStories.EditItem
     {
         public int AccountId { get; set; }
         public int Id { get; set; }
-        public string ToDoName { get; set; }
+        public string Name { get; set; }
         public string Notes { get; set; }
         public int ListId { get; set; }
         public bool Completed { get; set; }

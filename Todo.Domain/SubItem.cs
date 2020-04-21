@@ -5,16 +5,19 @@ using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
-    public class SubItem : TodoListItemBase
+    public class SubItem : Entity
     {
+        public int Id { get; set; }
         public int ListItemId { get; set; }
+        public bool Completed { get; protected set; }
+        public string Name { get; set; }
 
-        public override void MoveToTrash()
+        public void MoveToTrash()
         {
             throw new NotImplementedException();
         }
 
-        public override void SetCompleted()
+        public void SetCompleted()
         {
             if (Completed)
                 return;
@@ -23,7 +26,7 @@ namespace Todo.Domain
             DomainEvents.Add(new SubItemCompletedStateChanged { SubItem = this });
         }
 
-        public override void SetNotCompleted()
+        public void SetNotCompleted()
         {
             if (!Completed)
                 return;

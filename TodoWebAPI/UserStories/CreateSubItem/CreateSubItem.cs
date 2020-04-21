@@ -11,9 +11,7 @@ namespace TodoWebAPI.UserStories.CreateSubItem
     {
         public int AccountId { get; set; }
         public int ListId { get; set; }
-        public int ItemId { get; set; }
-        public string Notes { get; set; }
-        public string TodoName { get; set; }
-        public DateTime? DueDate { get; set; }
+        public int ListItemId { get; set; }
+        public string Name { get; set; }
     }
 }

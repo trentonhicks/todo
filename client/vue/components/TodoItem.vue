@@ -1,45 +1,70 @@
 <template lang="pug">
 
 .todo-item-wrapper(:data-id="item.id")
+
+  //- Todo List Item
   b-list-group-item.todo-item.bg-light
+
+    //- Item Info
     b-form-checkbox(v-model="item.completed")
-      .todo-item-name {{ item.toDoName }}
-      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !dueSoon, 'text-warning': dueSoon }")
+      .todo-item-name {{ item.name }}
+      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !dueSoon, 'text-danger': dueSoon }")
         b-icon-clock
         | {{ item.dueDate | monthDay }}
       .todo-item-notes(v-if="item.notes"): small.text-muted {{ item.notes }}
+
+    //- Item Options
     .todo-item-options
       b-button(variant="info" size="sm"  @click="$bvModal.show('modal-edit-' + item.id)"): b-icon-three-dots
       b-button(variant="danger" size="sm"  @click="$emit('deleted-list-item', item)"): b-icon-trash
 
+  //- Edit Todo List Item Modal
   b-modal(:id="'modal-edit-' + item.id" :title="`Edit todo item`" modal-class="modal-hide-footer")
-    b-form(v-on:submit.prevent="editTodoItem" id="edit-item-form")
 
+    //- Edit Form
+    b-form(v-on:submit.prevent="" id="edit-item-form")
+
+        //- Name
         b-form-group(label="Name")
           b-form-input(
             type="text"
             placeholder="Name"
-            v-model="item.toDoName"
+            v-model="item.name"
             required)
+
+        //- Notes
         b-form-group(label="Notes")
           b-form-textarea(
             placeholder="Notes"
             rows="3"
             v-model="item.notes")
+
+        //- Due Dates
         b-form-group(label="Due Date")
           b-form-datepicker(v-model="item.dueDate").mb-2
-        b-form-group(label="Sub-items")
-          b-list-group-item
-            b-form-checkbox Item 1
-          b-list-group-item
-            b-form-checkbox Item 2
-          b-list-group-item
-            b-form-checkbox Item 3
-          b-list-group-item
-            b-form-checkbox Item 4
-          b-button(variant="secondary" class="btn-block" style="border-top-left-radius: 0px; border-top-right-radius: 0px;") Add sub-item
 
-        b-button(type="submit" variant="primary" class="mr-2") Save Changes
+        //- Sub-items List
+        b-form-group(label="Sub-items")
+          draggable(v-model="subItems")
+
+            //- Sub-item Component
+            sub-item(
+              v-for="item in subItems"
+              :key="item.id"
+              :id="item.id"
+              :name="item.name"
+              :completed="completed")
+
+          //- Add sub-item
+          b-button(variant="secondary" class="btn-block mt-2" @click="addingSubItem = true" v-if="!addingSubItem") Add sub-item
+
+          .adding-sub-item(v-if="addingSubItem").mt-2
+            b-form-group
+              b-form-input(id="add-sub-item" v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
+              b-button(variant="success" @click="addSubItem()").mt-2 Add
+              b-button(variant="secondary" @click="addingSubItem = false").mt-2.ml-2 Cancel
+
+        b-button(@click="editTodoItem" variant="primary" class="mr-2") Save Changes
         b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
 
 </template>
@@ -48,20 +73,26 @@
 
 import axios from 'axios';
 import moment from 'moment';
+import SubItem from './SubItem.vue';
 
 export default {
   name: 'TodoItem',
-  props: ['id', 'toDoName', 'notes', 'dueDate', 'completed'],
+  props: ['listId', 'id', 'name', 'notes', 'dueDate', 'completed'],
   data() {
     return {
       item: {
         id: this.id,
-        toDoName: this.toDoName,
+        name: this.name,
         notes: this.notes,
         completed: this.completed,
         dueDate: this.dueDate
       },
-      dueSoon: false
+      dueSoon: false,
+      addingSubItem: false,
+      subItemForm: {
+        name: '',
+      },
+      subItems: []
     };
   },
   methods: {
@@ -90,9 +121,37 @@ export default {
           'content-type': 'application/json'
         }
       });
+    },
+    getSubItems() {
+      axios({
+        method: 'GET',
+        url: `http://localhost:5000/accounts/1/lists/${this.listId}/todos/${this.item.id}/subitems`
+      }).then(response => {
+        this.subItems = response.data;
+      });
+    },
+    addSubItem() {
+      let data = JSON.stringify({ name: this.subItemForm.name });
+
+      this.subItemForm.name = '';
+      let addSubItemInput = document.getElementById("add-sub-item");
+      addSubItemInput.focus();
+
+      axios({
+        method: 'POST',
+        url: `http://localhost:5000/accounts/1/lists/${this.listId}/todos/${this.item.id}/subitems`,
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      }).then(response => {
+        this.subItems.unshift(response.data);
+      });
     }
   },
   created: function() {
+    this.getSubItems();
+    
     let today = new Date();
     let dueDate = new Date(this.item.dueDate);
 
@@ -119,6 +178,16 @@ export default {
     },
     monthDay: function(value) : string {
       return moment(value).format('MMMM Do');
+    }
+  },
+  components: {
+    SubItem
+  },
+  directives: {
+    focus: {
+      inserted (el) {
+        el.focus()
+      }
     }
   }
 };

@@ -43,9 +43,9 @@ namespace TodoWebAPI.Controllers
               return BadRequest("List doesn't exist");
 
 
-            return Ok(new {
+            return Ok(new TodoListItemModel {
                 Id = todoItem.Id,
-                ToDoName = todoItem.Name,
+                Name = todoItem.Name,
                 Notes = todoItem.Notes,
                 ListId = listId,
                 DueDate = todoItem.DueDate
@@ -53,7 +53,7 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> GetAllTodoItemsAsync(int accountId, int listId)
+        public async Task<IActionResult> GetAllTodoItems(int accountId, int listId)
         {
             var dapper = new DapperQuery(_config);
 
@@ -63,14 +63,14 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodoAsync(int accountId, int todoId, [FromBody] EditItem todo)
+        public async Task<IActionResult> EditTodo(int accountId, int todoId, [FromBody] EditItem todo)
         {
             todo.AccountId = accountId;
             todo.Id = todoId;
 
             await _mediator.Send(todo);
 
-            return Ok($"Name = {todo.ToDoName}, Notes = {todo.Notes}");
+            return Ok($"Name = {todo.Name}, Notes = {todo.Notes}");
         }
 
         [HttpPut("accounts/{accountId}/todos/{todoId}/completed")]

@@ -6,7 +6,7 @@ CREATE TABLE [TodoListItems](
     [ID] INT PRIMARY KEY IDENTITY(1,1),
     [Notes] VARCHAR(200),
     [Completed] BIT NOT NULL DEFAULT(0),
-    [ToDoName] VARCHAR(50),
+    [Name] VARCHAR(50),
 	[DueDate] DATETIME,
     [ListID] INT,
 	[AccountID] INT NOT NULL

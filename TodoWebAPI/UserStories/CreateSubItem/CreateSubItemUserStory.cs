@@ -22,8 +22,8 @@ namespace TodoWebAPI.UserStories.CreateSubItem
 
         public async Task<SubItem> Handle(CreateSubItem request, CancellationToken cancellationToken)
         {
-            var item = await _listItems.FindToDoListItemByIdAsync(request.ItemId);
-            var subItem = item.CreateSubItem(request.TodoName, request.Notes, request.DueDate);
+            var item = await _listItems.FindToDoListItemByIdAsync(request.ListItemId);
+            var subItem = item.CreateSubItem(request.Name);
 
             _subItems.Add(subItem);
 

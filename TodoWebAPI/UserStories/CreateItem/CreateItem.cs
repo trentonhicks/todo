@@ -12,7 +12,7 @@ namespace TodoWebAPI.UserStories.CreateItem
         public int AccountId { get; set; }
         public int ListId { get; set; }
         public string Notes { get; set; }
-        public string TodoName { get; set; }
+        public string Name { get; set; }
         public DateTime? DueDate { get; set; }
     }
 }

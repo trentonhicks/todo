@@ -26,7 +26,7 @@ namespace TodoWebAPI.UserStories.CreateItem
             if (list == null)
                 return null;
 
-            var todoItem = list.CreateListItem(request.TodoName, request.Notes, request.DueDate);
+            var todoItem = list.CreateListItem(request.Name, request.Notes, request.DueDate);
 
             await _todoListItemRepository.AddTodoListItemAsync(todoItem);
 

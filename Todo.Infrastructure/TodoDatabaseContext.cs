@@ -61,21 +61,27 @@ namespace Todo.Infrastructure
         {
             modelBuilder.Entity<Account>(entity =>
             {
-                entity.HasIndex(e => e.UserName)
+                entity
+                    .HasIndex(e => e.UserName)
                     .HasName("UQ__Accounts__C9F2845640260CAD")
                     .IsUnique();
-                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.FullName)
+                entity
+                    .Property(e => e.Id).HasColumnName("ID");
+
+                entity
+                    .Property(e => e.FullName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Password)
+                entity
+                    .Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UserName)
+                entity
+                    .Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -83,11 +89,16 @@ namespace Todo.Infrastructure
 
             modelBuilder.Entity<TodoList>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity
+                    .Property(e => e.Id)
+                    .HasColumnName("ID");
 
-                entity.Property(e => e.AccountId).HasColumnName("AccountID");
+                entity
+                    .Property(e => e.AccountId)
+                    .HasColumnName("AccountID");
 
-                entity.Property(e => e.ListTitle)
+                entity
+                    .Property(e => e.ListTitle)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -95,60 +106,89 @@ namespace Todo.Infrastructure
 
             modelBuilder.Entity<TodoListItem>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity
+                    .Property(e => e.Id)
+                    .HasColumnName("ID");
 
-                entity.Property(e => e.ListId).HasColumnName("ListID");
+                entity
+                    .Property(e => e.ListId)
+                    .HasColumnName("ListID");
 
-                entity.Property(e => e.Notes)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
+                entity
+                    .Property(e => e.AccountId)
+                    .HasColumnName("AccountID");
 
-                entity.Property(e => e.Name).HasColumnName("ToDoName")
+                entity
+                    .Property(e => e.Name)
+                    .HasColumnName("Name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DueDate)
+                entity
+                    .Property(e => e.Notes)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity
+                    .Property(e => e.DueDate)
                     .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<TodoListLayout>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity
+                    .Property(e => e.Id)
+                    .HasColumnName("ID");
 
-                entity.Property(e => e.ListId).HasColumnName("ListID");
+                entity
+                    .Property(e => e.ListId)
+                    .HasColumnName("ListID");
 
-                entity.Property(e => e.Layout).HasColumnName("Layout")
-                    .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<int>>(v));
+                entity
+                    .Property(e => e.Layout)
+                    .HasColumnName("Layout")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<List<int>>(v)
+                    );
             });
 
             modelBuilder.Entity<SubItemLayout>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity
+                    .Property(e => e.Id)
+                    .HasColumnName("ID");
 
-                entity.Property(e => e.ItemId);
+                entity
+                    .Property(e => e.ItemId);
 
-                entity.Property(e => e.Layout).HasColumnName("Layout")
-                    .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<int>>(v));
+                entity
+                    .Property(e => e.Layout).HasColumnName("Layout")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<List<int>>(v)
+                    );
             });
 
             modelBuilder.Entity<SubItem>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity
+                    .Property(e => e.Id)
+                    .HasColumnName("ID");
 
-                entity.Property(e => e.ListId).HasColumnName("ListID");
+                entity
+                    .Property(e => e.ListItemId)
+                    .HasColumnName("ListItemID");
 
-                entity.Property(e => e.Notes)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ListItemId);
-
-                entity.Property(e => e.Name).HasColumnName("ToDoName")
+                entity
+                    .Property(e => e.Name)
+                    .HasColumnName("Name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DueDate)
-                    .HasColumnType("datetime");
+                entity
+                    .Property(e => e.Completed)
+                    .HasColumnName("Completed");
             });
         }
     }

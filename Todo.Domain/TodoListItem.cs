@@ -6,8 +6,15 @@ using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
-    public class TodoListItem : TodoListItemBase
+    public class TodoListItem : Entity
     {
+        public int Id { get; set; }
+        public int AccountId { get; set; }
+        public string Notes { get; set; }
+        public bool Completed { get; protected set; }
+        public string Name { get; set; }
+        public int? ListId { get; set; }
+        public DateTime? DueDate { get; set; }
         public void SetCompleted(List<SubItem> items)
         {
             if (!items.All(item => item.ListItemId == Id))
@@ -27,7 +34,7 @@ namespace Todo.Domain
             }
         }
 
-        public override void SetCompleted()
+        public void SetCompleted()
         {
             CheckIfListItemIsTrashed();
             
@@ -38,7 +45,7 @@ namespace Todo.Domain
             DomainEvents.Add(new TodoListItemCompletedStateChanged { Item = this });
         }
 
-        public override void SetNotCompleted()
+        public void SetNotCompleted()
         {
             CheckIfListItemIsTrashed();
 
@@ -49,16 +56,12 @@ namespace Todo.Domain
             DomainEvents.Add(new TodoListItemCompletedStateChanged { Item = this });
         }
 
-        public SubItem CreateSubItem(string name, string notes, DateTime? dueDate)
+        public SubItem CreateSubItem(string name)
         {
             var item = new SubItem
             {
-              AccountId = this.AccountId,
-              DueDate = dueDate,
-              ListId = this.ListId,
               ListItemId = this.Id,
               Name = name,
-              Notes = notes
             };
 
             DomainEvents.Add(new SubItemCreated { SubItem = item });
@@ -66,7 +69,7 @@ namespace Todo.Domain
             return item;
         }
 
-        public override void MoveToTrash()
+        public void MoveToTrash()
         {
             var listId = this.ListId;
             this.ListId = null;
