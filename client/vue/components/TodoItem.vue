@@ -8,7 +8,7 @@
     //- Item Info
     b-form-checkbox(v-model="item.completed" :disabled="hasSubItems")
       .todo-item-name {{ item.name }}
-      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !dueSoon, 'text-danger': dueSoon }")
+      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !itemDueToday, 'text-danger': itemDueToday }")
         b-icon-clock
         | {{ item.dueDate | monthDay }}
       .todo-item-notes(v-if="item.notes"): small.text-muted {{ item.notes }}
@@ -95,7 +95,6 @@ export default {
         completed: this.completed,
         dueDate: this.dueDate
       },
-      dueSoon: false,
       addingSubItem: false,
       subItemForm: {
         name: '',
@@ -159,16 +158,6 @@ export default {
   },
   created: function() {
     this.getSubItems();
-    
-    let today = new Date();
-    let dueDate = new Date(this.item.dueDate);
-
-    if(dueDate.getTime() >= today.getTime()) {
-      this.dueSoon = false;
-    }
-    else {
-      this.dueSoon = true;
-    }
   },
   watch: {
     checkboxToggle: function() {
@@ -181,6 +170,16 @@ export default {
     },
     hasSubItems() {
       return this.subItems.length > 0;
+    },
+    itemDueToday() {
+      let today = new Date();
+      let dueDate = new Date(this.item.dueDate);
+
+      if(dueDate.getTime() >= today.getTime()) {
+        return false;
+      }
+
+      return true;
     }
   },
   filters: {
