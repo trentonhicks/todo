@@ -12,6 +12,7 @@ namespace TodoWebAPI.Models
     public class CreateList : IRequest<TodoList>
     {
         [Required]
+        [StringLength(50)]
         [FromBody]
         public string ListTitle { get; set; }
         [FromRoute]
