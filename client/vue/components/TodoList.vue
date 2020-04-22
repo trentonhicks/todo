@@ -46,8 +46,9 @@
         b-form-group(label="Notes")
           b-form-textarea(
             placeholder="Notes"
-            rows="3"
-            v-model="form.notes")
+            rows="4"
+            v-model="form.notes"
+            maxlength="200")
         b-form-group(label="Due Date")
           b-form-datepicker(v-model="form.dueDate")
 
