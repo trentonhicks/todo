@@ -58,6 +58,7 @@ export default {
             font-weight: bold;
             padding: 20px;
             padding-bottom: 0px;
+            max-width: 400px;
 
             @media screen and (min-width: 540px) {
                 padding-bottom: 20px;
