@@ -29,7 +29,7 @@
           b-form-input(
             type="text"
             placeholder="Name"
-            v-model="item.name"
+            v-model="form.name"
             required)
 
         //- Notes
@@ -37,12 +37,12 @@
           b-form-textarea(
             placeholder="Notes"
             rows="4"
-            v-model="item.notes"
+            v-model="form.notes"
             maxlength="200")
 
         //- Due Dates
         b-form-group(label="Due Date")
-          b-form-datepicker(v-model="item.dueDate").mb-2
+          b-form-datepicker(v-model="form.dueDate").mb-2
 
         //- Sub-items List
         b-form-group(label="Sub-items")
@@ -88,6 +88,13 @@ export default {
         completed: this.completed,
         dueDate: this.dueDate
       },
+      form: {
+        id: this.id,
+        name: this.name,
+        notes: this.notes,
+        completed: this.completed,
+        dueDate: this.dueDate
+      },
       dueSoon: false,
       addingSubItem: false,
       subItemForm: {
@@ -111,8 +118,8 @@ export default {
     },
     editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
-
-      let data = JSON.stringify(this.item);
+      let data = JSON.stringify(this.form);
+      this.item = JSON.parse(data);
 
       axios({
         method: 'PUT',
