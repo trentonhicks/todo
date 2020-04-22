@@ -4,8 +4,8 @@
     b-card(class="mb-3 bg-light")
         b-button(:to="'/lists/'+ item.id").card-title
             | {{item.listTitle}}
-        b-badge(:class="{ 'badge-success': item.completed }") {{ item.completed ? 'Completed' : 'In progress' }}
         .todo-list-options
+            b-badge(:class="{ 'badge-success': item.completed }").mr-3 {{ item.completed ? 'Completed' : 'In progress' }}
             b-button(variant="info" size="sm" :to="'/lists/'+ item.id").mr-2: b-icon-list-ul
             b-button(variant="danger" size="sm"  @click="$emit('delete-list', item)"): b-icon-trash
 
@@ -41,7 +41,7 @@ export default {
             flex-direction: column;
             padding: 0px;
 
-            @media screen and (min-width: 540px) {
+            @media screen and (min-width: 768px) {
                 flex-direction: row;
                 align-items: center;
             }
@@ -58,9 +58,9 @@ export default {
             font-weight: bold;
             padding: 20px;
             padding-bottom: 0px;
-            max-width: 400px;
 
-            @media screen and (min-width: 540px) {
+            @media screen and (min-width: 768px) {
+                max-width: 400px;
                 padding-bottom: 20px;
             }
 
@@ -69,11 +69,6 @@ export default {
                 border: none;
                 color: #212529;
             }
-        }
-
-        .badge {
-            margin-top: 3px;
-            margin-left: 20px;
         }
 
         .todo-list-options {

@@ -228,6 +228,11 @@ export default {
     line-height: 1;
     margin-top: 3px;
     max-width: 160px;
+    overflow-wrap: break-word;
+
+    @media screen and (min-width: 768px) {
+      max-width: 320px;
+    }
   }
 
   .todo-item-options {
