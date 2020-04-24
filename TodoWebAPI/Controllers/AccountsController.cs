@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
@@ -30,16 +31,14 @@ namespace TodoWebAPI.Controllers
             _todoDatabaseContext = todoDatabaseContext;
         }
 
-        [HttpGet("accounts/login")]
+        [HttpGet("accounts")]
         public IActionResult Login(string returnUrl = "/")
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Ok(User.FindFirst(c => c.Type == "urn:github:avatar")?.Value);
+            }
             return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
-        }
-
-        [HttpGet("")]
-        public IActionResult GitHubResponse()
-        {
-            return Ok();
         }
 
         [HttpPost("accounts")]

@@ -12,10 +12,12 @@ using Todo.Infrastructure;
 using TodoWebAPI.ApplicationServices;
 using MediatR;
 using TodoWebAPI.UserStories.ListLayout;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     public class TodoListController : ControllerBase
     {
         private readonly IMediator _mediator;

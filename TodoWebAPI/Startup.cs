@@ -140,7 +140,7 @@ namespace TodoWebAPI
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseStaticFiles();
+            app.UseFileServer();
 
             app.UseAuthentication();
 

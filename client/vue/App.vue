@@ -3,7 +3,7 @@
 #content.mt-4
   b-navbar(toggleable="sm" type="light" variant="light").fixed-top
     b-navbar-brand Todo
-    b-avatar(text="A").ml-auto
+    b-avatar(:src="avatar").ml-auto
 
   router-view
 
@@ -11,11 +11,25 @@
 
 <script lang="ts">
 
+import axios from 'axios';
+
 export default {
   name: 'App',
   data() {
-    return {};
+    return {
+      avatar: ''
+    };
   },
+  created: function() {
+    axios({
+      method: 'GET',
+      url: 'http://localhost:5000/accounts',
+    }).then((response) => {
+      if(response.status === 200) {
+        this.avatar = response.data;
+      }
+    });
+  }
 };
 
 </script>
