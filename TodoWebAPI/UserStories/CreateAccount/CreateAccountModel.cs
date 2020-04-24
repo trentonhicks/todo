@@ -10,6 +10,8 @@ namespace TodoWebAPI.Models
 {
     public class CreateAccountModel : IRequest<Account>
     {
+        [Required]
+        [StringLength(50)]
         public string FullName { get; set; }
         [Required(ErrorMessage ="UserName Required")]
         public string UserName { get; set; }
