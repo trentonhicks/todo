@@ -61,7 +61,11 @@
 
           .adding-sub-item(v-if="addingSubItem").mt-2
             b-form-group
-              b-form-input(id="add-sub-item" v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
+              b-form-input(
+                :class="{'is-invalid': subitemFormLengthExceeded}"
+                id="add-sub-item"
+                v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
+              .invalid-feedback(v-if="subitemFormLengthExceeded") Sub item name needs to be less than 50!
               b-button(variant="success" @click="addSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false").mt-2.ml-2 Cancel
 
@@ -138,22 +142,26 @@ export default {
       });
     },
     addSubItem() {
-      let data = JSON.stringify({ name: this.subItemForm.name });
+     if(this.subitemFormValid) {
+        let data = JSON.stringify({ name: this.subItemForm.name });
 
-      this.subItemForm.name = '';
-      let addSubItemInput = document.getElementById("add-sub-item");
-      addSubItemInput.focus();
+        this.subItemForm.name = '';
+        let addSubItemInput = document.getElementById("add-sub-item");
+        addSubItemInput.focus();
 
-      axios({
-        method: 'POST',
-        url: `http://localhost:5000/accounts/1/lists/${this.listId}/todos/${this.item.id}/subitems`,
-        data,
-        headers: {
-          'content-type': 'application/json'
-        }
-      }).then(response => {
-        this.subItems.unshift(response.data);
-      });
+        axios({
+          method: 'POST',
+          url: `http://localhost:5000/accounts/1/lists/${this.listId}/todos/${this.item.id}/subitems`,
+          data,
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(response => {
+          this.subItems.unshift(response.data);
+        });
+
+      }
+
     }
   },
   created: function() {
@@ -165,6 +173,15 @@ export default {
     }
   },
   computed: {
+    subitemFormIsEmpty(){
+        return this.subItemForm.name.length > 0
+    },
+    subitemFormLengthExceeded(){
+      return this.subItemForm.name.length > 50 
+    },
+    subitemFormValid(){
+      return !this.subitemFormIsEmpty && !this.subitemFormLengthExceeded
+    },
     checkboxToggle() {
       return this.item.completed;
     },
