@@ -10,6 +10,7 @@ using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using TodoWebAPI.UserStories.CreateSubItem;
 using TodoWebAPI.UserStories.SubItemCompletedState;
+using TodoWebAPI.UserStories.TrashSubItem;
 
 namespace TodoWebAPI.Controllers
 {
@@ -57,6 +58,20 @@ namespace TodoWebAPI.Controllers
             };
             await _mediator.Send(subItemCompleted);
             return Ok();
+        }
+
+        [HttpDelete("accounts/{accountId}/subitems/{subitemId}")]
+        public async Task<IActionResult> TrashSubItem(int accountId, int subitemId)
+        {
+            var trashSubItem = new TrashSubItem
+            {
+                AccountId = accountId,
+                SubItemId = subitemId
+            };
+
+            await _mediator.Send(trashSubItem);
+
+            return Ok("Subitem deleted!!!");
         }
     }
 }
