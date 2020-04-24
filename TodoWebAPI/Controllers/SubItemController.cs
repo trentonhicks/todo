@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using TodoWebAPI.UserStories.CreateSubItem;
+using TodoWebAPI.UserStories.EditSubItem;
 using TodoWebAPI.UserStories.SubItemCompletedState;
 using TodoWebAPI.UserStories.TrashSubItem;
 
@@ -57,6 +58,17 @@ namespace TodoWebAPI.Controllers
                 Completed = completed
             };
             await _mediator.Send(subItemCompleted);
+            return Ok();
+        }
+
+        [HttpPut("accounts/{accountId}/subitems/{subitemId}")]
+        public async Task<IActionResult> UpdateSubItem(int accountId, int subitemId, EditSubItem editSubItem)
+        {
+            editSubItem.AccountId = accountId;
+            editSubItem.SubItemId = subitemId;
+
+            await _mediator.Send(editSubItem);
+
             return Ok();
         }
 
