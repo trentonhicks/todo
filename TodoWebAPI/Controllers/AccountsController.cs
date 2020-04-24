@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Todo.Domain.Repositories;
@@ -15,6 +16,7 @@ using TodoWebAPI.UserStories.DeleteAccount;
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
+
     public class AccountsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,6 +28,18 @@ namespace TodoWebAPI.Controllers
             _config = config;
             _mediator = mediator;
             _todoDatabaseContext = todoDatabaseContext;
+        }
+
+        [HttpGet("accounts/login")]
+        public IActionResult Login(string returnUrl = "/")
+        {
+            return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
+        }
+
+        [HttpGet("")]
+        public IActionResult GitHubResponse()
+        {
+            return Ok();
         }
 
         [HttpPost("accounts")]
