@@ -19,6 +19,7 @@ namespace TodoWebAPI.Models
         [Required(ErrorMessage = "Password Required")]
         public string Password { get; set; }
         [Required(ErrorMessage = "Email Required")]
+        [EmailAddress]
         public string Email { get; set; }
     }
 }
