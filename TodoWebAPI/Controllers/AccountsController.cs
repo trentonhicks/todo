@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Todo.Domain.Repositories;
@@ -31,14 +32,20 @@ namespace TodoWebAPI.Controllers
             _todoDatabaseContext = todoDatabaseContext;
         }
 
-        [HttpGet("accounts")]
+        [HttpGet("accounts/login")]
         public IActionResult Login(string returnUrl = "/")
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Ok(User.FindFirst(c => c.Type == "urn:github:avatar")?.Value);
+                return Ok(User.FindFirst(c => c.Type == "urn:github:avatar").Value);
             }
             return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
+        }
+
+        [HttpGet("accounts/logout")]
+        public async Task Logout(string returnUrl = "/")
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
         [HttpPost("accounts")]

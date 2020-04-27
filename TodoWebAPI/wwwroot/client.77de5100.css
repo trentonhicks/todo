@@ -1,3 +1,142 @@
+.card .card-body[data-v-54986f] {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 0px;
+}
+@media screen and (min-width: 540px) {
+.card .card-body[data-v-54986f] {
+    flex-direction: row;
+    align-items: center;
+}
+}
+.card .card-title[data-v-54986f] {
+  font-size: 20px;
+  margin-bottom: 0px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #212529;
+  border: none;
+  font-weight: bold;
+  padding: 20px;
+  padding-bottom: 0px;
+}
+@media screen and (min-width: 540px) {
+.card .card-title[data-v-54986f] {
+    padding-bottom: 20px;
+}
+}
+.card .card-title[data-v-54986f]:focus, .card .card-title[data-v-54986f]:hover, .card .card-title[data-v-54986f]:not(:disabled):not(.disabled):active {
+  background-color: transparent;
+  border: none;
+  color: #212529;
+}
+.card .badge[data-v-54986f] {
+  margin-top: 3px;
+  margin-left: 20px;
+}
+.card .todo-list-options[data-v-54986f] {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+}
+.card .todo-list-options .btn[data-v-54986f] {
+  height: 36px;
+  width: 36px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#modal-add .modal-footer {
+  display: none;
+}
+.sub-item[data-v-897bf8] {
+  display: flex;
+  padding: 0;
+  align-items: center;
+}
+.sub-item[data-v-897bf8]:hover {
+  background-color: #f8f9fa;
+}
+.sub-item[data-v-897bf8]:active {
+  background-color: #f4f5f7;
+}
+.sub-item .item-name-wrapper[data-v-897bf8] {
+  flex: 1 0 auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+.sub-item .item-name-wrapper[data-v-897bf8]:hover {
+  cursor: pointer;
+}
+.sub-item .item-checkbox-wrapper[data-v-897bf8] {
+  padding: 12px 0 12px 20px;
+}
+.todo-item[data-v-731ae4] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 12px 14px 12px;
+  font-family: "Nunito", sans-serif;
+}
+.todo-item .todo-item-name[data-v-731ae4] {
+  margin-top: 2px;
+  font-weight: bold;
+  line-height: 1.1;
+  max-width: 160px;
+}
+.todo-item .todo-item-date[data-v-731ae4] {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.todo-item .todo-item-date svg[data-v-731ae4] {
+  margin-right: 3px;
+}
+.todo-item .todo-item-notes[data-v-731ae4] {
+  line-height: 1;
+  margin-top: 3px;
+  max-width: 160px;
+}
+.todo-item .todo-item-options[data-v-731ae4] {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.todo-item .todo-item-options .btn[data-v-731ae4] {
+  height: 36px;
+  width: 36px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.todo-item .todo-item-options .btn[data-v-731ae4]:not(:last-child) {
+  margin-right: 8px;
+}
+#confetti[data-v-0731ef] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 500;
+}
+.back-button[data-v-ada004] {
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  position: relative;
+  left: -7px;
+  margin-bottom: 10px;
+}
 * {
   box-sizing: border-box;
 }
@@ -58,145 +197,6 @@ h1 {
 
 .navbar.fixed-top {
   z-index: 400;
-}
-.card .card-body[data-v-64c23c] {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-direction: column;
-  padding: 0px;
-}
-@media screen and (min-width: 540px) {
-.card .card-body[data-v-64c23c] {
-    flex-direction: row;
-    align-items: center;
-}
-}
-.card .card-title[data-v-64c23c] {
-  font-size: 20px;
-  margin-bottom: 0px;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  color: #212529;
-  border: none;
-  font-weight: bold;
-  padding: 20px;
-  padding-bottom: 0px;
-}
-@media screen and (min-width: 540px) {
-.card .card-title[data-v-64c23c] {
-    padding-bottom: 20px;
-}
-}
-.card .card-title[data-v-64c23c]:focus, .card .card-title[data-v-64c23c]:hover, .card .card-title[data-v-64c23c]:not(:disabled):not(.disabled):active {
-  background-color: transparent;
-  border: none;
-  color: #212529;
-}
-.card .badge[data-v-64c23c] {
-  margin-top: 3px;
-  margin-left: 20px;
-}
-.card .todo-list-options[data-v-64c23c] {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px;
-}
-.card .todo-list-options .btn[data-v-64c23c] {
-  height: 36px;
-  width: 36px;
-  border-radius: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#modal-add .modal-footer {
-  display: none;
-}
-.sub-item[data-v-4f5ec9] {
-  display: flex;
-  padding: 0;
-  align-items: center;
-}
-.sub-item[data-v-4f5ec9]:hover {
-  background-color: #f8f9fa;
-}
-.sub-item[data-v-4f5ec9]:active {
-  background-color: #f4f5f7;
-}
-.sub-item .item-name-wrapper[data-v-4f5ec9] {
-  flex: 1 0 auto;
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-}
-.sub-item .item-name-wrapper[data-v-4f5ec9]:hover {
-  cursor: pointer;
-}
-.sub-item .item-checkbox-wrapper[data-v-4f5ec9] {
-  padding: 12px 0 12px 20px;
-}
-.todo-item[data-v-2162c0] {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 12px 14px 12px;
-  font-family: "Nunito", sans-serif;
-}
-.todo-item .todo-item-name[data-v-2162c0] {
-  margin-top: 2px;
-  font-weight: bold;
-  line-height: 1.1;
-  max-width: 160px;
-}
-.todo-item .todo-item-date[data-v-2162c0] {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  margin-top: 4px;
-}
-.todo-item .todo-item-date svg[data-v-2162c0] {
-  margin-right: 3px;
-}
-.todo-item .todo-item-notes[data-v-2162c0] {
-  line-height: 1;
-  margin-top: 3px;
-  max-width: 160px;
-}
-.todo-item .todo-item-options[data-v-2162c0] {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-.todo-item .todo-item-options .btn[data-v-2162c0] {
-  height: 36px;
-  width: 36px;
-  border-radius: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.todo-item .todo-item-options .btn[data-v-2162c0]:not(:last-child) {
-  margin-right: 8px;
-}
-#confetti[data-v-032e85] {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 500;
-}
-.back-button[data-v-72e1c2] {
-  display: flex;
-  align-items: center;
-  padding: 0px;
-  position: relative;
-  left: -7px;
-  margin-bottom: 10px;
 }
 /*!
  * Bootstrap v4.4.1 (https://getbootstrap.com/)

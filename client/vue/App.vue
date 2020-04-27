@@ -12,23 +12,31 @@
 <script lang="ts">
 
 import axios from 'axios';
+import store from '../modules/store';
 
 export default {
   name: 'App',
   data() {
     return {
-      avatar: ''
-    };
+      avatar: null
+    }
+  },
+  methods: {
+    checkAuthState() {
+      axios({
+        method: 'GET',
+        url: 'http://localhost:5000/accounts/login'
+      }).then((response) => {
+        this.avatar = response.data;
+      }).catch(() => {
+        if(this.$router.name !== 'Login') {
+          this.$router.push('/login');
+        }
+      });
+    }
   },
   created: function() {
-    axios({
-      method: 'GET',
-      url: 'http://localhost:5000/accounts',
-    }).then((response) => {
-      if(response.status === 200) {
-        this.avatar = response.data;
-      }
-    });
+    this.checkAuthState();
   }
 };
 
