@@ -19,7 +19,7 @@ namespace TodoWebAPI.DomainEventHandlers
         }
         public Task Handle(SubItemCompletedStateChanged notification, CancellationToken cancellationToken)
         {
-            return _service.MarkTodoListItemAsCompletedAsync(notification.SubItem.ListItemId);
+            return _service.MarkTodoListItemAsCompletedAsync(notification.SubItem.ListItemId.GetValueOrDefault());
         }
     }
 }

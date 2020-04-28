@@ -8,17 +8,14 @@ namespace Todo.Domain
     public class SubItem : Entity
     {
         public int Id { get; set; }
-        public int ListItemId { get; set; }
+        public int? ListItemId { get; set; }
         public bool Completed { get; protected set; }
         public string Name { get; set; }
 
-        public void MoveToTrash()
-        {
-            throw new NotImplementedException();
-        }
-
         public void SetCompleted()
         {
+            CheckIfSubItemIsTrashed();
+
             if (Completed)
                 return;
 
@@ -28,11 +25,27 @@ namespace Todo.Domain
 
         public void SetNotCompleted()
         {
+            CheckIfSubItemIsTrashed();
+
             if (!Completed)
                 return;
 
             Completed = false;
             DomainEvents.Add(new SubItemCompletedStateChanged { SubItem = this });
+        }
+
+        public void MoveToTrash()
+        {
+            var itemId = this.ListItemId;
+            this.ListItemId = null;
+
+            DomainEvents.Add(new SubItemMovedToTrash { ItemId = itemId, SubItem = this });
+        }
+
+        private void CheckIfSubItemIsTrashed()
+        {
+            if (this.ListItemId == null)
+                throw new InvalidOperationException("Item is in the trash!");
         }
     }
 }
