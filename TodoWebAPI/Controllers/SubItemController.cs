@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TodoWebAPI.ApplicationServices;
+using TodoWebAPI.Extentions;
 using TodoWebAPI.Models;
 using TodoWebAPI.UserStories.CreateSubItem;
 using TodoWebAPI.UserStories.SubItemCompletedState;
@@ -27,7 +28,7 @@ namespace TodoWebAPI.Controllers
             _config = config;
         }
 
-        [HttpGet("accounts/{accountId}/lists/{listId}/todos/{todoItemId}/subitems")]
+        [HttpGet("api/lists/{listId}/todos/{todoItemId}/subitems")]
         public async Task<IActionResult> GetSubItems(int todoItemId)
         {
             var dapper = new DapperQuery(_config);
@@ -37,10 +38,10 @@ namespace TodoWebAPI.Controllers
             return Ok(subItems);
         }
 
-        [HttpPost("accounts/{accountId}/lists/{listId}/todos/{todoItemId}/subitems")]
-        public async Task<IActionResult> CreateSubItem(int accountId, int listId, int todoItemId, [FromBody] CreateSubItem createSubItem)
+        [HttpPost("api/lists/{listId}/todos/{todoItemId}/subitems")]
+        public async Task<IActionResult> CreateSubItem(int listId, int todoItemId, [FromBody] CreateSubItem createSubItem)
         {
-            createSubItem.AccountId = accountId;
+            createSubItem.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
             createSubItem.ListId = listId;
             createSubItem.ListItemId = todoItemId;
             var subItem = await _mediator.Send(createSubItem);
@@ -48,9 +49,11 @@ namespace TodoWebAPI.Controllers
             return Ok(subItem);
         }
 
-        [HttpPut("accounts/{accountId}/subitems/{subitemId}/completed")]
-        public async Task<IActionResult> ToggleCompletedState(int accountId, int subItemId, [FromBody] bool completed)
+        [HttpPut("api/subitems/{subitemId}/completed")]
+        public async Task<IActionResult> ToggleCompletedState(int subItemId, [FromBody] bool completed)
         {
+            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+
             var subItemCompleted = new SubItemCompletedState
             {
                 AccountId = accountId,
