@@ -35,8 +35,8 @@ namespace TodoWebAPI.Controllers
             _todoDatabaseContext = todoDatabaseContext;
         }
 
-        [HttpGet("accounts/login")]
-        public async Task<IActionResult> Login(string returnUrl = "/")
+        [HttpGet("api/accounts/login")]
+        public IActionResult Login(string returnUrl = "/")
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -46,27 +46,17 @@ namespace TodoWebAPI.Controllers
             return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
         }
 
-        [HttpGet("accounts/logout")]
+        [HttpGet("api/accounts/logout")]
         public async Task Logout(string returnUrl = "/")
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-      
-        [HttpPost("accounts")]
-        public async Task<IActionResult> CreateAccount(CreateAccountModel model)
+        [HttpGet("api/accounts")]
+        public async Task<IActionResult> GetAccount()
         {
-            var account = await _mediator.Send(model);
-            if (account == null)
-                return BadRequest("Username already Exists.");
+            var accountId = Convert.ToInt32(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
 
-
-            return Ok(account);
-        }
-
-        [HttpGet("accounts/{accountId}")]
-        public async Task<IActionResult> GetAccount(int accountId)
-        {
             var dapper = new DapperQuery(_config);
 
             var account = await dapper.GetAccountAsync(accountId);
@@ -74,9 +64,11 @@ namespace TodoWebAPI.Controllers
             return Ok(account);
         }
 
-        [HttpDelete("accounts/{accountId}")]
-        public async Task<IActionResult> DeleteAccountAsync(int accountId)
+        [HttpDelete("api/accounts")]
+        public async Task<IActionResult> DeleteAccountAsync()
         {
+            var accountId = Convert.ToInt32(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
+
             var deleteAccount = new DeleteAccount
             {
                 AccountId = accountId
