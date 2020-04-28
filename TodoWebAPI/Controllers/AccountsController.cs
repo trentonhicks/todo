@@ -6,8 +6,11 @@ using Dapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Octokit;
+using Octokit.Internal;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using Todo.WebAPI.ApplicationServices;
@@ -33,10 +36,11 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("accounts/login")]
-        public IActionResult Login(string returnUrl = "/")
+        public async Task<IActionResult> Login(string returnUrl = "/")
         {
             if (User.Identity.IsAuthenticated)
             {
+                var email = User.FindFirst(ClaimTypes.Email).Value;
                 return Ok(User.FindFirst(c => c.Type == "urn:github:avatar").Value);
             }
             return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
@@ -48,6 +52,7 @@ namespace TodoWebAPI.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
+      
         [HttpPost("accounts")]
         public async Task<IActionResult> CreateAccount(CreateAccountModel model)
         {
@@ -62,11 +67,11 @@ namespace TodoWebAPI.Controllers
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetAccount(int accountId)
         {
-           var dapper = new DapperQuery(_config);
+            var dapper = new DapperQuery(_config);
 
-           var account = await dapper.GetAccountAsync(accountId);
+            var account = await dapper.GetAccountAsync(accountId);
 
-           return Ok(account);
+            return Ok(account);
         }
 
         [HttpDelete("accounts/{accountId}")]

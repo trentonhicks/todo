@@ -14,7 +14,6 @@ namespace TodoWebAPI.Models
         [Required(ErrorMessage ="UserName Required")]
         public string UserName { get; set; }
         public string Picture { get; set; }
-        [Required(ErrorMessage = "Password Required")]
         public string Password { get; set; }
         [Required(ErrorMessage = "Email Required")]
         public string Email { get; set; }

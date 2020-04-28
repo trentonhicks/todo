@@ -30,10 +30,10 @@ namespace TodoWebAPI.Controllers
             _dapperQuery = dapperQuery;
         }
 
-        [HttpPost("accounts/{AccountId}/lists")]
+        [HttpPost("accounts/{accountId}/lists")]
         public async Task<IActionResult> CreateList(int accountId, CreateList createTodoList)
         {
-           createTodoList.AccountId = accountId;
+            createTodoList.AccountId = Convert.ToInt32(User.FindFirst("urn:codefliptodo:accountid").Value);
            var todoList = await _mediator.Send(createTodoList);
             if (todoList == null)
                 return BadRequest("Unable to create list :(");

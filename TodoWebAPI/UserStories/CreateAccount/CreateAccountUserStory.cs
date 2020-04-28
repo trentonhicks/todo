@@ -35,7 +35,7 @@ namespace TodoWebAPI.UserStories.CreateAccount
                 Email = request.Email
             };
 
-            await _accountRepository.AddAccountAsync(account);
+            _accountRepository.AddAccount(account);
 
             if (!string.IsNullOrEmpty(request.Picture))
                 await _accountProfileImageRepository.StoreImageProfileAsync(account.Id, request.Picture);

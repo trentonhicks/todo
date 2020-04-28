@@ -30,6 +30,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using Octokit;
+using Octokit.Internal;
 
 namespace TodoWebAPI
 {
@@ -96,11 +98,14 @@ namespace TodoWebAPI
                 {
                     options.ClientId = Configuration["GitHub:ClientId"];
                     options.ClientSecret = Configuration["GitHub:ClientSecret"];
-                    options.CallbackPath = new PathString("/signin-github");
+                    options.CallbackPath = new PathString("/external-callback");
+                    options.Scope.Add("user:email");
 
                     options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
                     options.TokenEndpoint = "https://github.com/login/oauth/access_token";
                     options.UserInformationEndpoint = "https://api.github.com/user";
+
+                    options.SaveTokens = true;
 
                     options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
                     options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
@@ -120,11 +125,40 @@ namespace TodoWebAPI
                             response.EnsureSuccessStatusCode();
 
                             var user = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-
                             context.RunClaimActions(user.RootElement);
+
+                            var github = new GitHubClient(new Octokit.ProductHeaderValue("codefliptodo"), new InMemoryCredentialStore(new Credentials(context.AccessToken)));
+                            var primaryEmail = (await github.User.Email.GetAll()).FirstOrDefault(email => email.Primary && email.Verified).Email;
+
+                            // call repo to create or get account
+                            var accountRepository = context.HttpContext.RequestServices.GetRequiredService<IAccountRepository>();
+
+                            var account = await accountRepository.FindAccountByEmailAsync(primaryEmail);
+
+                            if(account == null)
+                            {
+                                account = new Todo.Domain.Account
+                                {
+                                    Email = primaryEmail,
+                                    FullName = context.Identity.Claims.First(c => c.Type == ClaimTypes.Name)?.Value,
+                                    Password = "1234",
+                                    UserName = "parker"
+                                    //finish creating an account.
+                                };
+                                accountRepository.AddAccount(account);
+                                await accountRepository.SaveChangesAsync();
+                            }
+
+                            context.Identity.AddClaim(new Claim("urn:codefliptodo:accountid", account.Id.ToString()));
+
+                            context.Identity.AddClaim(new Claim(
+                            ClaimTypes.Email, primaryEmail,
+                            ClaimValueTypes.String, context.Options.ClaimsIssuer));
                         }
                     };
                 });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
