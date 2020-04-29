@@ -32,6 +32,8 @@ using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Octokit;
 using Octokit.Internal;
+using TodoWebAPI.Models;
+using TodoWebAPI.Extentions;
 
 namespace TodoWebAPI
 {
@@ -131,23 +133,15 @@ namespace TodoWebAPI
                             var primaryEmail = (await github.User.Email.GetAll()).FirstOrDefault(email => email.Primary && email.Verified).Email;
 
                             // call repo to create or get account
-                            var accountRepository = context.HttpContext.RequestServices.GetRequiredService<IAccountRepository>();
+                            var mediator = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
 
-                            var account = await accountRepository.FindAccountByEmailAsync(primaryEmail);
-
-                            if(account == null)
+                            var account = await mediator.Send(new CreateAccountModel
                             {
-                                account = new Todo.Domain.Account
-                                {
-                                    Email = primaryEmail,
-                                    FullName = context.Identity.Claims.First(c => c.Type == ClaimTypes.Name)?.Value,
-                                    Password = "1234",
-                                    UserName = "parker"
-                                    //finish creating an account.
-                                };
-                                accountRepository.AddAccount(account);
-                                await accountRepository.SaveChangesAsync();
-                            }
+                                Email = primaryEmail,
+                                FullName = context.Identity.Claims.First(c => c.Type == ClaimTypes.Name)?.Value,
+                                Password = "",
+                                UserName = ""
+                            });
 
                             context.Identity.AddClaim(new Claim("urn:codefliptodo:accountid", account.Id.ToString()));
 

@@ -22,12 +22,14 @@ namespace TodoWebAPI.UserStories.CreateAccount
         }
         public async Task<Account> Handle(CreateAccountModel request, CancellationToken cancellationToken)
         {
-            var doesAccountExist = await _accountRepository.DoesAccountWithUserNameExistAsync(request.UserName);
+            var account = await _accountRepository.FindAccountByEmailAsync(request.Email);
 
-            if (doesAccountExist)
-                return null;
+            if (account != null)
+            {
+                return account;
+            }
 
-            var account = new Account()
+            account = new Account()
             {
                 FullName = request.FullName,
                 UserName = request.UserName,
@@ -36,9 +38,6 @@ namespace TodoWebAPI.UserStories.CreateAccount
             };
 
             _accountRepository.AddAccount(account);
-
-            if (!string.IsNullOrEmpty(request.Picture))
-                await _accountProfileImageRepository.StoreImageProfileAsync(account.Id, request.Picture);
 
             await _accountRepository.SaveChangesAsync();
 
