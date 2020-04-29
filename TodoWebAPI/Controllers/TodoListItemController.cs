@@ -15,6 +15,7 @@ using TodoWebAPI.UserStories.EditItem;
 using TodoWebAPI.UserStories.ItemLayout;
 using TodoWebAPI.UserStories.TrashItem;
 using TodoWebAPI.UserStories.ItemCompletedState;
+using TodoWebAPI.Extentions;
 
 namespace TodoWebAPI.Controllers
 {
@@ -32,10 +33,10 @@ namespace TodoWebAPI.Controllers
         }
 
 
-        [HttpPost("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(int accountId, int listId, [FromBody] CreateItem todo)
+        [HttpPost("api/lists/{listId}/todos")]
+        public async Task<IActionResult> CreateTodo(int listId, [FromBody] CreateItem todo)
         {
-            todo.AccountId = accountId;
+            todo.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
             todo.ListId = listId;
 
             var todoItem = await _mediator.Send(todo);
@@ -53,9 +54,10 @@ namespace TodoWebAPI.Controllers
             });
         }
 
-        [HttpGet("accounts/{accountId}/lists/{listId}/todos")]
-        public async Task<IActionResult> GetAllTodoItems(int accountId, int listId)
+        [HttpGet("api/lists/{listId}/todos")]
+        public async Task<IActionResult> GetAllTodoItems(int listId)
         {
+            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
             var dapper = new DapperQuery(_config);
 
             var items = await dapper.GetAllTodoItemAsync(accountId, listId);
@@ -63,10 +65,10 @@ namespace TodoWebAPI.Controllers
             return Ok(items);
         }
 
-        [HttpPut("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodo(int accountId, int todoId, [FromBody] EditItem todo)
+        [HttpPut("api/todos/{todoId}")]
+        public async Task<IActionResult> EditTodo(int todoId, [FromBody] EditItem todo)
         {
-            todo.AccountId = accountId;
+            todo.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
             todo.Id = todoId;
 
             await _mediator.Send(todo);
@@ -74,29 +76,31 @@ namespace TodoWebAPI.Controllers
             return Ok($"Name = {todo.Name}, Notes = {todo.Notes}");
         }
 
-        [HttpPut("accounts/{accountId}/todos/{todoId}/completed")]
-        public async Task<IActionResult> ToggleCompletedState(int accountId, int todoId, [FromBody] ItemCompletedState itemCompletedState)
+        [HttpPut("api/todos/{todoId}/completed")]
+        public async Task<IActionResult> ToggleCompletedState(int todoId, [FromBody] ItemCompletedState itemCompletedState)
         {
-            itemCompletedState.AccountId = accountId;
+            itemCompletedState.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
             itemCompletedState.ItemId = todoId;
             await _mediator.Send(itemCompletedState);
 
             return Ok();
         }
 
-        [HttpPut("accounts/{accountId}/todos/{todoId}/layout")]
-        public async Task<IActionResult> UpdateLayout(int accountId, int todoId, [FromBody] ItemLayout  itemLayout)
+        [HttpPut("api/todos/{todoId}/layout")]
+        public async Task<IActionResult> UpdateLayout(int todoId, [FromBody] ItemLayout  itemLayout)
         {
-            itemLayout.AccountId = accountId;
+            itemLayout.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
             itemLayout.ItemId = todoId;
             await _mediator.Send(itemLayout);
 
             return Ok();
         }
 
-        [HttpDelete("accounts/{accountId}/todos/{todoId}")]
-        public async Task<IActionResult> TrashItem(int accountId, int todoId)
+        [HttpDelete("api/todos/{todoId}")]
+        public async Task<IActionResult> TrashItem(int todoId)
         {
+            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+
             var trashItem = new TrashItem
             {
                 AccountId = accountId,
