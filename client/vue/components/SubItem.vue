@@ -5,7 +5,7 @@
       b-form-checkbox(v-model="item.completed")
     .item-name-wrapper(@click="editing = true")
       div.item-name(v-if="!editing") {{ item.name }}
-      b-form-input.item-name(v-else v-focus="" @keydown.enter="editing = false" placeholder="Name" v-model="item.name")
+      b-form-input.item-name(v-else v-focus="" @keydown.enter="editing = false" placeholder="Name" maxlength="50" v-model="item.name")
     .item-options(v-if="editing")
       b-button-group
         b-button(variant="info" @click="editing = false") Update
