@@ -13605,7 +13605,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists'
+        url: 'http://localhost:5000/api/lists'
       }).then(function (response) {
         _this.todoLists = response.data;
       }).catch(function (e) {
@@ -13620,7 +13620,7 @@ var _default = {
         listTitle: listTitle
       });
       (0, _axios.default)({
-        url: 'http://localhost:5000/accounts/1/lists',
+        url: 'http://localhost:5000/api/lists',
         method: 'POST',
         data: data,
         headers: {
@@ -13648,7 +13648,7 @@ var _default = {
         if (choseToDelete) {
           (0, _axios.default)({
             method: 'DELETE',
-            url: "http://localhost:5000/accounts/1/lists/" + list.id
+            url: "http://localhost:5000/api/lists/" + list.id
           }).then(function (response) {
             var index = _this.todoLists.findIndex(function (_a) {
               var id = _a.id;
@@ -18702,7 +18702,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'PUT',
-        url: "http://localhost:5000/accounts/1/todos/" + this.item.id + "/completed",
+        url: "http://localhost:5000/api/todos/" + this.item.id + "/completed",
         data: JSON.stringify({
           completed: this.item.completed
         }),
@@ -18718,7 +18718,7 @@ var _default = {
       var data = JSON.stringify(this.item);
       (0, _axios.default)({
         method: 'PUT',
-        url: "http://localhost:5000/accounts/1/todos/" + this.item.id,
+        url: "http://localhost:5000/api/todos/" + this.item.id,
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -18730,7 +18730,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'GET',
-        url: "http://localhost:5000/accounts/1/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
+        url: "http://localhost:5000/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
       }).then(function (response) {
         _this.subItems = response.data;
       });
@@ -18746,7 +18746,7 @@ var _default = {
       addSubItemInput.focus();
       (0, _axios.default)({
         method: 'POST',
-        url: "http://localhost:5000/accounts/1/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
+        url: "http://localhost:5000/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -27089,7 +27089,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists/' + id
+        url: 'http://localhost:5000/api/lists/' + id
       }).then(function (response) {
         _this.todoList = response.data;
       }).catch(function (e) {
@@ -27098,13 +27098,13 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: "http://localhost:5000/accounts/1/lists/" + id + "/layout"
+        url: "http://localhost:5000/api/lists/" + id + "/layout"
       }).then(function (response) {
         _this.todoListLayout = response.data; // Get todo list items
 
         (0, _axios.default)({
           method: 'get',
-          url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+          url: 'http://localhost:5000/api/lists/' + id + '/todos'
         }).then(function (response) {
           _this.todoListLayout.forEach(function (position) {
             var index = response.data.findIndex(function (item) {
@@ -27129,7 +27129,7 @@ var _default = {
         listTitle: listTitle
       });
       (0, _axios.default)({
-        url: "http://localhost:5000/accounts/1/lists/" + this.id,
+        url: "http://localhost:5000/api/lists/" + this.id,
         method: 'PUT',
         data: data,
         headers: {
@@ -27147,7 +27147,7 @@ var _default = {
         dueDate: dueDate
       });
       (0, _axios.default)({
-        url: "http://localhost:5000/accounts/1/lists/" + this.id + "/todos",
+        url: "http://localhost:5000/api/lists/" + this.id + "/todos",
         method: 'POST',
         data: data,
         headers: {
@@ -27174,7 +27174,7 @@ var _default = {
       }).then(function (choseToDelete) {
         if (choseToDelete) {
           (0, _axios.default)({
-            url: "http://localhost:5000/accounts/1/todos/" + item.id,
+            url: "http://localhost:5000/api/todos/" + item.id,
             method: 'DELETE'
           }).then(function (response) {
             var index = _this.todoListItems.findIndex(function (_a) {
@@ -27194,7 +27194,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists/' + this.id
+        url: 'http://localhost:5000/api/lists/' + this.id
       }).then(function (response) {
         if (response.data.completed === true) {
           _this.confetti = true;
@@ -27217,7 +27217,7 @@ var _default = {
       });
       (0, _axios.default)({
         method: 'PUT',
-        url: "http://localhost:5000/accounts/1/lists/" + this.id + "/layout",
+        url: "http://localhost:5000/api/lists/" + this.id + "/layout",
         data: data,
         headers: {
           'content-type': 'application/json'

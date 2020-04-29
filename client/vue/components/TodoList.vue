@@ -85,7 +85,7 @@ export default {
       // Get list
       axios({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists/' + id
+        url: 'http://localhost:5000/api/lists/' + id
       }).then((response) => {
         this.todoList = response.data;
       }).catch((e) => {
@@ -95,14 +95,14 @@ export default {
       // Get list layout
       axios({
         method: 'get',
-        url: `http://localhost:5000/accounts/1/lists/${id}/layout`
+        url: `http://localhost:5000/api/lists/${id}/layout`
       }).then((response) => {
         this.todoListLayout = response.data;
 
         // Get todo list items
         axios({
           method: 'get',
-          url: 'http://localhost:5000/accounts/1/lists/' + id + '/todos'
+          url: 'http://localhost:5000/api/lists/' + id + '/todos'
         }).then((response) => {
 
           this.todoListLayout.forEach(position => {
@@ -126,7 +126,7 @@ export default {
       let data = JSON.stringify({ listTitle });
 
       axios({
-        url: `http://localhost:5000/accounts/1/lists/${this.id}`,
+        url: `http://localhost:5000/api/lists/${this.id}`,
         method: 'PUT',
         data,
         headers: {
@@ -144,7 +144,7 @@ export default {
       });
 
       axios({
-        url: `http://localhost:5000/accounts/1/lists/${this.id}/todos`,
+        url: `http://localhost:5000/api/lists/${this.id}/todos`,
         method: 'POST',
         data,
         headers: {
@@ -169,7 +169,7 @@ export default {
       .then(choseToDelete => {
           if(choseToDelete) {
               axios({
-                url: `http://localhost:5000/accounts/1/todos/${item.id}`,
+                url: `http://localhost:5000/api/todos/${item.id}`,
                 method: 'DELETE'
               }).then((response) => {
                   let index = this.todoListItems.findIndex(({id}) => id === item.id);
@@ -183,7 +183,7 @@ export default {
     checkIfListCompleted() {
       axios({
         method: 'get',
-        url: 'http://localhost:5000/accounts/1/lists/' + this.id
+        url: 'http://localhost:5000/api/lists/' + this.id
       }).then((response) => {
         if(response.data.completed === true) {
           this.confetti = true;
@@ -206,7 +206,7 @@ export default {
       
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/accounts/1/lists/${this.id}/layout`,
+        url: `http://localhost:5000/api/lists/${this.id}/layout`,
         data,
         headers: {
           'content-type': 'application/json'
