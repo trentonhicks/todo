@@ -13499,13 +13499,22 @@ exports.default = _default;
             },
             [_vm._v(_vm._s(_vm.item.listTitle))]
           ),
-          _c("b-badge", { class: { "badge-success": _vm.item.completed } }, [
-            _vm._v(_vm._s(_vm.item.completed ? "Completed" : "In progress"))
-          ]),
           _c(
             "div",
             { staticClass: "todo-list-options" },
             [
+              _c(
+                "b-badge",
+                {
+                  staticClass: "mr-3",
+                  class: { "badge-success": _vm.item.completed }
+                },
+                [
+                  _vm._v(
+                    _vm._s(_vm.item.completed ? "Completed" : "In progress")
+                  )
+                ]
+              ),
               _c(
                 "b-button",
                 {
@@ -13605,7 +13614,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: 'http://localhost:5000/api/lists'
+        url: '/api/lists'
       }).then(function (response) {
         _this.todoLists = response.data;
       }).catch(function (e) {
@@ -13620,7 +13629,7 @@ var _default = {
         listTitle: listTitle
       });
       (0, _axios.default)({
-        url: 'http://localhost:5000/api/lists',
+        url: '/api/lists',
         method: 'POST',
         data: data,
         headers: {
@@ -13648,7 +13657,7 @@ var _default = {
         if (choseToDelete) {
           (0, _axios.default)({
             method: 'DELETE',
-            url: "http://localhost:5000/api/lists/" + list.id
+            url: "/api/lists/" + list.id
           }).then(function (response) {
             var index = _this.todoLists.findIndex(function (_a) {
               var id = _a.id;
@@ -13734,6 +13743,7 @@ exports.default = _default;
                     attrs: {
                       type: "text",
                       placeholder: "List name",
+                      maxlength: "50",
                       required: "required"
                     },
                     model: {
@@ -18563,7 +18573,7 @@ exports.default = _default;
           : _c("b-form-input", {
               directives: [{ name: "focus", rawName: "v-focus" }],
               staticClass: "item-name",
-              attrs: { placeholder: "Name" },
+              attrs: { placeholder: "Name", maxlength: "50" },
               on: {
                 keydown: function($event) {
                   if (
@@ -18688,7 +18698,13 @@ var _default = {
         completed: this.completed,
         dueDate: this.dueDate
       },
-      dueSoon: false,
+      form: {
+        id: this.id,
+        name: this.name,
+        notes: this.notes,
+        completed: this.completed,
+        dueDate: this.dueDate
+      },
       addingSubItem: false,
       subItemForm: {
         name: ''
@@ -18702,7 +18718,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'PUT',
-        url: "http://localhost:5000/api/todos/" + this.item.id + "/completed",
+        url: "/api/todos/" + this.item.id + "/completed",
         data: JSON.stringify({
           completed: this.item.completed
         }),
@@ -18715,10 +18731,11 @@ var _default = {
     },
     editTodoItem: function editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
-      var data = JSON.stringify(this.item);
+      var data = JSON.stringify(this.form);
+      this.item = JSON.parse(data);
       (0, _axios.default)({
         method: 'PUT',
-        url: "http://localhost:5000/api/todos/" + this.item.id,
+        url: "/api/todos/" + this.item.id,
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -18730,7 +18747,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'GET',
-        url: "http://localhost:5000/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
+        url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
       }).then(function (response) {
         _this.subItems = response.data;
       });
@@ -18738,34 +18755,28 @@ var _default = {
     addSubItem: function addSubItem() {
       var _this = this;
 
-      var data = JSON.stringify({
-        name: this.subItemForm.name
-      });
-      this.subItemForm.name = '';
-      var addSubItemInput = document.getElementById("add-sub-item");
-      addSubItemInput.focus();
-      (0, _axios.default)({
-        method: 'POST',
-        url: "http://localhost:5000/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
-        data: data,
-        headers: {
-          'content-type': 'application/json'
-        }
-      }).then(function (response) {
-        _this.subItems.unshift(response.data);
-      });
+      if (this.subitemFormValid) {
+        var data = JSON.stringify({
+          name: this.subItemForm.name
+        });
+        this.subItemForm.name = '';
+        var addSubItemInput = document.getElementById("add-sub-item");
+        addSubItemInput.focus();
+        (0, _axios.default)({
+          method: 'POST',
+          url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
+          data: data,
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (response) {
+          _this.subItems.unshift(response.data);
+        });
+      }
     }
   },
   created: function created() {
     this.getSubItems();
-    var today = new Date();
-    var dueDate = new Date(this.item.dueDate);
-
-    if (dueDate.getTime() >= today.getTime()) {
-      this.dueSoon = false;
-    } else {
-      this.dueSoon = true;
-    }
   },
   watch: {
     checkboxToggle: function checkboxToggle() {
@@ -18773,11 +18784,30 @@ var _default = {
     }
   },
   computed: {
+    subitemFormIsEmpty: function subitemFormIsEmpty() {
+      return this.subItemForm.name.length > 0;
+    },
+    subitemFormLengthExceeded: function subitemFormLengthExceeded() {
+      return this.subItemForm.name.length > 50;
+    },
+    subitemFormValid: function subitemFormValid() {
+      return !this.subitemFormIsEmpty && !this.subitemFormLengthExceeded;
+    },
     checkboxToggle: function checkboxToggle() {
       return this.item.completed;
     },
     hasSubItems: function hasSubItems() {
       return this.subItems.length > 0;
+    },
+    itemDueToday: function itemDueToday() {
+      var today = new Date();
+      var dueDate = new Date(this.item.dueDate);
+
+      if (dueDate.getTime() >= today.getTime()) {
+        return false;
+      }
+
+      return true;
     }
   },
   filters: {
@@ -18842,8 +18872,8 @@ exports.default = _default;
                     {
                       staticClass: "todo-item-date",
                       class: {
-                        "text-info": !_vm.dueSoon,
-                        "text-danger": _vm.dueSoon
+                        "text-info": !_vm.itemDueToday,
+                        "text-danger": _vm.itemDueToday
                       }
                     },
                     [
@@ -18930,11 +18960,11 @@ exports.default = _default;
                       required: "required"
                     },
                     model: {
-                      value: _vm.item.name,
+                      value: _vm.form.name,
                       callback: function($$v) {
-                        _vm.$set(_vm.item, "name", $$v)
+                        _vm.$set(_vm.form, "name", $$v)
                       },
-                      expression: "item.name"
+                      expression: "form.name"
                     }
                   })
                 ],
@@ -18945,13 +18975,17 @@ exports.default = _default;
                 { attrs: { label: "Notes" } },
                 [
                   _c("b-form-textarea", {
-                    attrs: { placeholder: "Notes", rows: "3" },
+                    attrs: {
+                      placeholder: "Notes",
+                      rows: "4",
+                      maxlength: "200"
+                    },
                     model: {
-                      value: _vm.item.notes,
+                      value: _vm.form.notes,
                       callback: function($$v) {
-                        _vm.$set(_vm.item, "notes", $$v)
+                        _vm.$set(_vm.form, "notes", $$v)
                       },
-                      expression: "item.notes"
+                      expression: "form.notes"
                     }
                   })
                 ],
@@ -18964,11 +18998,11 @@ exports.default = _default;
                   _c("b-form-datepicker", {
                     staticClass: "mb-2",
                     model: {
-                      value: _vm.item.dueDate,
+                      value: _vm.form.dueDate,
                       callback: function($$v) {
-                        _vm.$set(_vm.item, "dueDate", $$v)
+                        _vm.$set(_vm.form, "dueDate", $$v)
                       },
-                      expression: "item.dueDate"
+                      expression: "form.dueDate"
                     }
                   })
                 ],
@@ -19033,6 +19067,9 @@ exports.default = _default;
                                     expression: "v-focus"
                                   }
                                 ],
+                                class: {
+                                  "is-invalid": _vm.subitemFormLengthExceeded
+                                },
                                 attrs: {
                                   id: "add-sub-item",
                                   placeholder: "Add sub-item"
@@ -19062,6 +19099,17 @@ exports.default = _default;
                                   expression: "subItemForm.name"
                                 }
                               }),
+                              _vm.subitemFormLengthExceeded
+                                ? _c(
+                                    "div",
+                                    { staticClass: "invalid-feedback" },
+                                    [
+                                      _vm._v(
+                                        "Sub item name needs to be less than 50!"
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
                               _c(
                                 "b-button",
                                 {
@@ -27089,7 +27137,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: 'http://localhost:5000/api/lists/' + id
+        url: '/api/lists/' + id
       }).then(function (response) {
         _this.todoList = response.data;
       }).catch(function (e) {
@@ -27098,13 +27146,13 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: "http://localhost:5000/api/lists/" + id + "/layout"
+        url: "/api/lists/" + id + "/layout"
       }).then(function (response) {
         _this.todoListLayout = response.data; // Get todo list items
 
         (0, _axios.default)({
           method: 'get',
-          url: 'http://localhost:5000/api/lists/' + id + '/todos'
+          url: '/api/lists/' + id + '/todos'
         }).then(function (response) {
           _this.todoListLayout.forEach(function (position) {
             var index = response.data.findIndex(function (item) {
@@ -27129,7 +27177,7 @@ var _default = {
         listTitle: listTitle
       });
       (0, _axios.default)({
-        url: "http://localhost:5000/api/lists/" + this.id,
+        url: "/api/lists/" + this.id,
         method: 'PUT',
         data: data,
         headers: {
@@ -27147,7 +27195,7 @@ var _default = {
         dueDate: dueDate
       });
       (0, _axios.default)({
-        url: "http://localhost:5000/api/lists/" + this.id + "/todos",
+        url: "/api/lists/" + this.id + "/todos",
         method: 'POST',
         data: data,
         headers: {
@@ -27174,7 +27222,7 @@ var _default = {
       }).then(function (choseToDelete) {
         if (choseToDelete) {
           (0, _axios.default)({
-            url: "http://localhost:5000/api/todos/" + item.id,
+            url: "/api/todos/" + item.id,
             method: 'DELETE'
           }).then(function (response) {
             var index = _this.todoListItems.findIndex(function (_a) {
@@ -27194,7 +27242,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'get',
-        url: 'http://localhost:5000/api/lists/' + this.id
+        url: '/api/lists/' + this.id
       }).then(function (response) {
         if (response.data.completed === true) {
           _this.confetti = true;
@@ -27217,7 +27265,7 @@ var _default = {
       });
       (0, _axios.default)({
         method: 'PUT',
-        url: "http://localhost:5000/api/lists/" + this.id + "/layout",
+        url: "/api/lists/" + this.id + "/layout",
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -27415,7 +27463,11 @@ exports.default = _default;
                 { attrs: { label: "Notes" } },
                 [
                   _c("b-form-textarea", {
-                    attrs: { placeholder: "Notes", rows: "3" },
+                    attrs: {
+                      placeholder: "Notes",
+                      rows: "4",
+                      maxlength: "200"
+                    },
                     model: {
                       value: _vm.form.notes,
                       callback: function($$v) {
@@ -27623,7 +27675,7 @@ var _default = {
     logout: function logout() {
       (0, _axios.default)({
         method: 'GET',
-        url: 'http://localhost:5000/api/accounts/logout'
+        url: '/api/accounts/logout'
       });
     }
   }
@@ -27644,11 +27696,9 @@ exports.default = _default;
   return _c(
     "b-container",
     [
-      _c(
-        "b-button",
-        { attrs: { href: "http://localhost:5000/api/accounts/login" } },
-        [_vm._v("Login")]
-      )
+      _c("b-button", { attrs: { href: "/api/accounts/login" } }, [
+        _vm._v("Login")
+      ])
     ],
     1
   )
@@ -27755,7 +27805,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'GET',
-        url: 'http://localhost:5000/api/accounts/login'
+        url: 'api/accounts/login'
       }).then(function (response) {
         _this.user.avatar = response.data;
         _this.isAuthenticated = true;
@@ -27770,7 +27820,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'GET',
-        url: 'http://localhost:5000/api/accounts/logout'
+        url: 'api/accounts/logout'
       }).then(function () {
         _this.$router.push('/login');
 
@@ -74146,7 +74196,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58124" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63745" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

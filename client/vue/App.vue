@@ -29,7 +29,7 @@ export default {
     checkAuthState() {
       axios({
         method: 'GET',
-        url: 'http://localhost:5000/api/accounts/login'
+        url: 'api/accounts/login'
       }).then((response) => {
         this.user.avatar = response.data;
         this.isAuthenticated = true;
@@ -42,7 +42,7 @@ export default {
     logout() {
       axios({
         method: 'GET',
-        url: 'http://localhost:5000/api/accounts/logout'
+        url: 'api/accounts/logout'
       }).then(() => {
         this.$router.push('/login');
         this.isAuthenticated = false;

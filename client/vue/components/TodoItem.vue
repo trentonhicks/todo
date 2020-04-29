@@ -110,7 +110,7 @@ export default {
     toggleCompleted() {
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/api/todos/${this.item.id}/completed`,
+        url: `/api/todos/${this.item.id}/completed`,
         data: JSON.stringify({ completed: this.item.completed }),
         headers: {
           'content-type': 'application/json'
@@ -126,7 +126,7 @@ export default {
 
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/api/todos/${this.item.id}`,
+        url: `/api/todos/${this.item.id}`,
         data,
         headers: {
           'content-type': 'application/json'
@@ -136,7 +136,7 @@ export default {
     getSubItems() {
       axios({
         method: 'GET',
-        url: `http://localhost:5000/api/lists/${this.listId}/todos/${this.item.id}/subitems`
+        url: `/api/lists/${this.listId}/todos/${this.item.id}/subitems`
       }).then(response => {
         this.subItems = response.data;
       });
@@ -151,7 +151,7 @@ export default {
 
         axios({
           method: 'POST',
-          url: `http://localhost:5000/api/lists/${this.listId}/todos/${this.item.id}/subitems`,
+          url: `/api/lists/${this.listId}/todos/${this.item.id}/subitems`,
           data,
           headers: {
             'content-type': 'application/json'
