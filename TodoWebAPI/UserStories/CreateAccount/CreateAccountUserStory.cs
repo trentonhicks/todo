@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure;
+using Todo.Infrastructure.Repositories;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories.CreateAccount
@@ -13,12 +15,10 @@ namespace TodoWebAPI.UserStories.CreateAccount
     public class CreateAccountUserStory : IRequestHandler<CreateAccountModel, Account>
     {
         private readonly IAccountRepository _accountRepository;
-        private readonly IAccountProfileImageRepository _accountProfileImageRepository;
 
-        public CreateAccountUserStory(IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository)
+        public CreateAccountUserStory(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
-            _accountProfileImageRepository = accountProfileImageRepository;
         }
         public async Task<Account> Handle(CreateAccountModel request, CancellationToken cancellationToken)
         {
@@ -32,9 +32,8 @@ namespace TodoWebAPI.UserStories.CreateAccount
             account = new Account()
             {
                 FullName = request.FullName,
-                UserName = request.UserName,
-                Password = request.Password,
-                Email = request.Email
+                Email = request.Email,
+                PictureUrl = request.PictureUrl
             };
 
             _accountRepository.AddAccount(account);

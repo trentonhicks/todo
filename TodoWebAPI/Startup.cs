@@ -34,6 +34,7 @@ using Octokit;
 using Octokit.Internal;
 using TodoWebAPI.Models;
 using TodoWebAPI.Extentions;
+using Todo.Infrastructure.Repositories;
 
 namespace TodoWebAPI
 {
@@ -70,7 +71,6 @@ namespace TodoWebAPI
             services.AddScoped<IAccountRepository, EFAccountRepository>();
             services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
             services.AddScoped<IServiceBusEmail, ServiceBusEmail>();
-            services.AddScoped<IAccountProfileImageRepository, AccountProfileImageRepository>((x) => new AccountProfileImageRepository(Configuration.GetConnectionString("Development")));
             services.AddScoped<TodoListApplicationService>();
             services.AddScoped<TodoListItemApplicationService>();
             services.AddScoped<TodoListLayoutApplicationService>();
@@ -139,8 +139,7 @@ namespace TodoWebAPI
                             {
                                 Email = primaryEmail,
                                 FullName = context.Identity.Claims.First(c => c.Type == ClaimTypes.Name)?.Value,
-                                Password = "",
-                                UserName = ""
+                                PictureUrl = context.Identity.Claims.First(c => c.Type == "urn:github:avatar").Value
                             });
 
                             context.Identity.AddClaim(new Claim("urn:codefliptodo:accountid", account.Id.ToString()));
