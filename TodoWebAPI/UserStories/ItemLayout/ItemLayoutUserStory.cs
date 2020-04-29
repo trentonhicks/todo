@@ -8,7 +8,7 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.UserStories.ItemLayout
 {
-    public class ItemLayoutUserStory : IRequestHandler<ItemLayout>
+    public class ItemLayoutUserStory : AsyncRequestHandler<ItemLayout>
     {
         private readonly ISubItemLayout _subItemLayout;
 
@@ -16,7 +16,7 @@ namespace TodoWebAPI.UserStories.ItemLayout
         {
             _subItemLayout = subItemLayout;
         }
-        public async Task<Unit> Handle(ItemLayout request, CancellationToken cancellationToken)
+        protected override async Task Handle(ItemLayout request, CancellationToken cancellationToken)
         {
             var layout = await _subItemLayout.FindLayoutByListItemIdAsync(request.ItemId);
 
@@ -24,8 +24,6 @@ namespace TodoWebAPI.UserStories.ItemLayout
 
             _subItemLayout.Update(layout);
             await _subItemLayout.SaveChangesAsync();
-
-            return Unit.Value;
         }
     }
 }

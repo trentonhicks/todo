@@ -10,7 +10,7 @@ using Todo.Infrastructure.Repositories;
 
 namespace TodoWebAPI.UserStories.DeleteAccount
 {
-    public class DeleteAccountUserStory : IRequestHandler<DeleteAccount>
+    public class DeleteAccountUserStory : AsyncRequestHandler<DeleteAccount>
     {
         private readonly IAccountRepository _repository;
 
@@ -18,10 +18,9 @@ namespace TodoWebAPI.UserStories.DeleteAccount
         {
             _repository = repository;
         }
-        public async Task<Unit> Handle(DeleteAccount request, CancellationToken cancellationToken)
+        protected override async Task Handle(DeleteAccount request, CancellationToken cancellationToken)
         {
             await _repository.RemoveAccountAsync(request.AccountId);
-            return Unit.Value;
         }
     }
 }
