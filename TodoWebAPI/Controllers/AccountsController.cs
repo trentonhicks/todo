@@ -35,6 +35,7 @@ namespace TodoWebAPI.Controllers
             _todoDatabaseContext = todoDatabaseContext;
         }
 
+        [AllowAnonymous]
         [HttpGet("api/accounts/login")]
         public IActionResult Login(string returnUrl = "/")
         {
@@ -46,12 +47,14 @@ namespace TodoWebAPI.Controllers
             return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
         }
 
+        [Authorize]
         [HttpGet("api/accounts/logout")]
         public async Task Logout(string returnUrl = "/")
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
+        [Authorize]
         [HttpGet("api/accounts")]
         public async Task<IActionResult> GetAccount()
         {
@@ -64,6 +67,7 @@ namespace TodoWebAPI.Controllers
             return Ok(account);
         }
 
+        [Authorize]
         [HttpDelete("api/accounts")]
         public async Task<IActionResult> DeleteAccountAsync()
         {
