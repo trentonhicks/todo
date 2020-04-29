@@ -2,10 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
-using Todo.Domain;
-using Todo.Domain.Repositories;
 using System.Threading;
+using Todo.Infrastructure.Repositories;
 
 namespace Todo.Infrastructure.EFRepositories
 {
@@ -16,13 +14,11 @@ namespace Todo.Infrastructure.EFRepositories
         {
             _context = context;
         }
-        public Task AddAccountAsync(Account account)
+        public void AddAccount(Account account)
         {
             _context.Accounts.Add(account);
-            return Task.CompletedTask;
         }
         public async Task<Account> FindAccountByIdAsync(int id) => await _context.Accounts.FindAsync(id);
-        public async Task<bool> DoesAccountWithUserNameExistAsync(string userName) => await _context.Accounts.Where(a => a.UserName == userName).FirstOrDefaultAsync() != null;
         public async Task<bool> DoesAccountWithAccountIdExistAsync(int accountId) => await _context.Accounts.FindAsync(accountId) != null;
         public async Task RemoveAccountAsync(int accountId)
         {
@@ -34,6 +30,11 @@ namespace Todo.Infrastructure.EFRepositories
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<Account> FindAccountByEmailAsync(string email)
+        {
+            return await _context.Accounts.FirstOrDefaultAsync(x => x.Email == email);
         }
     }
 }

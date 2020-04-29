@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure;
+using Todo.Infrastructure.Repositories;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories.CreateAccount
@@ -13,32 +15,28 @@ namespace TodoWebAPI.UserStories.CreateAccount
     public class CreateAccountUserStory : IRequestHandler<CreateAccountModel, Account>
     {
         private readonly IAccountRepository _accountRepository;
-        private readonly IAccountProfileImageRepository _accountProfileImageRepository;
 
-        public CreateAccountUserStory(IAccountRepository accountRepository, IAccountProfileImageRepository accountProfileImageRepository)
+        public CreateAccountUserStory(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
-            _accountProfileImageRepository = accountProfileImageRepository;
         }
         public async Task<Account> Handle(CreateAccountModel request, CancellationToken cancellationToken)
         {
-            var doesAccountExist = await _accountRepository.DoesAccountWithUserNameExistAsync(request.UserName);
+            var account = await _accountRepository.FindAccountByEmailAsync(request.Email);
 
-            if (doesAccountExist)
-                return null;
+            if (account != null)
+            {
+                return account;
+            }
 
-            var account = new Account()
+            account = new Account()
             {
                 FullName = request.FullName,
-                UserName = request.UserName,
-                Password = request.Password,
-                Email = request.Email
+                Email = request.Email,
+                PictureUrl = request.PictureUrl
             };
 
-            await _accountRepository.AddAccountAsync(account);
-
-            if (!string.IsNullOrEmpty(request.Picture))
-                await _accountProfileImageRepository.StoreImageProfileAsync(account.Id, request.Picture);
+            _accountRepository.AddAccount(account);
 
             await _accountRepository.SaveChangesAsync();
 

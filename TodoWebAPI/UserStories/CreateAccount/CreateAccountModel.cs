@@ -1,10 +1,7 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Todo.Domain;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.Models
 {
@@ -13,11 +10,7 @@ namespace TodoWebAPI.Models
         [Required]
         [StringLength(50)]
         public string FullName { get; set; }
-        [Required(ErrorMessage ="UserName Required")]
-        public string UserName { get; set; }
-        public string Picture { get; set; }
-        [Required(ErrorMessage = "Password Required")]
-        public string Password { get; set; }
+        public string PictureUrl { get; set; }
         [Required(ErrorMessage = "Email Required")]
         [EmailAddress]
         public string Email { get; set; }

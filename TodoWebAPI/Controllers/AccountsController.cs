@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Octokit;
+using Octokit.Internal;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using Todo.WebAPI.ApplicationServices;
@@ -15,6 +21,7 @@ using TodoWebAPI.UserStories.DeleteAccount;
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
+
     public class AccountsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -28,30 +35,40 @@ namespace TodoWebAPI.Controllers
             _todoDatabaseContext = todoDatabaseContext;
         }
 
-        [HttpPost("accounts")]
-        public async Task<IActionResult> CreateAccount(CreateAccountModel model)
+        [HttpGet("api/accounts/login")]
+        public IActionResult Login(string returnUrl = "/")
         {
-            var account = await _mediator.Send(model);
-            if (account == null)
-                return BadRequest("Username already Exists.");
+            if (User.Identity.IsAuthenticated)
+            {
+                var email = User.FindFirst(ClaimTypes.Email).Value;
+                return Ok(User.FindFirst(c => c.Type == "urn:github:avatar").Value);
+            }
+            return Challenge(new AuthenticationProperties() { RedirectUri = returnUrl });
+        }
 
+        [HttpGet("api/accounts/logout")]
+        public async Task Logout(string returnUrl = "/")
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("api/accounts")]
+        public async Task<IActionResult> GetAccount()
+        {
+            var accountId = Convert.ToInt32(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
+
+            var dapper = new DapperQuery(_config);
+
+            var account = await dapper.GetAccountAsync(accountId);
 
             return Ok(account);
         }
 
-        [HttpGet("accounts/{accountId}")]
-        public async Task<IActionResult> GetAccount(int accountId)
+        [HttpDelete("api/accounts")]
+        public async Task<IActionResult> DeleteAccountAsync()
         {
-           var dapper = new DapperQuery(_config);
+            var accountId = Convert.ToInt32(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
 
-           var account = await dapper.GetAccountAsync(accountId);
-
-           return Ok(account);
-        }
-
-        [HttpDelete("accounts/{accountId}")]
-        public async Task<IActionResult> DeleteAccountAsync(int accountId)
-        {
             var deleteAccount = new DeleteAccount
             {
                 AccountId = accountId

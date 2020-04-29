@@ -14,7 +14,6 @@ b-container
 import TodoList from '../components/TodoList.vue'
 
 export default {
-  name: 'TodoListDetails',
   data() {
     return {
 

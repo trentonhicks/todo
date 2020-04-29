@@ -110,7 +110,7 @@ export default {
     toggleCompleted() {
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/accounts/1/todos/${this.item.id}/completed`,
+        url: `http://localhost:5000/api/todos/${this.item.id}/completed`,
         data: JSON.stringify({ completed: this.item.completed }),
         headers: {
           'content-type': 'application/json'
@@ -126,7 +126,7 @@ export default {
 
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/accounts/1/todos/${this.item.id}`,
+        url: `http://localhost:5000/api/todos/${this.item.id}`,
         data,
         headers: {
           'content-type': 'application/json'
@@ -136,7 +136,7 @@ export default {
     getSubItems() {
       axios({
         method: 'GET',
-        url: `http://localhost:5000/accounts/1/lists/${this.listId}/todos/${this.item.id}/subitems`
+        url: `http://localhost:5000/api/lists/${this.listId}/todos/${this.item.id}/subitems`
       }).then(response => {
         this.subItems = response.data;
       });
@@ -151,7 +151,7 @@ export default {
 
         axios({
           method: 'POST',
-          url: `http://localhost:5000/accounts/1/lists/${this.listId}/todos/${this.item.id}/subitems`,
+          url: `http://localhost:5000/api/lists/${this.listId}/todos/${this.item.id}/subitems`,
           data,
           headers: {
             'content-type': 'application/json'
@@ -161,7 +161,6 @@ export default {
         });
 
       }
-
     }
   },
   created: function() {

@@ -46,7 +46,7 @@ export default {
         getTodoLists() : void {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/accounts/1/lists',
+                url: 'http://localhost:5000/api/lists',
             })
             .then((response) => {
                 this.todoLists = response.data;
@@ -62,7 +62,7 @@ export default {
             });
 
             axios({
-                url: 'http://localhost:5000/accounts/1/lists',
+                url: 'http://localhost:5000/api/lists',
                 method: 'POST',
                 data,
                 headers: {
@@ -88,7 +88,7 @@ export default {
                 if(choseToDelete) {
                     axios({
                         method: 'DELETE',
-                        url: `http://localhost:5000/accounts/1/lists/${list.id}`
+                        url: `http://localhost:5000/api/lists/${list.id}`
                     }).then((response) => {
                         let index = this.todoLists.findIndex(({id}) => id === list.id);
                         if(index !== -1) {

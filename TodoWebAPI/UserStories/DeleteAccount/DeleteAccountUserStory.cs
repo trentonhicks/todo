@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure.Repositories;
 
 namespace TodoWebAPI.UserStories.DeleteAccount
 {

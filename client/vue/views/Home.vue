@@ -11,7 +11,6 @@ b-container
 import AllTodoLists from '../components/AllTodoLists.vue';
 
 export default {
-  name: 'Home',
   data() {
     return {};
   },
