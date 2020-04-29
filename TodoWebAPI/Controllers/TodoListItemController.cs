@@ -16,10 +16,12 @@ using TodoWebAPI.UserStories.ItemLayout;
 using TodoWebAPI.UserStories.TrashItem;
 using TodoWebAPI.UserStories.ItemCompletedState;
 using TodoWebAPI.Extentions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     public class TodoListItemController : ControllerBase
     {
         private readonly IConfiguration _config;
