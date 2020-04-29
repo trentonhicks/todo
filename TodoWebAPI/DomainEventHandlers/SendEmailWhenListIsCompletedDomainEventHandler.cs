@@ -45,7 +45,7 @@ namespace TodoWebAPI.DomainEventHandlers
                     Body = $"List {list.ListTitle} is finished! Nice work!"
                 };
 
-                _serviceBusEmail.SendServiceBusEmail(email);
+                //_serviceBusEmail.SendServiceBusEmail(email);
             }
         }
     }
