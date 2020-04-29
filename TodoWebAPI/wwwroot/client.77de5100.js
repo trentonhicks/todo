@@ -27623,7 +27623,7 @@ var _default = {
     logout: function logout() {
       (0, _axios.default)({
         method: 'GET',
-        url: 'http://localhost:5000/accounts/logout'
+        url: 'http://localhost:5000/api/accounts/logout'
       });
     }
   }
@@ -27646,13 +27646,9 @@ exports.default = _default;
     [
       _c(
         "b-button",
-        { attrs: { href: "http://localhost:5000/accounts/login" } },
+        { attrs: { href: "http://localhost:5000/api/accounts/login" } },
         [_vm._v("Login")]
-      ),
-      _vm.isAuthenticated
-        ? _c("b-button", { on: { click: _vm.logout } }, [_vm._v("Logout")])
-        : _vm._e(),
-      _c("b-button", { attrs: { to: "/lists" } }, [_vm._v("My Lists")])
+      )
     ],
     1
   )
@@ -27747,7 +27743,10 @@ var _default = {
   name: 'App',
   data: function data() {
     return {
-      avatar: null
+      user: {
+        avatar: null
+      },
+      isAuthenticated: false
     };
   },
   methods: {
@@ -27756,13 +27755,27 @@ var _default = {
 
       (0, _axios.default)({
         method: 'GET',
-        url: 'http://localhost:5000/accounts/login'
+        url: 'http://localhost:5000/api/accounts/login'
       }).then(function (response) {
-        _this.avatar = response.data;
+        _this.user.avatar = response.data;
+        _this.isAuthenticated = true;
       }).catch(function () {
         if (_this.$router.name !== 'Login') {
           _this.$router.push('/login');
         }
+      });
+    },
+    logout: function logout() {
+      var _this = this;
+
+      (0, _axios.default)({
+        method: 'GET',
+        url: 'http://localhost:5000/api/accounts/logout'
+      }).then(function () {
+        _this.$router.push('/login');
+
+        _this.isAuthenticated = false;
+        _this.user = {};
       });
     }
   },
@@ -27795,7 +27808,17 @@ exports.default = _default;
         },
         [
           _c("b-navbar-brand", [_vm._v("Todo")]),
-          _c("b-avatar", { staticClass: "ml-auto", attrs: { src: _vm.avatar } })
+          _vm.isAuthenticated
+            ? _c(
+                "b-button",
+                { staticClass: "ml-auto mr-2", on: { click: _vm.logout } },
+                [_vm._v("Logout")]
+              )
+            : _vm._e(),
+          _c("b-avatar", {
+            attrs: { src: _vm.user.avatar },
+            on: { click: function($event) {} }
+          })
         ],
         1
       ),

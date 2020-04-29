@@ -3,7 +3,8 @@
 #content.mt-4
   b-navbar(toggleable="sm" type="light" variant="light").fixed-top
     b-navbar-brand Todo
-    b-avatar(:src="avatar").ml-auto
+    b-button(v-if="isAuthenticated" @click="logout").ml-auto.mr-2 Logout
+    b-avatar(:src="user.avatar" @click="")
 
   router-view
 
@@ -18,20 +19,34 @@ export default {
   name: 'App',
   data() {
     return {
-      avatar: null
+      user: {
+        avatar: null
+      },
+      isAuthenticated: false
     }
   },
   methods: {
     checkAuthState() {
       axios({
         method: 'GET',
-        url: 'http://localhost:5000/accounts/login'
+        url: 'http://localhost:5000/api/accounts/login'
       }).then((response) => {
-        this.avatar = response.data;
+        this.user.avatar = response.data;
+        this.isAuthenticated = true;
       }).catch(() => {
         if(this.$router.name !== 'Login') {
           this.$router.push('/login');
         }
+      });
+    },
+    logout() {
+      axios({
+        method: 'GET',
+        url: 'http://localhost:5000/api/accounts/logout'
+      }).then(() => {
+        this.$router.push('/login');
+        this.isAuthenticated = false;
+        this.user = {};
       });
     }
   },

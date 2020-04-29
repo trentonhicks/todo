@@ -1,9 +1,7 @@
 <template lang="pug">
 
 b-container
-  b-button(href="http://localhost:5000/accounts/login") Login
-  b-button(@click="logout" v-if="isAuthenticated") Logout
-  b-button(to="/lists") My Lists
+  b-button(href="http://localhost:5000/api/accounts/login") Login
       
 </template>
 
@@ -23,7 +21,7 @@ export default {
     logout() {
       axios({
         method: 'GET',
-        url: 'http://localhost:5000/accounts/logout'
+        url: 'http://localhost:5000/api/accounts/logout'
       })
     }
   },
