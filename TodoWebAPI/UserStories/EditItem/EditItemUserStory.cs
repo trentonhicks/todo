@@ -8,7 +8,7 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.UserStories.EditItem
 {
-    public class EditItemUserStory : IRequestHandler<EditItem>
+    public class EditItemUserStory : AsyncRequestHandler<EditItem>
     {
         private readonly ITodoListItemRepository _todoListItemRepository;
 
@@ -16,7 +16,7 @@ namespace TodoWebAPI.UserStories.EditItem
         {
             _todoListItemRepository = todoListItemRepository;
         }
-        public async Task<Unit> Handle(EditItem request, CancellationToken cancellationToken)
+        protected override async Task Handle(EditItem request, CancellationToken cancellationToken)
         {
             var todoListItem = await _todoListItemRepository.FindToDoListItemByIdAsync(request.Id);
 
@@ -25,8 +25,6 @@ namespace TodoWebAPI.UserStories.EditItem
             todoListItem.DueDate = request.DueDate;
 
             await _todoListItemRepository.SaveChangesAsync();
-
-            return Unit.Value;
         }
     }
 }

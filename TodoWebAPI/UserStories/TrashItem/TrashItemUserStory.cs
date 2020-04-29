@@ -8,7 +8,7 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.UserStories.TrashItem
 {
-    public class TrashItemUserStory : IRequestHandler<TrashItem>
+    public class TrashItemUserStory : AsyncRequestHandler<TrashItem>
     {
         private readonly ITodoListItemRepository _listItemRepository;
 
@@ -16,15 +16,13 @@ namespace TodoWebAPI.UserStories.TrashItem
         {
             _listItemRepository = listItemRepository;
         }
-        public async Task<Unit> Handle(TrashItem request, CancellationToken cancellationToken)
+        protected override async Task Handle(TrashItem request, CancellationToken cancellationToken)
         {
             var item = await _listItemRepository.FindToDoListItemByIdAsync(request.ItemId);
 
             item.MoveToTrash();
 
             await _listItemRepository.SaveChangesAsync();
-
-            return Unit.Value;
         }
     }
 }

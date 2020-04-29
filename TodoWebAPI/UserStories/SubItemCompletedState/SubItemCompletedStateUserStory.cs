@@ -8,7 +8,7 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.UserStories.SubItemCompletedState
 {
-    public class SubItemCompletedStateUserStory : IRequestHandler<SubItemCompletedState>
+    public class SubItemCompletedStateUserStory : AsyncRequestHandler<SubItemCompletedState>
     {
         private readonly ISubItemRepository _subItems;
 
@@ -16,7 +16,7 @@ namespace TodoWebAPI.UserStories.SubItemCompletedState
         {
             _subItems = subItems;
         }
-        public async Task<Unit> Handle(SubItemCompletedState request, CancellationToken cancellationToken)
+        protected override async Task Handle(SubItemCompletedState request, CancellationToken cancellationToken)
         {
             var subItem = await _subItems.FindByIdAsync(request.SubItemId);
 
@@ -27,8 +27,6 @@ namespace TodoWebAPI.UserStories.SubItemCompletedState
                 subItem.SetNotCompleted();
 
             await _subItems.SaveChangesAsync();
-
-            return Unit.Value;
         }
     }
 }

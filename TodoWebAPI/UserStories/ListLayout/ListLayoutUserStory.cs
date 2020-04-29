@@ -9,14 +9,14 @@ using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories.ListLayout
 {
-    public class ListLayoutUserStory : IRequestHandler<ListLayout>
+    public class ListLayoutUserStory : AsyncRequestHandler<ListLayout>
     {
         private readonly ITodoListLayoutRepository _todoListLayout;
         public ListLayoutUserStory(ITodoListLayoutRepository todoListLayout)
         {
             _todoListLayout = todoListLayout;
         }
-        public async Task<Unit> Handle(ListLayout request, CancellationToken cancellationToken)
+        protected override async Task Handle(ListLayout request, CancellationToken cancellationToken)
         {
             var todoListLayout = await _todoListLayout.FindLayoutByListIdAsync(request.ListId);
 
@@ -24,8 +24,6 @@ namespace TodoWebAPI.UserStories.ListLayout
 
             _todoListLayout.Update(todoListLayout);
             await _todoListLayout.SaveChangesAsync();
-
-            return Unit.Value;
         }
     }
 }
