@@ -8,7 +8,7 @@
     //- Item Info
     b-form-checkbox(v-model="item.completed" :disabled="hasSubItems")
       .todo-item-name {{ item.name }}
-      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !dueSoon, 'text-danger': dueSoon }")
+      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !itemDueToday, 'text-danger': itemDueToday }")
         b-icon-clock
         | {{ item.dueDate | monthDay }}
       .todo-item-notes(v-if="item.notes"): small.text-muted {{ item.notes }}
@@ -29,19 +29,20 @@
           b-form-input(
             type="text"
             placeholder="Name"
-            v-model="item.name"
+            v-model="form.name"
             required)
 
         //- Notes
         b-form-group(label="Notes")
           b-form-textarea(
             placeholder="Notes"
-            rows="3"
-            v-model="item.notes")
+            rows="4"
+            v-model="form.notes"
+            maxlength="200")
 
         //- Due Dates
         b-form-group(label="Due Date")
-          b-form-datepicker(v-model="item.dueDate").mb-2
+          b-form-datepicker(v-model="form.dueDate").mb-2
 
         //- Sub-items List
         b-form-group(label="Sub-items")
@@ -60,7 +61,11 @@
 
           .adding-sub-item(v-if="addingSubItem").mt-2
             b-form-group
-              b-form-input(id="add-sub-item" v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
+              b-form-input(
+                :class="{'is-invalid': subitemFormLengthExceeded}"
+                id="add-sub-item"
+                v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
+              .invalid-feedback(v-if="subitemFormLengthExceeded") Sub item name needs to be less than 50!
               b-button(variant="success" @click="addSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false").mt-2.ml-2 Cancel
 
@@ -87,7 +92,13 @@ export default {
         completed: this.completed,
         dueDate: this.dueDate
       },
-      dueSoon: false,
+      form: {
+        id: this.id,
+        name: this.name,
+        notes: this.notes,
+        completed: this.completed,
+        dueDate: this.dueDate
+      },
       addingSubItem: false,
       subItemForm: {
         name: '',
@@ -110,8 +121,8 @@ export default {
     },
     editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
-
-      let data = JSON.stringify(this.item);
+      let data = JSON.stringify(this.form);
+      this.item = JSON.parse(data);
 
       axios({
         method: 'PUT',
@@ -131,36 +142,29 @@ export default {
       });
     },
     addSubItem() {
-      let data = JSON.stringify({ name: this.subItemForm.name });
+     if(this.subitemFormValid) {
+        let data = JSON.stringify({ name: this.subItemForm.name });
 
-      this.subItemForm.name = '';
-      let addSubItemInput = document.getElementById("add-sub-item");
-      addSubItemInput.focus();
+        this.subItemForm.name = '';
+        let addSubItemInput = document.getElementById("add-sub-item");
+        addSubItemInput.focus();
 
-      axios({
-        method: 'POST',
-        url: `http://localhost:5000/api/lists/${this.listId}/todos/${this.item.id}/subitems`,
-        data,
-        headers: {
-          'content-type': 'application/json'
-        }
-      }).then(response => {
-        this.subItems.unshift(response.data);
-      });
+        axios({
+          method: 'POST',
+          url: `http://localhost:5000/api/lists/${this.listId}/todos/${this.item.id}/subitems`,
+          data,
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(response => {
+          this.subItems.unshift(response.data);
+        });
+
+      }
     }
   },
   created: function() {
     this.getSubItems();
-    
-    let today = new Date();
-    let dueDate = new Date(this.item.dueDate);
-
-    if(dueDate.getTime() >= today.getTime()) {
-      this.dueSoon = false;
-    }
-    else {
-      this.dueSoon = true;
-    }
   },
   watch: {
     checkboxToggle: function() {
@@ -168,11 +172,30 @@ export default {
     }
   },
   computed: {
+    subitemFormIsEmpty(){
+        return this.subItemForm.name.length > 0
+    },
+    subitemFormLengthExceeded(){
+      return this.subItemForm.name.length > 50 
+    },
+    subitemFormValid(){
+      return !this.subitemFormIsEmpty && !this.subitemFormLengthExceeded
+    },
     checkboxToggle() {
       return this.item.completed;
     },
     hasSubItems() {
       return this.subItems.length > 0;
+    },
+    itemDueToday() {
+      let today = new Date();
+      let dueDate = new Date(this.item.dueDate);
+
+      if(dueDate.getTime() >= today.getTime()) {
+        return false;
+      }
+
+      return true;
     }
   },
   filters: {
@@ -228,6 +251,11 @@ export default {
     line-height: 1;
     margin-top: 3px;
     max-width: 160px;
+    overflow-wrap: break-word;
+
+    @media screen and (min-width: 768px) {
+      max-width: 320px;
+    }
   }
 
   .todo-item-options {

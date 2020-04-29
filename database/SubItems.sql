@@ -4,7 +4,7 @@ GO
 
 CREATE TABLE [SubItems](
     [ID] INT PRIMARY KEY IDENTITY(1,1),
-    [ListItemID] INT NOT NULL,
+    [ListItemID] INT,
     [Name] VARCHAR(50),
     [Completed] BIT NOT NULL DEFAULT(0)
 

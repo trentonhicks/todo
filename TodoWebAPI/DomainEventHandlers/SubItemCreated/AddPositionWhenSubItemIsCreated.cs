@@ -21,7 +21,7 @@ namespace TodoWebAPI.DomainEventHandlers
         }
         public Task Handle(SubItemCreated notification, CancellationToken cancellationToken)
         {
-            return _mediator.Send(new ItemLayout { SubItemId = notification.SubItem.Id, Position = 0, ItemId = notification.SubItem.ListItemId });
+            return _mediator.Send(new ItemLayout { SubItemId = notification.SubItem.Id, Position = 0, ItemId = notification.SubItem.ListItemId.GetValueOrDefault()});
         }
     }
 }

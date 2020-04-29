@@ -19,6 +19,7 @@
                 b-form-input(
                 type="text"
                 placeholder="List name"
+                maxlength="50"
                 v-model="form.listTitle"
                 required)
             b-button(type="submit" variant="primary" class="mr-2") Add
