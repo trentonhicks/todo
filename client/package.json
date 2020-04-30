@@ -4,7 +4,7 @@
   "description": "A todo application built with Bootstrap and Vue.js",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel index.html --port 5002 --out-dir ../TodoWebAPI/wwwroot",
+    "dev": "parcel watch index.html --out-dir ../TodoWebAPI/wwwroot",
     "build": "parcel build index.html --out-dir ../TodoWebAPI/wwwroot"
   },
   "author": "",
