@@ -65,8 +65,8 @@
               b-form-input(
                 :class="{'is-invalid': subitemFormLengthExceeded}"
                 id="add-sub-item"
-                v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
-              .invalid-feedback(v-if="subitemFormLengthExceeded") Sub item name needs to be less than 50!
+                v-model="subItemForm.name" @keydown.enter.prevent="addSubItem()" placeholder="Add sub-item" v-focus)
+              .invalid-feedback(v-if="subitemFormLengthExceeded") Name must be less than 50 characters.
               b-button(variant="success" @click="addSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false").mt-2.ml-2 Cancel
 
@@ -79,6 +79,7 @@
 
 import axios from 'axios';
 import moment from 'moment';
+import Draggable from 'vuedraggable';
 import SubItem from './SubItem.vue';
 
 export default {
@@ -143,7 +144,7 @@ export default {
       });
     },
     addSubItem() {
-     if(this.subitemFormValid) {
+      if(this.subitemFormValid) {
         let data = JSON.stringify({ name: this.subItemForm.name });
 
         this.subItemForm.name = '';
@@ -174,7 +175,7 @@ export default {
   },
   computed: {
     subitemFormIsEmpty(){
-        return this.subItemForm.name.length > 0
+        return this.subItemForm.name.length == 0
     },
     subitemFormLengthExceeded(){
       return this.subItemForm.name.length > 50 
@@ -208,7 +209,8 @@ export default {
     }
   },
   components: {
-    SubItem
+    SubItem,
+    Draggable
   },
   directives: {
     focus: {
