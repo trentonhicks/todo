@@ -125,7 +125,7 @@ export default {
     },
     editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
-      this.set(this.form, 'completed', this.item.completed)
+      this.form.completed = this.item.completed;
       let data = JSON.stringify(this.form);
       this.item = JSON.parse(data);
 

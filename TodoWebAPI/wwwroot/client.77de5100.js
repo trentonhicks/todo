@@ -26389,7 +26389,7 @@ var _default = {
     },
     editTodoItem: function editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
-      this.set(this.form, 'completed', this.item.completed);
+      this.form.completed = this.item.completed;
       var data = JSON.stringify(this.form);
       this.item = JSON.parse(data);
       (0, _axios.default)({
@@ -74272,7 +74272,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57737" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64560" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
