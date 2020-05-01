@@ -43,7 +43,7 @@ namespace Todo.Domain
         }
         public void SetCompleted(List<TodoListItem> items)
         {
-            if (!items.All(item => item.ListId == Id))
+            if (!items.All(item => item.ListId == Id) || items.Count == 0)
                 return;
 
             var itemsCompleted = items.All(item => item.Completed);
