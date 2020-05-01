@@ -220,7 +220,7 @@ export default {
   },
   computed: {
     allItemsCompleted() {
-      return this.todoListItems.every(item => item.completed)
+      return this.todoListItems.every(item => item.completed) && this.todoListItems.length > 0
     }
   },
   watch: {
