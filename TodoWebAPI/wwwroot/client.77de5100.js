@@ -26389,6 +26389,7 @@ var _default = {
     },
     editTodoItem: function editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
+      this.set(this.form, 'completed', this.item.completed);
       var data = JSON.stringify(this.form);
       this.item = JSON.parse(data);
       (0, _axios.default)({
