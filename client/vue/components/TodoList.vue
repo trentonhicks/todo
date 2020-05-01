@@ -42,6 +42,7 @@
             type="text"
             placeholder="Name"
             v-model="form.name"
+            maxlength="50"
             required)
         b-form-group(label="Notes")
           b-form-textarea(
@@ -220,8 +221,7 @@ export default {
   },
   computed: {
     allItemsCompleted() {
-      return this.todoListItems.every(item => item.completed) && this.todoListItems.length > 0
-    }
+      return this.todoListItems.every(item => item.completed) && this.todoListItems.length > 0    }
   },
   watch: {
     allItemsCompleted: {

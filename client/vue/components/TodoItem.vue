@@ -22,7 +22,7 @@
   b-modal(:id="'modal-edit-' + item.id" :title="`Edit todo item`" modal-class="modal-hide-footer")
 
     //- Edit Form
-    b-form(v-on:submit.prevent="" id="edit-item-form")
+    b-form(v-on:submit.prevent="editTodoItem" id="edit-item-form")
 
         //- Name
         b-form-group(label="Name")
@@ -30,6 +30,7 @@
             type="text"
             placeholder="Name"
             v-model="form.name"
+            maxlength="50"
             required)
 
         //- Notes
@@ -54,7 +55,8 @@
               :key="item.id"
               :id="item.id"
               :name="item.name"
-              :completed="completed")
+              :completed="item.completed"
+              @sub-item-toggled="refreshSubItems")
 
           //- Add sub-item
           b-button(variant="secondary" class="btn-block mt-2" @click="addingSubItem = true" v-if="!addingSubItem") Add sub-item
@@ -64,12 +66,12 @@
               b-form-input(
                 :class="{'is-invalid': subitemFormLengthExceeded}"
                 id="add-sub-item"
-                v-model="subItemForm.name" @keydown.enter="addSubItem()" placeholder="Add sub-item" v-focus)
-              .invalid-feedback(v-if="subitemFormLengthExceeded") Sub item name needs to be less than 50!
+                v-model="subItemForm.name" @keydown.enter.prevent="addSubItem()" placeholder="Add sub-item" v-focus)
+              .invalid-feedback(v-if="subitemFormLengthExceeded") Name must be less than 50 characters.
               b-button(variant="success" @click="addSubItem()").mt-2 Add
-              b-button(variant="secondary" @click="addingSubItem = false").mt-2.ml-2 Cancel
+              b-button(variant="secondary" @click="addingSubItem = false; subItemForm.name = ''").mt-2.ml-2 Cancel
 
-        b-button(@click="editTodoItem" variant="primary" class="mr-2") Save Changes
+        b-button(type="submit" variant="primary" class="mr-2") Save Changes
         b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
 
 </template>
@@ -78,6 +80,7 @@
 
 import axios from 'axios';
 import moment from 'moment';
+import Draggable from 'vuedraggable';
 import SubItem from './SubItem.vue';
 
 export default {
@@ -108,16 +111,17 @@ export default {
   },
   methods: {
     toggleCompleted() {
-      axios({
-        method: 'PUT',
-        url: `/api/todos/${this.item.id}/completed`,
-        data: JSON.stringify({ completed: this.item.completed }),
-        headers: {
-          'content-type': 'application/json'
-        }
-      }).then(() => {
-        this.$emit('toggled-list-item', this.item);
-      });
+      if(this.subItems < 1) {
+        axios({
+          method: 'PUT',
+          url: `/api/todos/${this.item.id}/completed`,
+          data: JSON.stringify({ completed: this.item.completed }),
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+      }
+      this.$emit('toggled-list-item', this.item);
     },
     editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
@@ -142,7 +146,7 @@ export default {
       });
     },
     addSubItem() {
-     if(this.subitemFormValid) {
+      if(this.subitemFormValid) {
         let data = JSON.stringify({ name: this.subItemForm.name });
 
         this.subItemForm.name = '';
@@ -161,7 +165,11 @@ export default {
         });
 
       }
-    }
+    },
+    refreshSubItems(item) {
+      let index = this.subItems.findIndex(({id}) => id === item.id);
+      this.$set(this.subItems, index, item);
+    },
   },
   created: function() {
     this.getSubItems();
@@ -169,11 +177,19 @@ export default {
   watch: {
     checkboxToggle: function() {
       this.toggleCompleted();
+    },
+    allSubItemsCompleted: function() {
+      if(this.allSubItemsCompleted) {
+        this.$set(this.item, 'completed', true);
+      }
+      else {
+        this.$set(this.item, 'completed', false);
+      }
     }
   },
   computed: {
     subitemFormIsEmpty(){
-        return this.subItemForm.name.length > 0
+        return this.subItemForm.name.length == 0
     },
     subitemFormLengthExceeded(){
       return this.subItemForm.name.length > 50 
@@ -196,6 +212,9 @@ export default {
       }
 
       return true;
+    },
+    allSubItemsCompleted() {
+      return this.subItems.every(item => item.completed) && this.subItems.length > 0
     }
   },
   filters: {
@@ -207,7 +226,8 @@ export default {
     }
   },
   components: {
-    SubItem
+    SubItem,
+    Draggable
   },
   directives: {
     focus: {

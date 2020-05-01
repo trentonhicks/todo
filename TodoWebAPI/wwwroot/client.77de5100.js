@@ -18497,720 +18497,7 @@ var global = arguments[3];
 
 })));
 
-},{}],"vue/components/SubItem.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  name: 'SubItem',
-  props: ['id', 'name', 'completed'],
-  data: function data() {
-    return {
-      editing: false,
-      item: {
-        id: this.id,
-        name: this.name,
-        completed: this.completed
-      }
-    };
-  },
-  directives: {
-    focus: {
-      inserted: function inserted(el) {
-        el.focus();
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $89908c = exports.default || module.exports;
-      
-      if (typeof $89908c === 'function') {
-        $89908c = $89908c.options;
-      }
-    
-        /* template */
-        Object.assign($89908c, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("b-list-group-item", { staticClass: "sub-item" }, [
-    _c(
-      "div",
-      { staticClass: "item-checkbox-wrapper" },
-      [
-        _c("b-form-checkbox", {
-          model: {
-            value: _vm.item.completed,
-            callback: function($$v) {
-              _vm.$set(_vm.item, "completed", $$v)
-            },
-            expression: "item.completed"
-          }
-        })
-      ],
-      1
-    ),
-    _c(
-      "div",
-      {
-        staticClass: "item-name-wrapper",
-        on: {
-          click: function($event) {
-            _vm.editing = true
-          }
-        }
-      },
-      [
-        !_vm.editing
-          ? _c("div", { staticClass: "item-name" }, [
-              _vm._v(_vm._s(_vm.item.name))
-            ])
-          : _c("b-form-input", {
-              directives: [{ name: "focus", rawName: "v-focus" }],
-              staticClass: "item-name",
-              attrs: { placeholder: "Name", maxlength: "50" },
-              on: {
-                keydown: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  _vm.editing = false
-                }
-              },
-              model: {
-                value: _vm.item.name,
-                callback: function($$v) {
-                  _vm.$set(_vm.item, "name", $$v)
-                },
-                expression: "item.name"
-              }
-            })
-      ],
-      1
-    ),
-    _vm.editing
-      ? _c(
-          "div",
-          { staticClass: "item-options" },
-          [
-            _c(
-              "b-button-group",
-              [
-                _c(
-                  "b-button",
-                  {
-                    attrs: { variant: "info" },
-                    on: {
-                      click: function($event) {
-                        _vm.editing = false
-                      }
-                    }
-                  },
-                  [_vm._v("Update")]
-                ),
-                _c(
-                  "b-button",
-                  {
-                    attrs: { variant: "danger" },
-                    on: {
-                      click: function($event) {
-                        _vm.editing = false
-                      }
-                    }
-                  },
-                  [_vm._v("Delete")]
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: "data-v-89908c",
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$89908c', $89908c);
-          } else {
-            api.reload('$89908c', $89908c);
-          }
-        }
-
-        
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
-      }
-    })();
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoItem.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _axios = _interopRequireDefault(require("axios"));
-
-var _moment = _interopRequireDefault(require("moment"));
-
-var _SubItem = _interopRequireDefault(require("./SubItem.vue"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _default = {
-  name: 'TodoItem',
-  props: ['listId', 'id', 'name', 'notes', 'dueDate', 'completed'],
-  data: function data() {
-    return {
-      item: {
-        id: this.id,
-        name: this.name,
-        notes: this.notes,
-        completed: this.completed,
-        dueDate: this.dueDate
-      },
-      form: {
-        id: this.id,
-        name: this.name,
-        notes: this.notes,
-        completed: this.completed,
-        dueDate: this.dueDate
-      },
-      addingSubItem: false,
-      subItemForm: {
-        name: ''
-      },
-      subItems: []
-    };
-  },
-  methods: {
-    toggleCompleted: function toggleCompleted() {
-      var _this = this;
-
-      (0, _axios.default)({
-        method: 'PUT',
-        url: "/api/todos/" + this.item.id + "/completed",
-        data: JSON.stringify({
-          completed: this.item.completed
-        }),
-        headers: {
-          'content-type': 'application/json'
-        }
-      }).then(function () {
-        _this.$emit('toggled-list-item', _this.item);
-      });
-    },
-    editTodoItem: function editTodoItem() {
-      this.$bvModal.hide('modal-edit-' + this.item.id);
-      var data = JSON.stringify(this.form);
-      this.item = JSON.parse(data);
-      (0, _axios.default)({
-        method: 'PUT',
-        url: "/api/todos/" + this.item.id,
-        data: data,
-        headers: {
-          'content-type': 'application/json'
-        }
-      });
-    },
-    getSubItems: function getSubItems() {
-      var _this = this;
-
-      (0, _axios.default)({
-        method: 'GET',
-        url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
-      }).then(function (response) {
-        _this.subItems = response.data;
-      });
-    },
-    addSubItem: function addSubItem() {
-      var _this = this;
-
-      if (this.subitemFormValid) {
-        var data = JSON.stringify({
-          name: this.subItemForm.name
-        });
-        this.subItemForm.name = '';
-        var addSubItemInput = document.getElementById("add-sub-item");
-        addSubItemInput.focus();
-        (0, _axios.default)({
-          method: 'POST',
-          url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
-          data: data,
-          headers: {
-            'content-type': 'application/json'
-          }
-        }).then(function (response) {
-          _this.subItems.unshift(response.data);
-        });
-      }
-    }
-  },
-  created: function created() {
-    this.getSubItems();
-  },
-  watch: {
-    checkboxToggle: function checkboxToggle() {
-      this.toggleCompleted();
-    }
-  },
-  computed: {
-    subitemFormIsEmpty: function subitemFormIsEmpty() {
-      return this.subItemForm.name.length > 0;
-    },
-    subitemFormLengthExceeded: function subitemFormLengthExceeded() {
-      return this.subItemForm.name.length > 50;
-    },
-    subitemFormValid: function subitemFormValid() {
-      return !this.subitemFormIsEmpty && !this.subitemFormLengthExceeded;
-    },
-    checkboxToggle: function checkboxToggle() {
-      return this.item.completed;
-    },
-    hasSubItems: function hasSubItems() {
-      return this.subItems.length > 0;
-    },
-    itemDueToday: function itemDueToday() {
-      var today = new Date();
-      var dueDate = new Date(this.item.dueDate);
-
-      if (dueDate.getTime() >= today.getTime()) {
-        return false;
-      }
-
-      return true;
-    }
-  },
-  filters: {
-    formatDate: function formatDate(value) {
-      return (0, _moment.default)(value).format('dddd, MMMM Do YYYY');
-    },
-    monthDay: function monthDay(value) {
-      return (0, _moment.default)(value).format('MMMM Do');
-    }
-  },
-  components: {
-    SubItem: _SubItem.default
-  },
-  directives: {
-    focus: {
-      inserted: function inserted(el) {
-        el.focus();
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $c8b3b1 = exports.default || module.exports;
-      
-      if (typeof $c8b3b1 === 'function') {
-        $c8b3b1 = $c8b3b1.options;
-      }
-    
-        /* template */
-        Object.assign($c8b3b1, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "todo-item-wrapper", attrs: { "data-id": _vm.item.id } },
-    [
-      _c(
-        "b-list-group-item",
-        { staticClass: "todo-item bg-light" },
-        [
-          _c(
-            "b-form-checkbox",
-            {
-              attrs: { disabled: _vm.hasSubItems },
-              model: {
-                value: _vm.item.completed,
-                callback: function($$v) {
-                  _vm.$set(_vm.item, "completed", $$v)
-                },
-                expression: "item.completed"
-              }
-            },
-            [
-              _c("div", { staticClass: "todo-item-name" }, [
-                _vm._v(_vm._s(_vm.item.name))
-              ]),
-              _vm.item.dueDate
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "todo-item-date",
-                      class: {
-                        "text-info": !_vm.itemDueToday,
-                        "text-danger": _vm.itemDueToday
-                      }
-                    },
-                    [
-                      _c("b-icon-clock"),
-                      _vm._v(_vm._s(_vm._f("monthDay")(_vm.item.dueDate)))
-                    ],
-                    1
-                  )
-                : _vm._e(),
-              _vm.item.notes
-                ? _c("div", { staticClass: "todo-item-notes" }, [
-                    _c("small", { staticClass: "text-muted" }, [
-                      _vm._v(_vm._s(_vm.item.notes))
-                    ])
-                  ])
-                : _vm._e()
-            ]
-          ),
-          _c(
-            "div",
-            { staticClass: "todo-item-options" },
-            [
-              _c(
-                "b-button",
-                {
-                  attrs: { variant: "info", size: "sm" },
-                  on: {
-                    click: function($event) {
-                      return _vm.$bvModal.show("modal-edit-" + _vm.item.id)
-                    }
-                  }
-                },
-                [_c("b-icon-three-dots")],
-                1
-              ),
-              _c(
-                "b-button",
-                {
-                  attrs: { variant: "danger", size: "sm" },
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit("deleted-list-item", _vm.item)
-                    }
-                  }
-                },
-                [_c("b-icon-trash")],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _c(
-        "b-modal",
-        {
-          attrs: {
-            id: "modal-edit-" + _vm.item.id,
-            title: "Edit todo item",
-            "modal-class": "modal-hide-footer"
-          }
-        },
-        [
-          _c(
-            "b-form",
-            {
-              attrs: { id: "edit-item-form" },
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                }
-              }
-            },
-            [
-              _c(
-                "b-form-group",
-                { attrs: { label: "Name" } },
-                [
-                  _c("b-form-input", {
-                    attrs: {
-                      type: "text",
-                      placeholder: "Name",
-                      required: "required"
-                    },
-                    model: {
-                      value: _vm.form.name,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "name", $$v)
-                      },
-                      expression: "form.name"
-                    }
-                  })
-                ],
-                1
-              ),
-              _c(
-                "b-form-group",
-                { attrs: { label: "Notes" } },
-                [
-                  _c("b-form-textarea", {
-                    attrs: {
-                      placeholder: "Notes",
-                      rows: "4",
-                      maxlength: "200"
-                    },
-                    model: {
-                      value: _vm.form.notes,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "notes", $$v)
-                      },
-                      expression: "form.notes"
-                    }
-                  })
-                ],
-                1
-              ),
-              _c(
-                "b-form-group",
-                { attrs: { label: "Due Date" } },
-                [
-                  _c("b-form-datepicker", {
-                    staticClass: "mb-2",
-                    model: {
-                      value: _vm.form.dueDate,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "dueDate", $$v)
-                      },
-                      expression: "form.dueDate"
-                    }
-                  })
-                ],
-                1
-              ),
-              _c(
-                "b-form-group",
-                { attrs: { label: "Sub-items" } },
-                [
-                  _c(
-                    "draggable",
-                    {
-                      model: {
-                        value: _vm.subItems,
-                        callback: function($$v) {
-                          _vm.subItems = $$v
-                        },
-                        expression: "subItems"
-                      }
-                    },
-                    _vm._l(_vm.subItems, function(item) {
-                      return _c("sub-item", {
-                        key: item.id,
-                        attrs: {
-                          id: item.id,
-                          name: item.name,
-                          completed: _vm.completed
-                        }
-                      })
-                    }),
-                    1
-                  ),
-                  !_vm.addingSubItem
-                    ? _c(
-                        "b-button",
-                        {
-                          staticClass: "btn-block mt-2",
-                          attrs: { variant: "secondary" },
-                          on: {
-                            click: function($event) {
-                              _vm.addingSubItem = true
-                            }
-                          }
-                        },
-                        [_vm._v("Add sub-item")]
-                      )
-                    : _vm._e(),
-                  _vm.addingSubItem
-                    ? _c(
-                        "div",
-                        { staticClass: "adding-sub-item mt-2" },
-                        [
-                          _c(
-                            "b-form-group",
-                            [
-                              _c("b-form-input", {
-                                directives: [
-                                  {
-                                    name: "focus",
-                                    rawName: "v-focus",
-                                    value: _vm.v - _vm.focus,
-                                    expression: "v-focus"
-                                  }
-                                ],
-                                class: {
-                                  "is-invalid": _vm.subitemFormLengthExceeded
-                                },
-                                attrs: {
-                                  id: "add-sub-item",
-                                  placeholder: "Add sub-item"
-                                },
-                                on: {
-                                  keydown: function($event) {
-                                    if (
-                                      !$event.type.indexOf("key") &&
-                                      _vm._k(
-                                        $event.keyCode,
-                                        "enter",
-                                        13,
-                                        $event.key,
-                                        "Enter"
-                                      )
-                                    ) {
-                                      return null
-                                    }
-                                    return _vm.addSubItem()
-                                  }
-                                },
-                                model: {
-                                  value: _vm.subItemForm.name,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.subItemForm, "name", $$v)
-                                  },
-                                  expression: "subItemForm.name"
-                                }
-                              }),
-                              _vm.subitemFormLengthExceeded
-                                ? _c(
-                                    "div",
-                                    { staticClass: "invalid-feedback" },
-                                    [
-                                      _vm._v(
-                                        "Sub item name needs to be less than 50!"
-                                      )
-                                    ]
-                                  )
-                                : _vm._e(),
-                              _c(
-                                "b-button",
-                                {
-                                  staticClass: "mt-2",
-                                  attrs: { variant: "success" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.addSubItem()
-                                    }
-                                  }
-                                },
-                                [_vm._v("Add")]
-                              ),
-                              _c(
-                                "b-button",
-                                {
-                                  staticClass: "mt-2 ml-2",
-                                  attrs: { variant: "secondary" },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.addingSubItem = false
-                                    }
-                                  }
-                                },
-                                [_vm._v("Cancel")]
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    : _vm._e()
-                ],
-                1
-              ),
-              _c(
-                "b-button",
-                {
-                  staticClass: "mr-2",
-                  attrs: { variant: "primary" },
-                  on: { click: _vm.editTodoItem }
-                },
-                [_vm._v("Save Changes")]
-              ),
-              _c(
-                "b-button",
-                {
-                  attrs: { variant: "secondary" },
-                  on: {
-                    click: function($event) {
-                      return _vm.$bvModal.hide("modal-edit-" + _vm.item.id)
-                    }
-                  }
-                },
-                [_vm._v("Cancel")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: "data-v-c8b3b1",
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$c8b3b1', $c8b3b1);
-          } else {
-            api.reload('$c8b3b1', $c8b3b1);
-          }
-        }
-
-        
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
-      }
-    })();
-},{"axios":"node_modules/axios/index.js","moment":"node_modules/moment/moment.js","./SubItem.vue":"vue/components/SubItem.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"node_modules/sortablejs/modular/sortable.esm.js":[function(require,module,exports) {
+},{}],"node_modules/sortablejs/modular/sortable.esm.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26838,7 +26125,774 @@ function (modules) {
   /******/
 
 })["default"];
-},{"sortablejs":"node_modules/sortablejs/modular/sortable.esm.js"}],"node_modules/confetti-js/dist/index.es.js":[function(require,module,exports) {
+},{"sortablejs":"node_modules/sortablejs/modular/sortable.esm.js"}],"vue/components/SubItem.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  name: 'SubItem',
+  props: ['id', 'name', 'completed'],
+  data: function data() {
+    return {
+      editing: false,
+      item: {
+        id: this.id,
+        name: this.name,
+        completed: this.completed
+      }
+    };
+  },
+  methods: {
+    toggleCompleted: function toggleCompleted() {
+      this.$emit('sub-item-toggled', this.item);
+      (0, _axios.default)({
+        method: 'PUT',
+        url: "/api/subitems/" + this.item.id + "/completed",
+        headers: {
+          'content-type': 'application/json'
+        },
+        data: this.item.completed
+      });
+    }
+  },
+  watch: {
+    checkboxToggle: function checkboxToggle() {
+      this.toggleCompleted();
+    }
+  },
+  computed: {
+    checkboxToggle: function checkboxToggle() {
+      return this.item.completed;
+    }
+  },
+  directives: {
+    focus: {
+      inserted: function inserted(el) {
+        el.focus();
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $89908c = exports.default || module.exports;
+      
+      if (typeof $89908c === 'function') {
+        $89908c = $89908c.options;
+      }
+    
+        /* template */
+        Object.assign($89908c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("b-list-group-item", { staticClass: "sub-item" }, [
+    _c(
+      "div",
+      { staticClass: "item-checkbox-wrapper" },
+      [
+        _c("b-form-checkbox", {
+          model: {
+            value: _vm.item.completed,
+            callback: function($$v) {
+              _vm.$set(_vm.item, "completed", $$v)
+            },
+            expression: "item.completed"
+          }
+        })
+      ],
+      1
+    ),
+    _c(
+      "div",
+      {
+        staticClass: "item-name-wrapper",
+        on: {
+          click: function($event) {
+            _vm.editing = true
+          }
+        }
+      },
+      [
+        !_vm.editing
+          ? _c("div", { staticClass: "item-name" }, [
+              _vm._v(_vm._s(_vm.item.name))
+            ])
+          : _c("b-form-input", {
+              directives: [{ name: "focus", rawName: "v-focus" }],
+              staticClass: "item-name",
+              attrs: { placeholder: "Name", maxlength: "50" },
+              on: {
+                keydown: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  _vm.editing = false
+                }
+              },
+              model: {
+                value: _vm.item.name,
+                callback: function($$v) {
+                  _vm.$set(_vm.item, "name", $$v)
+                },
+                expression: "item.name"
+              }
+            })
+      ],
+      1
+    ),
+    _vm.editing
+      ? _c(
+          "div",
+          { staticClass: "item-options" },
+          [
+            _c(
+              "b-button-group",
+              [
+                _c(
+                  "b-button",
+                  {
+                    attrs: { variant: "info" },
+                    on: {
+                      click: function($event) {
+                        _vm.editing = false
+                      }
+                    }
+                  },
+                  [_vm._v("Update")]
+                ),
+                _c(
+                  "b-button",
+                  {
+                    attrs: { variant: "danger" },
+                    on: {
+                      click: function($event) {
+                        _vm.editing = false
+                      }
+                    }
+                  },
+                  [_vm._v("Delete")]
+                )
+              ],
+              1
+            )
+          ],
+          1
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-89908c",
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$89908c', $89908c);
+          } else {
+            api.reload('$89908c', $89908c);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"axios":"node_modules/axios/index.js","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoItem.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _moment = _interopRequireDefault(require("moment"));
+
+var _vuedraggable = _interopRequireDefault(require("vuedraggable"));
+
+var _SubItem = _interopRequireDefault(require("./SubItem.vue"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  name: 'TodoItem',
+  props: ['listId', 'id', 'name', 'notes', 'dueDate', 'completed'],
+  data: function data() {
+    return {
+      item: {
+        id: this.id,
+        name: this.name,
+        notes: this.notes,
+        completed: this.completed,
+        dueDate: this.dueDate
+      },
+      form: {
+        id: this.id,
+        name: this.name,
+        notes: this.notes,
+        completed: this.completed,
+        dueDate: this.dueDate
+      },
+      addingSubItem: false,
+      subItemForm: {
+        name: ''
+      },
+      subItems: []
+    };
+  },
+  methods: {
+    toggleCompleted: function toggleCompleted() {
+      if (this.subItems < 1) {
+        (0, _axios.default)({
+          method: 'PUT',
+          url: "/api/todos/" + this.item.id + "/completed",
+          data: JSON.stringify({
+            completed: this.item.completed
+          }),
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+      }
+
+      this.$emit('toggled-list-item', this.item);
+    },
+    editTodoItem: function editTodoItem() {
+      this.$bvModal.hide('modal-edit-' + this.item.id);
+      var data = JSON.stringify(this.form);
+      this.item = JSON.parse(data);
+      (0, _axios.default)({
+        method: 'PUT',
+        url: "/api/todos/" + this.item.id,
+        data: data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+    },
+    getSubItems: function getSubItems() {
+      var _this = this;
+
+      (0, _axios.default)({
+        method: 'GET',
+        url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
+      }).then(function (response) {
+        _this.subItems = response.data;
+      });
+    },
+    addSubItem: function addSubItem() {
+      var _this = this;
+
+      if (this.subitemFormValid) {
+        var data = JSON.stringify({
+          name: this.subItemForm.name
+        });
+        this.subItemForm.name = '';
+        var addSubItemInput = document.getElementById("add-sub-item");
+        addSubItemInput.focus();
+        (0, _axios.default)({
+          method: 'POST',
+          url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
+          data: data,
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (response) {
+          _this.subItems.unshift(response.data);
+        });
+      }
+    },
+    refreshSubItems: function refreshSubItems(item) {
+      var index = this.subItems.findIndex(function (_a) {
+        var id = _a.id;
+        return id === item.id;
+      });
+      this.$set(this.subItems, index, item);
+    }
+  },
+  created: function created() {
+    this.getSubItems();
+  },
+  watch: {
+    checkboxToggle: function checkboxToggle() {
+      this.toggleCompleted();
+    },
+    allSubItemsCompleted: function allSubItemsCompleted() {
+      if (this.allSubItemsCompleted) {
+        this.$set(this.item, 'completed', true);
+      } else {
+        this.$set(this.item, 'completed', false);
+      }
+    }
+  },
+  computed: {
+    subitemFormIsEmpty: function subitemFormIsEmpty() {
+      return this.subItemForm.name.length == 0;
+    },
+    subitemFormLengthExceeded: function subitemFormLengthExceeded() {
+      return this.subItemForm.name.length > 50;
+    },
+    subitemFormValid: function subitemFormValid() {
+      return !this.subitemFormIsEmpty && !this.subitemFormLengthExceeded;
+    },
+    checkboxToggle: function checkboxToggle() {
+      return this.item.completed;
+    },
+    hasSubItems: function hasSubItems() {
+      return this.subItems.length > 0;
+    },
+    itemDueToday: function itemDueToday() {
+      var today = new Date();
+      var dueDate = new Date(this.item.dueDate);
+
+      if (dueDate.getTime() >= today.getTime()) {
+        return false;
+      }
+
+      return true;
+    },
+    allSubItemsCompleted: function allSubItemsCompleted() {
+      return this.subItems.every(function (item) {
+        return item.completed;
+      }) && this.subItems.length > 0;
+    }
+  },
+  filters: {
+    formatDate: function formatDate(value) {
+      return (0, _moment.default)(value).format('dddd, MMMM Do YYYY');
+    },
+    monthDay: function monthDay(value) {
+      return (0, _moment.default)(value).format('MMMM Do');
+    }
+  },
+  components: {
+    SubItem: _SubItem.default,
+    Draggable: _vuedraggable.default
+  },
+  directives: {
+    focus: {
+      inserted: function inserted(el) {
+        el.focus();
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $c8b3b1 = exports.default || module.exports;
+      
+      if (typeof $c8b3b1 === 'function') {
+        $c8b3b1 = $c8b3b1.options;
+      }
+    
+        /* template */
+        Object.assign($c8b3b1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "todo-item-wrapper", attrs: { "data-id": _vm.item.id } },
+    [
+      _c(
+        "b-list-group-item",
+        { staticClass: "todo-item bg-light" },
+        [
+          _c(
+            "b-form-checkbox",
+            {
+              attrs: { disabled: _vm.hasSubItems },
+              model: {
+                value: _vm.item.completed,
+                callback: function($$v) {
+                  _vm.$set(_vm.item, "completed", $$v)
+                },
+                expression: "item.completed"
+              }
+            },
+            [
+              _c("div", { staticClass: "todo-item-name" }, [
+                _vm._v(_vm._s(_vm.item.name))
+              ]),
+              _vm.item.dueDate
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "todo-item-date",
+                      class: {
+                        "text-info": !_vm.itemDueToday,
+                        "text-danger": _vm.itemDueToday
+                      }
+                    },
+                    [
+                      _c("b-icon-clock"),
+                      _vm._v(_vm._s(_vm._f("monthDay")(_vm.item.dueDate)))
+                    ],
+                    1
+                  )
+                : _vm._e(),
+              _vm.item.notes
+                ? _c("div", { staticClass: "todo-item-notes" }, [
+                    _c("small", { staticClass: "text-muted" }, [
+                      _vm._v(_vm._s(_vm.item.notes))
+                    ])
+                  ])
+                : _vm._e()
+            ]
+          ),
+          _c(
+            "div",
+            { staticClass: "todo-item-options" },
+            [
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "info", size: "sm" },
+                  on: {
+                    click: function($event) {
+                      return _vm.$bvModal.show("modal-edit-" + _vm.item.id)
+                    }
+                  }
+                },
+                [_c("b-icon-three-dots")],
+                1
+              ),
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "danger", size: "sm" },
+                  on: {
+                    click: function($event) {
+                      return _vm.$emit("deleted-list-item", _vm.item)
+                    }
+                  }
+                },
+                [_c("b-icon-trash")],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _c(
+        "b-modal",
+        {
+          attrs: {
+            id: "modal-edit-" + _vm.item.id,
+            title: "Edit todo item",
+            "modal-class": "modal-hide-footer"
+          }
+        },
+        [
+          _c(
+            "b-form",
+            {
+              attrs: { id: "edit-item-form" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.editTodoItem($event)
+                }
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                { attrs: { label: "Name" } },
+                [
+                  _c("b-form-input", {
+                    attrs: {
+                      type: "text",
+                      placeholder: "Name",
+                      maxlength: "50",
+                      required: "required"
+                    },
+                    model: {
+                      value: _vm.form.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "name", $$v)
+                      },
+                      expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _c(
+                "b-form-group",
+                { attrs: { label: "Notes" } },
+                [
+                  _c("b-form-textarea", {
+                    attrs: {
+                      placeholder: "Notes",
+                      rows: "4",
+                      maxlength: "200"
+                    },
+                    model: {
+                      value: _vm.form.notes,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "notes", $$v)
+                      },
+                      expression: "form.notes"
+                    }
+                  })
+                ],
+                1
+              ),
+              _c(
+                "b-form-group",
+                { attrs: { label: "Due Date" } },
+                [
+                  _c("b-form-datepicker", {
+                    staticClass: "mb-2",
+                    model: {
+                      value: _vm.form.dueDate,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "dueDate", $$v)
+                      },
+                      expression: "form.dueDate"
+                    }
+                  })
+                ],
+                1
+              ),
+              _c(
+                "b-form-group",
+                { attrs: { label: "Sub-items" } },
+                [
+                  _c(
+                    "draggable",
+                    {
+                      model: {
+                        value: _vm.subItems,
+                        callback: function($$v) {
+                          _vm.subItems = $$v
+                        },
+                        expression: "subItems"
+                      }
+                    },
+                    _vm._l(_vm.subItems, function(item) {
+                      return _c("sub-item", {
+                        key: item.id,
+                        attrs: {
+                          id: item.id,
+                          name: item.name,
+                          completed: item.completed
+                        },
+                        on: { "sub-item-toggled": _vm.refreshSubItems }
+                      })
+                    }),
+                    1
+                  ),
+                  !_vm.addingSubItem
+                    ? _c(
+                        "b-button",
+                        {
+                          staticClass: "btn-block mt-2",
+                          attrs: { variant: "secondary" },
+                          on: {
+                            click: function($event) {
+                              _vm.addingSubItem = true
+                            }
+                          }
+                        },
+                        [_vm._v("Add sub-item")]
+                      )
+                    : _vm._e(),
+                  _vm.addingSubItem
+                    ? _c(
+                        "div",
+                        { staticClass: "adding-sub-item mt-2" },
+                        [
+                          _c(
+                            "b-form-group",
+                            [
+                              _c("b-form-input", {
+                                directives: [
+                                  {
+                                    name: "focus",
+                                    rawName: "v-focus",
+                                    value: _vm.v - _vm.focus,
+                                    expression: "v-focus"
+                                  }
+                                ],
+                                class: {
+                                  "is-invalid": _vm.subitemFormLengthExceeded
+                                },
+                                attrs: {
+                                  id: "add-sub-item",
+                                  placeholder: "Add sub-item"
+                                },
+                                on: {
+                                  keydown: function($event) {
+                                    if (
+                                      !$event.type.indexOf("key") &&
+                                      _vm._k(
+                                        $event.keyCode,
+                                        "enter",
+                                        13,
+                                        $event.key,
+                                        "Enter"
+                                      )
+                                    ) {
+                                      return null
+                                    }
+                                    $event.preventDefault()
+                                    return _vm.addSubItem()
+                                  }
+                                },
+                                model: {
+                                  value: _vm.subItemForm.name,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.subItemForm, "name", $$v)
+                                  },
+                                  expression: "subItemForm.name"
+                                }
+                              }),
+                              _vm.subitemFormLengthExceeded
+                                ? _c(
+                                    "div",
+                                    { staticClass: "invalid-feedback" },
+                                    [
+                                      _vm._v(
+                                        "Name must be less than 50 characters."
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _c(
+                                "b-button",
+                                {
+                                  staticClass: "mt-2",
+                                  attrs: { variant: "success" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.addSubItem()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Add")]
+                              ),
+                              _c(
+                                "b-button",
+                                {
+                                  staticClass: "mt-2 ml-2",
+                                  attrs: { variant: "secondary" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.addingSubItem = false
+                                      _vm.subItemForm.name = ""
+                                    }
+                                  }
+                                },
+                                [_vm._v("Cancel")]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e()
+                ],
+                1
+              ),
+              _c(
+                "b-button",
+                {
+                  staticClass: "mr-2",
+                  attrs: { type: "submit", variant: "primary" }
+                },
+                [_vm._v("Save Changes")]
+              ),
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "secondary" },
+                  on: {
+                    click: function($event) {
+                      return _vm.$bvModal.hide("modal-edit-" + _vm.item.id)
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-c8b3b1",
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$c8b3b1', $c8b3b1);
+          } else {
+            api.reload('$c8b3b1', $c8b3b1);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"axios":"node_modules/axios/index.js","moment":"node_modules/moment/moment.js","vuedraggable":"node_modules/vuedraggable/dist/vuedraggable.common.js","./SubItem.vue":"vue/components/SubItem.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"node_modules/confetti-js/dist/index.es.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27465,6 +27519,7 @@ exports.default = _default;
                     attrs: {
                       type: "text",
                       placeholder: "Name",
+                      maxlength: "50",
                       required: "required"
                     },
                     model: {
