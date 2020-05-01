@@ -27465,6 +27465,7 @@ exports.default = _default;
                     attrs: {
                       type: "text",
                       placeholder: "Name",
+                      maxlength: "50",
                       required: "required"
                     },
                     model: {
