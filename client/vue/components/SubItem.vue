@@ -31,6 +31,30 @@ export default {
       }
     };
   },
+  methods: {
+    toggleCompleted() {
+      this.$emit('sub-item-toggled', this.item);
+
+      axios({
+        method: 'PUT',
+        url: `/api/subitems/${this.item.id}/completed`,
+        headers: {
+          'content-type': 'application/json'
+        },
+        data: this.item.completed
+      });
+    }
+  },
+  watch: {
+    checkboxToggle: function() {
+      this.toggleCompleted();
+    }
+  },
+  computed: {
+    checkboxToggle() {
+      return this.item.completed;
+    }
+  },
   directives: {
     focus: {
       inserted (el) {

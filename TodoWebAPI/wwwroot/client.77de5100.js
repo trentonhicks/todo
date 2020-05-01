@@ -26132,6 +26132,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var _default = {
   name: 'SubItem',
   props: ['id', 'name', 'completed'],
@@ -26144,6 +26149,29 @@ var _default = {
         completed: this.completed
       }
     };
+  },
+  methods: {
+    toggleCompleted: function toggleCompleted() {
+      this.$emit('sub-item-toggled', this.item);
+      (0, _axios.default)({
+        method: 'PUT',
+        url: "/api/subitems/" + this.item.id + "/completed",
+        headers: {
+          'content-type': 'application/json'
+        },
+        data: this.item.completed
+      });
+    }
+  },
+  watch: {
+    checkboxToggle: function checkboxToggle() {
+      this.toggleCompleted();
+    }
+  },
+  computed: {
+    checkboxToggle: function checkboxToggle() {
+      return this.item.completed;
+    }
   },
   directives: {
     focus: {
@@ -26298,7 +26326,7 @@ render._withStripped = true
       
       }
     })();
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoItem.vue":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoItem.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26344,20 +26372,20 @@ var _default = {
   },
   methods: {
     toggleCompleted: function toggleCompleted() {
-      var _this = this;
+      if (this.subItems < 1) {
+        (0, _axios.default)({
+          method: 'PUT',
+          url: "/api/todos/" + this.item.id + "/completed",
+          data: JSON.stringify({
+            completed: this.item.completed
+          }),
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+      }
 
-      (0, _axios.default)({
-        method: 'PUT',
-        url: "/api/todos/" + this.item.id + "/completed",
-        data: JSON.stringify({
-          completed: this.item.completed
-        }),
-        headers: {
-          'content-type': 'application/json'
-        }
-      }).then(function () {
-        _this.$emit('toggled-list-item', _this.item);
-      });
+      this.$emit('toggled-list-item', this.item);
     },
     editTodoItem: function editTodoItem() {
       this.$bvModal.hide('modal-edit-' + this.item.id);
@@ -26403,6 +26431,13 @@ var _default = {
           _this.subItems.unshift(response.data);
         });
       }
+    },
+    refreshSubItems: function refreshSubItems(item) {
+      var index = this.subItems.findIndex(function (_a) {
+        var id = _a.id;
+        return id === item.id;
+      });
+      this.$set(this.subItems, index, item);
     }
   },
   created: function created() {
@@ -26411,6 +26446,13 @@ var _default = {
   watch: {
     checkboxToggle: function checkboxToggle() {
       this.toggleCompleted();
+    },
+    allSubItemsCompleted: function allSubItemsCompleted() {
+      if (this.allSubItemsCompleted) {
+        this.$set(this.item, 'completed', true);
+      } else {
+        this.$set(this.item, 'completed', false);
+      }
     }
   },
   computed: {
@@ -26438,6 +26480,11 @@ var _default = {
       }
 
       return true;
+    },
+    allSubItemsCompleted: function allSubItemsCompleted() {
+      return this.subItems.every(function (item) {
+        return item.completed;
+      }) && this.subItems.length > 0;
     }
   },
   filters: {
@@ -26662,8 +26709,9 @@ exports.default = _default;
                         attrs: {
                           id: item.id,
                           name: item.name,
-                          completed: _vm.completed
-                        }
+                          completed: item.completed
+                        },
+                        on: { "sub-item-toggled": _vm.refreshSubItems }
                       })
                     }),
                     1
@@ -26765,6 +26813,7 @@ exports.default = _default;
                                   on: {
                                     click: function($event) {
                                       _vm.addingSubItem = false
+                                      _vm.subItemForm.name = ""
                                     }
                                   }
                                 },
