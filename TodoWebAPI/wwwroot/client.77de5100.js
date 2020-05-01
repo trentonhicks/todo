@@ -18945,6 +18945,7 @@ exports.default = _default;
               on: {
                 submit: function($event) {
                   $event.preventDefault()
+                  return _vm.editTodoItem($event)
                 }
               }
             },
@@ -18957,6 +18958,7 @@ exports.default = _default;
                     attrs: {
                       type: "text",
                       placeholder: "Name",
+                      maxlength: "50",
                       required: "required"
                     },
                     model: {
@@ -19150,8 +19152,7 @@ exports.default = _default;
                 "b-button",
                 {
                   staticClass: "mr-2",
-                  attrs: { variant: "primary" },
-                  on: { click: _vm.editTodoItem }
+                  attrs: { type: "submit", variant: "primary" }
                 },
                 [_vm._v("Save Changes")]
               ),

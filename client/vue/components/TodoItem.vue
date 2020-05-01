@@ -22,7 +22,7 @@
   b-modal(:id="'modal-edit-' + item.id" :title="`Edit todo item`" modal-class="modal-hide-footer")
 
     //- Edit Form
-    b-form(v-on:submit.prevent="" id="edit-item-form")
+    b-form(v-on:submit.prevent="editTodoItem" id="edit-item-form")
 
         //- Name
         b-form-group(label="Name")
@@ -30,6 +30,7 @@
             type="text"
             placeholder="Name"
             v-model="form.name"
+            maxlength="50"
             required)
 
         //- Notes
@@ -69,7 +70,7 @@
               b-button(variant="success" @click="addSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false").mt-2.ml-2 Cancel
 
-        b-button(@click="editTodoItem" variant="primary" class="mr-2") Save Changes
+        b-button(type="submit" variant="primary" class="mr-2") Save Changes
         b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
 
 </template>
