@@ -20,7 +20,7 @@
       todo-item(
         v-for="(todo, index) in todoListItems"
         v-on:deleted-list-item="deleteTodoListItem"
-        v-on:toggled-list-item="checkIfListCompleted"
+        v-on:toggled-list-item="updateListCompletedState"
         :key="todo.id"
         :listId="id"
         :id="todo.id"
@@ -81,6 +81,11 @@ export default {
   created: function() {
     this.getTodoList(this.id);
   },
+  mounted() {
+    var confettiSettings = { target: 'confetti' };
+    var confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
+  },
   methods: {
     getTodoList(id : number) : void {
       // Get list
@@ -123,7 +128,7 @@ export default {
         });
       });
     },
-    updateListTitle(listTitle : string) {
+    updateListTitle(listTitle : string) : void {
       let data = JSON.stringify({ listTitle });
 
       axios({
@@ -181,23 +186,17 @@ export default {
           }
       });
     },
-    checkIfListCompleted() {
-      axios({
-        method: 'get',
-        url: '/api/lists/' + this.id
-      }).then((response) => {
-        if(response.data.completed === true) {
-          this.confetti = true;
-          var confettiSettings = { target: 'confetti' };
-          var confetti = new ConfettiGenerator(confettiSettings);
-          confetti.render();
-        }
-        else {
-          this.confetti = false;
-        }
-      })
+    updateListCompletedState(item) : void {
+      let index = this.todoListItems.findIndex(({id}) => id === item.id);
+      this.$set(this.todoListItems, index, item)
     },
-    updateItemPosition(e) {
+    throwConfetti() : void {
+      this.confetti = true;
+    },
+    hideConfetti() : void {
+      this.confetti = false;
+    },
+    updateItemPosition(e) : void {
       let position = e.newIndex;
       let itemId = parseInt(e.item.dataset.id);
       let data = JSON.stringify({
@@ -218,6 +217,24 @@ export default {
   components: {
     TodoItem,
     draggable
+  },
+  computed: {
+    allItemsCompleted() {
+      return this.todoListItems.every(item => item.completed)
+    }
+  },
+  watch: {
+    allItemsCompleted: {
+      handler: function() {
+        if(this.allItemsCompleted) {
+          this.throwConfetti();
+        }
+        else {
+          this.hideConfetti();
+        }
+      },
+      immediate: true
+    }
   },
   directives: {
     focus: {

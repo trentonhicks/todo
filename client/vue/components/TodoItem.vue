@@ -116,7 +116,7 @@ export default {
           'content-type': 'application/json'
         }
       }).then(() => {
-        this.$emit('toggled-list-item');
+        this.$emit('toggled-list-item', this.item);
       });
     },
     editTodoItem() {

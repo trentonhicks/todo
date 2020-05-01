@@ -1,4 +1,4 @@
-.card .card-body[data-v-54986f] {
+.card .card-body[data-v-c99d36] {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -6,12 +6,12 @@
   padding: 0px;
 }
 @media screen and (min-width: 768px) {
-.card .card-body[data-v-54986f] {
+.card .card-body[data-v-c99d36] {
     flex-direction: row;
     align-items: center;
 }
 }
-.card .card-title[data-v-54986f] {
+.card .card-title[data-v-c99d36] {
   font-size: 20px;
   margin-bottom: 0px;
   width: 100%;
@@ -24,23 +24,23 @@
   padding-bottom: 0px;
 }
 @media screen and (min-width: 768px) {
-.card .card-title[data-v-54986f] {
+.card .card-title[data-v-c99d36] {
     max-width: 400px;
     padding-bottom: 20px;
 }
 }
-.card .card-title[data-v-54986f]:focus, .card .card-title[data-v-54986f]:hover, .card .card-title[data-v-54986f]:not(:disabled):not(.disabled):active {
+.card .card-title[data-v-c99d36]:focus, .card .card-title[data-v-c99d36]:hover, .card .card-title[data-v-c99d36]:not(:disabled):not(.disabled):active {
   background-color: transparent;
   border: none;
   color: #212529;
 }
-.card .todo-list-options[data-v-54986f] {
+.card .todo-list-options[data-v-c99d36] {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding: 20px;
 }
-.card .todo-list-options .btn[data-v-54986f] {
+.card .todo-list-options .btn[data-v-c99d36] {
   height: 36px;
   width: 36px;
   border-radius: 100px;
@@ -51,68 +51,68 @@
 #modal-add .modal-footer {
   display: none;
 }
-.sub-item[data-v-897bf8] {
+.sub-item[data-v-89908c] {
   display: flex;
   padding: 0;
   align-items: center;
 }
-.sub-item[data-v-897bf8]:hover {
+.sub-item[data-v-89908c]:hover {
   background-color: #f8f9fa;
 }
-.sub-item[data-v-897bf8]:active {
+.sub-item[data-v-89908c]:active {
   background-color: #f4f5f7;
 }
-.sub-item .item-name-wrapper[data-v-897bf8] {
+.sub-item .item-name-wrapper[data-v-89908c] {
   flex: 1 0 auto;
   align-self: stretch;
   display: flex;
   align-items: center;
 }
-.sub-item .item-name-wrapper[data-v-897bf8]:hover {
+.sub-item .item-name-wrapper[data-v-89908c]:hover {
   cursor: pointer;
 }
-.sub-item .item-checkbox-wrapper[data-v-897bf8] {
+.sub-item .item-checkbox-wrapper[data-v-89908c] {
   padding: 12px 0 12px 20px;
 }
-.todo-item[data-v-731ae4] {
+.todo-item[data-v-c8b3b1] {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 12px 14px 12px;
   font-family: "Nunito", sans-serif;
 }
-.todo-item .todo-item-name[data-v-731ae4] {
+.todo-item .todo-item-name[data-v-c8b3b1] {
   margin-top: 2px;
   font-weight: bold;
   line-height: 1.1;
   max-width: 160px;
 }
-.todo-item .todo-item-date[data-v-731ae4] {
+.todo-item .todo-item-date[data-v-c8b3b1] {
   display: flex;
   align-items: center;
   font-size: 12px;
   margin-top: 4px;
 }
-.todo-item .todo-item-date svg[data-v-731ae4] {
+.todo-item .todo-item-date svg[data-v-c8b3b1] {
   margin-right: 3px;
 }
-.todo-item .todo-item-notes[data-v-731ae4] {
+.todo-item .todo-item-notes[data-v-c8b3b1] {
   line-height: 1;
   margin-top: 3px;
   max-width: 160px;
   overflow-wrap: break-word;
 }
 @media screen and (min-width: 768px) {
-.todo-item .todo-item-notes[data-v-731ae4] {
+.todo-item .todo-item-notes[data-v-c8b3b1] {
     max-width: 320px;
 }
 }
-.todo-item .todo-item-options[data-v-731ae4] {
+.todo-item .todo-item-options[data-v-c8b3b1] {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
-.todo-item .todo-item-options .btn[data-v-731ae4] {
+.todo-item .todo-item-options .btn[data-v-c8b3b1] {
   height: 36px;
   width: 36px;
   border-radius: 100px;
@@ -120,10 +120,10 @@
   align-items: center;
   justify-content: center;
 }
-.todo-item .todo-item-options .btn[data-v-731ae4]:not(:last-child) {
+.todo-item .todo-item-options .btn[data-v-c8b3b1]:not(:last-child) {
   margin-right: 8px;
 }
-#confetti[data-v-0731ef] {
+#confetti[data-v-9edb9b] {
   position: fixed;
   top: 0;
   left: 0;
@@ -132,7 +132,7 @@
   pointer-events: none;
   z-index: 500;
 }
-.back-button[data-v-ada004] {
+.back-button[data-v-5d99f9] {
   display: flex;
   align-items: center;
   padding: 0px;
