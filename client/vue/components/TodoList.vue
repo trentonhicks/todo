@@ -5,15 +5,17 @@
     canvas(v-show="confetti")#confetti
 
     .list-title.mb-3
-      h1(v-if="!editingTitle" @click="editingTitle = true") {{ todoList.listTitle }}
+      h1(v-if="!editingTitle" @click="toggleTitleEditor") {{ todoList.listTitle }}
       input(
         v-if="editingTitle"
         type="text"
         v-model="todoList.listTitle" 
         class="form-control" 
-        @keydown.enter="editingTitle = false"
-        @blur="editingTitle = false; updateListTitle(todoList.listTitle)"
+        @blur="toggleTitleEditor"
+        @keydown.enter="$event.target.blur()"
         v-focus="")
+
+    .invalid-feedback(:class="{ 'd-block mb-3': invalidTitle }") Title must be between 1 and 50 characters long.
 
     draggable(v-model="todoListItems" @end="updateItemPosition").todo-list-items.mb-3
 
@@ -129,6 +131,19 @@ export default {
         });
       });
     },
+    toggleTitleEditor() {
+
+      // User wants to save changes
+      if(this.editingTitle && !this.invalidTitle) {
+        this.editingTitle = false;
+        this.updateListTitle(this.todoList.listTitle);
+      }
+
+      // User wants to edit title
+      else {
+        this.editingTitle = true;
+      }
+    },
     updateListTitle(listTitle : string) : void {
       let data = JSON.stringify({ listTitle });
 
@@ -221,7 +236,14 @@ export default {
   },
   computed: {
     allItemsCompleted() {
-      return this.todoListItems.every(item => item.completed) && this.todoListItems.length > 0    }
+      return this.todoListItems.every(item => item.completed) && this.todoListItems.length > 0
+    },
+    invalidTitle() {
+      if(this.todoList.listTitle.length === 0 || this.todoList.listTitle.length > 50) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     allItemsCompleted: {
