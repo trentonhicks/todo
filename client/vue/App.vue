@@ -93,6 +93,8 @@ h1 {
     @extend .list-title;
     padding: 0;
     height: auto;
+    padding: 0 10px;
+    background: #f8f9fa !important;
   }
 }
 

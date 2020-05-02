@@ -27234,6 +27234,16 @@ var _default = {
         });
       });
     },
+    toggleTitleEditor: function toggleTitleEditor() {
+      // User wants to save changes
+      if (this.editingTitle && !this.invalidTitle) {
+        this.editingTitle = false;
+        this.updateListTitle(this.todoList.listTitle);
+      } // User wants to edit title
+      else {
+          this.editingTitle = true;
+        }
+    },
     updateListTitle: function updateListTitle(listTitle) {
       var data = JSON.stringify({
         listTitle: listTitle
@@ -27338,6 +27348,13 @@ var _default = {
       return this.todoListItems.every(function (item) {
         return item.completed;
       }) && this.todoListItems.length > 0;
+    },
+    invalidTitle: function invalidTitle() {
+      if (this.todoList.listTitle.length === 0 || this.todoList.listTitle.length > 50) {
+        return true;
+      }
+
+      return false;
     }
   },
   watch: {
@@ -27390,17 +27407,9 @@ exports.default = _default;
       }),
       _c("div", { staticClass: "list-title mb-3" }, [
         !_vm.editingTitle
-          ? _c(
-              "h1",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.editingTitle = true
-                  }
-                }
-              },
-              [_vm._v(_vm._s(_vm.todoList.listTitle))]
-            )
+          ? _c("h1", { on: { click: _vm.toggleTitleEditor } }, [
+              _vm._v(_vm._s(_vm.todoList.listTitle))
+            ])
           : _vm._e(),
         _vm.editingTitle
           ? _c("input", {
@@ -27417,6 +27426,7 @@ exports.default = _default;
               attrs: { type: "text" },
               domProps: { value: _vm.todoList.listTitle },
               on: {
+                blur: _vm.toggleTitleEditor,
                 keydown: function($event) {
                   if (
                     !$event.type.indexOf("key") &&
@@ -27424,11 +27434,7 @@ exports.default = _default;
                   ) {
                     return null
                   }
-                  _vm.editingTitle = false
-                },
-                blur: function($event) {
-                  _vm.editingTitle = false
-                  _vm.updateListTitle(_vm.todoList.listTitle)
+                  return $event.target.blur()
                 },
                 input: function($event) {
                   if ($event.target.composing) {
@@ -27440,6 +27446,14 @@ exports.default = _default;
             })
           : _vm._e()
       ]),
+      _c(
+        "div",
+        {
+          staticClass: "invalid-feedback",
+          class: { "d-block mb-3": _vm.invalidTitle }
+        },
+        [_vm._v("Title must be between 1 and 50 characters long.")]
+      ),
       _c(
         "draggable",
         {
