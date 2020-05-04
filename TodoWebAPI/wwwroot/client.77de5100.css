@@ -110,9 +110,10 @@
   align-items: center;
 }
 .todo-item .todo-item-handle[data-v-c8b3b1] {
-  margin-right: 12px;
+  margin: 5px 12px 0 0;
   opacity: 0.3;
   transition: opacity 0.3s ease;
+  align-self: flex-start;
 }
 .todo-item .todo-item-handle[data-v-c8b3b1]:hover {
   cursor: move;

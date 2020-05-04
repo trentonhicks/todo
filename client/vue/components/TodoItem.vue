@@ -6,7 +6,7 @@
   b-list-group-item.todo-item.bg-light
 
     .todo-item-content
-      b-icon-list.todo-item-handle
+      b-icon-list.todo-item-handle(font-scale="1.2")
 
       //- Item Info
       b-form-checkbox(v-model="item.completed" :disabled="hasSubItems")
@@ -279,9 +279,10 @@ export default {
   }
 
   .todo-item-handle {
-    margin-right: 12px;
+    margin: 5px 12px 0 0;
     opacity: 0.3;
     transition: opacity 0.3s ease;
+    align-self: flex-start;
 
     &:hover {
       cursor: move;

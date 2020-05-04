@@ -26547,7 +26547,10 @@ exports.default = _default;
           "div",
           { staticClass: "todo-item-content" },
           [
-            _c("b-icon-list", { staticClass: "todo-item-handle" }),
+            _c("b-icon-list", {
+              staticClass: "todo-item-handle",
+              attrs: { "font-scale": "1.2" }
+            }),
             _c(
               "b-form-checkbox",
               {
