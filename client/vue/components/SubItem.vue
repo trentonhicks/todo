@@ -1,15 +1,16 @@
 <template lang="pug">
 
   b-list-group-item.sub-item
+    b-icon-list.sub-item-handle
     .item-checkbox-wrapper
       b-form-checkbox(v-model="item.completed")
-    .item-name-wrapper(@click="editing = true")
-      div.item-name(v-if="!editing") {{ item.name }}
-      b-form-input.item-name(v-else v-focus="" @keydown.enter="editing = false" placeholder="Name" maxlength="50" v-model="item.name")
-    .item-options(v-if="editing")
-      b-button-group
-        b-button(variant="info" @click="editing = false") Update
-        b-button(variant="danger" @click="editing = false") Delete
+    .item-name-wrapper(@click="editing = true" v-if="!editing")
+      div.item-name {{ item.name }}
+    .item-editing(v-else)
+      b-form-group
+        b-form-input.item-name(v-focus="" @keydown.enter="editing = false" placeholder="Name" maxlength="50" v-model="item.name")
+      b-button(variant="info" size="sm" @click="editing = false").mr-2 Update
+      b-button(variant="danger" size="sm" @click="editing = false") Delete
       
 </template>
 
@@ -70,11 +71,15 @@ export default {
 
   .sub-item {
     display: flex;
-    padding: 0;
+    padding: 0 0 0 10px;
     align-items: center;
 
     &:hover {
       background-color: #f8f9fa;
+
+      .sub-item-handle {
+        opacity: 1;
+      }
     }
 
     &:active {
@@ -82,10 +87,10 @@ export default {
     }
 
     .item-name-wrapper {
-      flex: 1 0 auto;
-      align-self: stretch;
       display: flex;
       align-items: center;
+      flex: 1 0 auto;
+      align-self: stretch;
 
       &:hover {
         cursor: pointer;
@@ -93,7 +98,21 @@ export default {
     }
 
     .item-checkbox-wrapper {
-      padding: 12px 0 12px 20px;
+      padding: 12px 0 12px 10px;
+    }
+
+    .item-editing {
+      width: 100%;
+      padding: 12px;
+    }
+
+    .sub-item-handle {
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        cursor: move;
+      }
     }
   }
 
