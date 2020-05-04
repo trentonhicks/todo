@@ -34,13 +34,14 @@
 
       b-list-group-item.no-items.bg-light(v-if="listIsEmpty") Your list is empty. Add a new item to get started.
       
-    b-button(id="add-list-item-btn" @click="$bvModal.show('modal-add')") Add list item
+    b-button(id="add-list-item-btn" @click="showAddItemModal") Add list item
 
     b-modal(id="modal-add" title="Add new list item")
       b-form(v-on:submit.prevent="addTodoListItem(form.name, form.notes, form.dueDate)" id="add-list-item-form")
 
         b-form-group(label="Name")
           b-form-input(
+            class="form-input-focus"
             type="text"
             placeholder="Name"
             v-model="form.name"
@@ -72,7 +73,9 @@ export default {
   props: ['id'],
   data() {
     return {
-      todoList: {},
+      todoList: {
+        listTitle: ''
+      },
       todoListLayout: [],
       todoListItems: [],
       form: {},
@@ -88,8 +91,16 @@ export default {
     var confettiSettings = { target: 'confetti' };
     var confetti = new ConfettiGenerator(confettiSettings);
     confetti.render();
+
+    this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
+      let formInput = document.querySelector(`#${modalId} .form-input-focus`);
+      formInput.focus();
+    });
   },
   methods: {
+    showAddItemModal() {
+      this.$bvModal.show('modal-add');
+    },
     getTodoList(id : number) : void {
       // Get list
       axios({
@@ -243,7 +254,7 @@ export default {
         return true;
       }
       return false;
-    }
+    },
   },
   watch: {
     allItemsCompleted: {
