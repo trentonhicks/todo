@@ -27,6 +27,7 @@
         //- Name
         b-form-group(label="Name")
           b-form-input(
+            class="form-input-focus"
             type="text"
             placeholder="Name"
             v-model="form.name"
@@ -175,6 +176,12 @@ export default {
   created: function() {
     this.getSubItems();
   },
+  mounted() {
+    this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
+      let formInput = document.querySelector(`#${modalId} .form-input-focus`);
+      formInput.focus();
+    });
+  },
   watch: {
     checkboxToggle: function() {
       this.toggleCompleted();
@@ -246,15 +253,21 @@ export default {
 .todo-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 14px 12px 14px 12px;
   font-family: 'Nunito', sans-serif;
+  flex-direction: column;
+
+    @media screen and (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+    }
 
   .todo-item-name {
     margin-top: 2px;
     font-weight: bold;
-    line-height: 1.1;
-    max-width: 160px;
+    line-height: 1.2;
+    max-width: 400px;
   }
 
   .todo-item-date {
@@ -271,11 +284,11 @@ export default {
   .todo-item-notes {
     line-height: 1;
     margin-top: 3px;
-    max-width: 160px;
+    max-width: 400px;
     overflow-wrap: break-word;
 
     @media screen and (min-width: 768px) {
-      max-width: 320px;
+      max-width: 400px;
     }
   }
 
@@ -283,6 +296,12 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    margin-left: 24px;
+    margin-top: 12px;
+
+    @media screen and (min-width: 768px) {
+      margin-top: 0px;
+    }
 
     .btn {
         height: 36px;

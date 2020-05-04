@@ -17,6 +17,7 @@
         b-form(v-on:submit.prevent="addTodoList(form.listTitle)" id="add-list-form")
             b-form-group
                 b-form-input(
+                class="form-input-focus"
                 type="text"
                 placeholder="List name"
                 maxlength="50"

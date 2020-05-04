@@ -13740,6 +13740,7 @@ exports.default = _default;
                 "b-form-group",
                 [
                   _c("b-form-input", {
+                    staticClass: "form-input-focus",
                     attrs: {
                       type: "text",
                       placeholder: "List name",
@@ -26444,6 +26445,12 @@ var _default = {
   created: function created() {
     this.getSubItems();
   },
+  mounted: function mounted() {
+    this.$root.$on('bv::modal::shown', function (bvEvent, modalId) {
+      var formInput = document.querySelector("#" + modalId + " .form-input-focus");
+      formInput.focus();
+    });
+  },
   watch: {
     checkboxToggle: function checkboxToggle() {
       this.toggleCompleted();
@@ -26634,6 +26641,7 @@ exports.default = _default;
                 { attrs: { label: "Name" } },
                 [
                   _c("b-form-input", {
+                    staticClass: "form-input-focus",
                     attrs: {
                       type: "text",
                       placeholder: "Name",
@@ -27173,7 +27181,9 @@ var _default = {
   props: ['id'],
   data: function data() {
     return {
-      todoList: {},
+      todoList: {
+        listTitle: ''
+      },
       todoListLayout: [],
       todoListItems: [],
       form: {},
@@ -27191,8 +27201,15 @@ var _default = {
     };
     var confetti = new _confettiJs.default(confettiSettings);
     confetti.render();
+    this.$root.$on('bv::modal::shown', function (bvEvent, modalId) {
+      var formInput = document.querySelector("#" + modalId + " .form-input-focus");
+      formInput.focus();
+    });
   },
   methods: {
+    showAddItemModal: function showAddItemModal() {
+      this.$bvModal.show('modal-add');
+    },
     getTodoList: function getTodoList(id) {
       var _this = this; // Get list
 
@@ -27498,11 +27515,7 @@ exports.default = _default;
         "b-button",
         {
           attrs: { id: "add-list-item-btn" },
-          on: {
-            click: function($event) {
-              return _vm.$bvModal.show("modal-add")
-            }
-          }
+          on: { click: _vm.showAddItemModal }
         },
         [_vm._v("Add list item")]
       ),
@@ -27531,6 +27544,7 @@ exports.default = _default;
                 { attrs: { label: "Name" } },
                 [
                   _c("b-form-input", {
+                    staticClass: "form-input-focus",
                     attrs: {
                       type: "text",
                       placeholder: "Name",
@@ -74286,7 +74300,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64560" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60663" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
