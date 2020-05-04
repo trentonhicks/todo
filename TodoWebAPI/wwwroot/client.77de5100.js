@@ -26195,104 +26195,114 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("b-list-group-item", { staticClass: "sub-item" }, [
-    _c(
-      "div",
-      { staticClass: "item-checkbox-wrapper" },
-      [
-        _c("b-form-checkbox", {
-          model: {
-            value: _vm.item.completed,
-            callback: function($$v) {
-              _vm.$set(_vm.item, "completed", $$v)
-            },
-            expression: "item.completed"
-          }
-        })
-      ],
-      1
-    ),
-    _c(
-      "div",
-      {
-        staticClass: "item-name-wrapper",
-        on: {
-          click: function($event) {
-            _vm.editing = true
-          }
-        }
-      },
-      [
-        !_vm.editing
-          ? _c("div", { staticClass: "item-name" }, [
-              _vm._v(_vm._s(_vm.item.name))
-            ])
-          : _c("b-form-input", {
-              directives: [{ name: "focus", rawName: "v-focus" }],
-              staticClass: "item-name",
-              attrs: { placeholder: "Name", maxlength: "50" },
-              on: {
-                keydown: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  _vm.editing = false
-                }
+  return _c(
+    "b-list-group-item",
+    { staticClass: "sub-item" },
+    [
+      _c("b-icon-list", { staticClass: "sub-item-handle" }),
+      _c(
+        "div",
+        { staticClass: "item-checkbox-wrapper" },
+        [
+          _c("b-form-checkbox", {
+            model: {
+              value: _vm.item.completed,
+              callback: function($$v) {
+                _vm.$set(_vm.item, "completed", $$v)
               },
-              model: {
-                value: _vm.item.name,
-                callback: function($$v) {
-                  _vm.$set(_vm.item, "name", $$v)
-                },
-                expression: "item.name"
+              expression: "item.completed"
+            }
+          })
+        ],
+        1
+      ),
+      !_vm.editing
+        ? _c(
+            "div",
+            {
+              staticClass: "item-name-wrapper",
+              on: {
+                click: function($event) {
+                  _vm.editing = true
+                }
               }
-            })
-      ],
-      1
-    ),
-    _vm.editing
-      ? _c(
-          "div",
-          { staticClass: "item-options" },
-          [
-            _c(
-              "b-button-group",
-              [
-                _c(
-                  "b-button",
-                  {
-                    attrs: { variant: "info" },
+            },
+            [
+              _c("div", { staticClass: "item-name" }, [
+                _vm._v(_vm._s(_vm.item.name))
+              ])
+            ]
+          )
+        : _c(
+            "div",
+            { staticClass: "item-editing" },
+            [
+              _c(
+                "b-form-group",
+                [
+                  _c("b-form-input", {
+                    directives: [{ name: "focus", rawName: "v-focus" }],
+                    staticClass: "item-name",
+                    attrs: { placeholder: "Name", maxlength: "50" },
                     on: {
-                      click: function($event) {
+                      keydown: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
                         _vm.editing = false
                       }
+                    },
+                    model: {
+                      value: _vm.item.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.item, "name", $$v)
+                      },
+                      expression: "item.name"
                     }
-                  },
-                  [_vm._v("Update")]
-                ),
-                _c(
-                  "b-button",
-                  {
-                    attrs: { variant: "danger" },
-                    on: {
-                      click: function($event) {
-                        _vm.editing = false
-                      }
+                  })
+                ],
+                1
+              ),
+              _c(
+                "b-button",
+                {
+                  staticClass: "mr-2",
+                  attrs: { variant: "info", size: "sm" },
+                  on: {
+                    click: function($event) {
+                      _vm.editing = false
                     }
-                  },
-                  [_vm._v("Delete")]
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      : _vm._e()
-  ])
+                  }
+                },
+                [_vm._v("Update")]
+              ),
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "danger", size: "sm" },
+                  on: {
+                    click: function($event) {
+                      _vm.editing = false
+                    }
+                  }
+                },
+                [_vm._v("Delete")]
+              )
+            ],
+            1
+          )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -26532,88 +26542,91 @@ exports.default = _default;
     "div",
     { staticClass: "todo-item-wrapper", attrs: { "data-id": _vm.item.id } },
     [
-      _c(
-        "b-list-group-item",
-        { staticClass: "todo-item bg-light" },
-        [
-          _c(
-            "b-form-checkbox",
-            {
-              attrs: { disabled: _vm.hasSubItems },
-              model: {
-                value: _vm.item.completed,
-                callback: function($$v) {
-                  _vm.$set(_vm.item, "completed", $$v)
-                },
-                expression: "item.completed"
-              }
-            },
-            [
-              _c("div", { staticClass: "todo-item-name" }, [
-                _vm._v(_vm._s(_vm.item.name))
-              ]),
-              _vm.item.dueDate
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "todo-item-date",
-                      class: {
-                        "text-info": !_vm.itemDueToday,
-                        "text-danger": _vm.itemDueToday
-                      }
-                    },
-                    [
-                      _c("b-icon-clock"),
-                      _vm._v(_vm._s(_vm._f("monthDay")(_vm.item.dueDate)))
-                    ],
-                    1
-                  )
-                : _vm._e(),
-              _vm.item.notes
-                ? _c("div", { staticClass: "todo-item-notes" }, [
-                    _c("small", { staticClass: "text-muted" }, [
-                      _vm._v(_vm._s(_vm.item.notes))
+      _c("b-list-group-item", { staticClass: "todo-item bg-light" }, [
+        _c(
+          "div",
+          { staticClass: "todo-item-content" },
+          [
+            _c("b-icon-list", { staticClass: "todo-item-handle" }),
+            _c(
+              "b-form-checkbox",
+              {
+                attrs: { disabled: _vm.hasSubItems },
+                model: {
+                  value: _vm.item.completed,
+                  callback: function($$v) {
+                    _vm.$set(_vm.item, "completed", $$v)
+                  },
+                  expression: "item.completed"
+                }
+              },
+              [
+                _c("div", { staticClass: "todo-item-name" }, [
+                  _vm._v(_vm._s(_vm.item.name))
+                ]),
+                _vm.item.dueDate
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "todo-item-date",
+                        class: {
+                          "text-info": !_vm.itemDueToday,
+                          "text-danger": _vm.itemDueToday
+                        }
+                      },
+                      [
+                        _c("b-icon-clock"),
+                        _vm._v(_vm._s(_vm._f("monthDay")(_vm.item.dueDate)))
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm.item.notes
+                  ? _c("div", { staticClass: "todo-item-notes" }, [
+                      _c("small", { staticClass: "text-muted" }, [
+                        _vm._v(_vm._s(_vm.item.notes))
+                      ])
                     ])
-                  ])
-                : _vm._e()
-            ]
-          ),
-          _c(
-            "div",
-            { staticClass: "todo-item-options" },
-            [
-              _c(
-                "b-button",
-                {
-                  attrs: { variant: "info", size: "sm" },
-                  on: {
-                    click: function($event) {
-                      return _vm.$bvModal.show("modal-edit-" + _vm.item.id)
-                    }
+                  : _vm._e()
+              ]
+            )
+          ],
+          1
+        ),
+        _c(
+          "div",
+          { staticClass: "todo-item-options" },
+          [
+            _c(
+              "b-button",
+              {
+                attrs: { variant: "info", size: "sm" },
+                on: {
+                  click: function($event) {
+                    return _vm.$bvModal.show("modal-edit-" + _vm.item.id)
                   }
-                },
-                [_c("b-icon-three-dots")],
-                1
-              ),
-              _c(
-                "b-button",
-                {
-                  attrs: { variant: "danger", size: "sm" },
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit("deleted-list-item", _vm.item)
-                    }
+                }
+              },
+              [_c("b-icon-three-dots")],
+              1
+            ),
+            _c(
+              "b-button",
+              {
+                attrs: { variant: "danger", size: "sm" },
+                on: {
+                  click: function($event) {
+                    return _vm.$emit("deleted-list-item", _vm.item)
                   }
-                },
-                [_c("b-icon-trash")],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
+                }
+              },
+              [_c("b-icon-trash")],
+              1
+            )
+          ],
+          1
+        )
+      ]),
       _c(
         "b-modal",
         {
@@ -26704,6 +26717,7 @@ exports.default = _default;
                   _c(
                     "draggable",
                     {
+                      attrs: { handle: ".sub-item-handle" },
                       model: {
                         value: _vm.subItems,
                         callback: function($$v) {
@@ -26839,24 +26853,31 @@ exports.default = _default;
                 1
               ),
               _c(
-                "b-button",
-                {
-                  staticClass: "mr-2",
-                  attrs: { type: "submit", variant: "primary" }
-                },
-                [_vm._v("Save Changes")]
-              ),
-              _c(
-                "b-button",
-                {
-                  attrs: { variant: "secondary" },
-                  on: {
-                    click: function($event) {
-                      return _vm.$bvModal.hide("modal-edit-" + _vm.item.id)
-                    }
-                  }
-                },
-                [_vm._v("Cancel")]
+                "b-form-group",
+                { staticClass: "mb-0 text-right" },
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mr-2",
+                      attrs: { type: "submit", variant: "primary" }
+                    },
+                    [_vm._v("Save Changes")]
+                  ),
+                  _c(
+                    "b-button",
+                    {
+                      attrs: { variant: "secondary" },
+                      on: {
+                        click: function($event) {
+                          return _vm.$bvModal.hide("modal-edit-" + _vm.item.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ],
+                1
               )
             ],
             1
@@ -27475,6 +27496,7 @@ exports.default = _default;
         "draggable",
         {
           staticClass: "todo-list-items mb-3",
+          attrs: { handle: ".todo-item-handle" },
           on: { end: _vm.updateItemPosition },
           model: {
             value: _vm.todoListItems,
@@ -74300,7 +74322,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60663" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58955" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

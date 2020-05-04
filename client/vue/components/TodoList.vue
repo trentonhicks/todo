@@ -17,7 +17,7 @@
 
     .invalid-feedback(:class="{ 'd-block mb-3': invalidTitle }") Title must be between 1 and 50 characters long.
 
-    draggable(v-model="todoListItems" @end="updateItemPosition").todo-list-items.mb-3
+    draggable(v-model="todoListItems" @end="updateItemPosition" handle=".todo-item-handle").todo-list-items.mb-3
 
       todo-item(
         v-for="(todo, index) in todoListItems"

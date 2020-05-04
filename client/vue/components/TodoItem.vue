@@ -5,13 +5,16 @@
   //- Todo List Item
   b-list-group-item.todo-item.bg-light
 
-    //- Item Info
-    b-form-checkbox(v-model="item.completed" :disabled="hasSubItems")
-      .todo-item-name {{ item.name }}
-      .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !itemDueToday, 'text-danger': itemDueToday }")
-        b-icon-clock
-        | {{ item.dueDate | monthDay }}
-      .todo-item-notes(v-if="item.notes"): small.text-muted {{ item.notes }}
+    .todo-item-content
+      b-icon-list.todo-item-handle
+
+      //- Item Info
+      b-form-checkbox(v-model="item.completed" :disabled="hasSubItems")
+        .todo-item-name {{ item.name }}
+        .todo-item-date(v-if="item.dueDate" :class="{ 'text-info': !itemDueToday, 'text-danger': itemDueToday }")
+          b-icon-clock
+          | {{ item.dueDate | monthDay }}
+        .todo-item-notes(v-if="item.notes"): small.text-muted {{ item.notes }}
 
     //- Item Options
     .todo-item-options
@@ -48,7 +51,7 @@
 
         //- Sub-items List
         b-form-group(label="Sub-items")
-          draggable(v-model="subItems")
+          draggable(v-model="subItems" handle=".sub-item-handle")
 
             //- Sub-item Component
             sub-item(
@@ -72,8 +75,9 @@
               b-button(variant="success" @click="addSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false; subItemForm.name = ''").mt-2.ml-2 Cancel
 
-        b-button(type="submit" variant="primary" class="mr-2") Save Changes
-        b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
+        b-form-group.mb-0.text-right
+          b-button(type="submit" variant="primary" class="mr-2") Save Changes
+          b-button(variant="secondary" @click="$bvModal.hide('modal-edit-' + item.id)") Cancel
 
 </template>
 
@@ -258,10 +262,31 @@ export default {
   font-family: 'Nunito', sans-serif;
   flex-direction: column;
 
-    @media screen and (min-width: 768px) {
-      flex-direction: row;
-      align-items: center;
+  &:hover {
+    .todo-item-handle {
+      opacity: 1;
     }
+  }
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .todo-item-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .todo-item-handle {
+    margin-right: 12px;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      cursor: move;
+    }
+  }
 
   .todo-item-name {
     margin-top: 2px;
