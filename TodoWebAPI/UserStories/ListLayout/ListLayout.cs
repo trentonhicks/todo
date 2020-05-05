@@ -9,9 +9,9 @@ namespace TodoWebAPI.UserStories.ListLayout
 {
     public class ListLayout : IRequest
     {
-        public int ItemId { get; set; }
+        public Guid ItemId { get; set; }
         public int Position { get; set; }
-        public int ListId { get; set; }
-        public int AccountId { get; set; }
+        public Guid ListId { get; set; }
+        public Guid AccountId { get; set; }
     }
 }

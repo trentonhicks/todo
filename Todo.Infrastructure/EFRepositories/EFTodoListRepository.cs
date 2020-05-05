@@ -8,15 +8,19 @@ using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
+using Todo.Infrastructure.Guids;
 
 namespace TodoWebAPI.Data
 {
     public class EFTodoListRepository : ITodoListRepository
     {
+        private readonly ISequentialIdGenerator _idGenerator;
+
         private TodoDatabaseContext _context { get; set; }
-        public EFTodoListRepository(TodoDatabaseContext context)
+        public EFTodoListRepository(TodoDatabaseContext context, ISequentialIdGenerator idGenerator)
         {
             _context = context;
+            _idGenerator = idGenerator;
         }
         public Task AddTodoListAsync(TodoList todoList)
         {
@@ -24,23 +28,23 @@ namespace TodoWebAPI.Data
             return Task.CompletedTask;
         }
 
-        public Task<List<TodoList>> FindTodoListsByAccountIdAsync(int accountId, int pageSize)
+        public Task<List<TodoList>> FindTodoListsByAccountIdAsync(Guid accountId, int pageSize)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<TodoList> FindTodoListIdByIdAsync(int listId)
+        public async Task<TodoList> FindTodoListIdByIdAsync(Guid listId)
         {
             return await _context.TodoLists.FindAsync(listId);
         }
-        public async Task RemoveTodoListAsync(int listId)
+        public async Task RemoveTodoListAsync(Guid listId)
         {
             var list = await _context.TodoLists.FindAsync(listId);
 
             _context.Remove(list);
         }
 
-        public async Task RemoveAllTodoListsFromAccountAsync(int accountId)
+        public async Task RemoveAllTodoListsFromAccountAsync(Guid accountId)
         {
             var todoLists = await _context.TodoLists.Where(t => t.AccountId == accountId).ToListAsync();
 
@@ -50,6 +54,11 @@ namespace TodoWebAPI.Data
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Guid NextId()
+        {
+           return _idGenerator.NextId();
         }
     }
 }

@@ -7,10 +7,10 @@ namespace Todo.Domain
 {
     public class SubItemLayout : Entity
     {
-        public int Id { get; set; }
-        public int ItemId { get; set; }
-        public List<int> Layout { get; set; } = new List<int>();
-        public void UpdateLayout(int subItemId, int position)
+        public Guid Id { get; set; }
+        public Guid ItemId { get; set; }
+        public List<Guid> Layout { get; set; } = new List<Guid>();
+        public void UpdateLayout(Guid subItemId, int position)
         {
             Layout.Remove(subItemId);
             Layout.Insert(position, subItemId);

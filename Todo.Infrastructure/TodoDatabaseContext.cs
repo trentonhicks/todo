@@ -133,7 +133,7 @@ namespace Todo.Infrastructure
                     .HasColumnName("Layout")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<int>>(v)
+                        v => JsonConvert.DeserializeObject<List<Guid>>(v)
                     );
             });
 
@@ -150,7 +150,7 @@ namespace Todo.Infrastructure
                     .Property(e => e.Layout).HasColumnName("Layout")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<int>>(v)
+                        v => JsonConvert.DeserializeObject<List<Guid>>(v)
                     );
             });
 

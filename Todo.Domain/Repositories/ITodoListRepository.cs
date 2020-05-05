@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Todo.Domain.Repositories
 {
-    public interface ITodoListRepository : IUnitOfWork
+    public interface ITodoListRepository : IRepository
     {
         Task AddTodoListAsync(TodoList list);
-        Task<List<TodoList>> FindTodoListsByAccountIdAsync(int accountId, int pageSize);
-        Task<TodoList> FindTodoListIdByIdAsync(int listId);
-        Task RemoveTodoListAsync(int listId);
-        Task RemoveAllTodoListsFromAccountAsync(int accountId);
+        Task<List<TodoList>> FindTodoListsByAccountIdAsync(Guid accountId, int pageSize);
+        Task<TodoList> FindTodoListIdByIdAsync(Guid listId);
+        Task RemoveTodoListAsync(Guid listId);
+        Task RemoveAllTodoListsFromAccountAsync(Guid accountId);
     }
 }

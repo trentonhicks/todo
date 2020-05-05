@@ -7,7 +7,7 @@ namespace TodoWebAPI.Presentation
 {
     public class CreateListPresentation
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ListTitle { get; set; }
     }
 }

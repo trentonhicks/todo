@@ -35,6 +35,7 @@ using Octokit.Internal;
 using TodoWebAPI.Models;
 using TodoWebAPI.Extentions;
 using Todo.Infrastructure.Repositories;
+using Todo.Infrastructure.Guids;
 
 namespace TodoWebAPI
 {
@@ -75,9 +76,10 @@ namespace TodoWebAPI
             services.AddScoped<TodoListItemApplicationService>();
             services.AddScoped<TodoListLayoutApplicationService>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
-            services.AddScoped<ISubItemLayout, EFSubItemLayout>();
+            services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
             services.AddScoped<SubItemLayoutApplicationService>();
             services.AddSingleton<DapperQuery>();
+            services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 

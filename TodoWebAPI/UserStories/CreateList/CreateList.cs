@@ -16,6 +16,6 @@ namespace TodoWebAPI.Models
         [FromBody]
         public string ListTitle { get; set; }
         [FromRoute]
-        public int AccountId { get; set; }
+        public Guid AccountId { get; set; }
     }
 }

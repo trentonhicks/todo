@@ -8,7 +8,7 @@ namespace TodoWebAPI.UserStories.TrashItem
 {
     public class TrashItem : IRequest
     {
-        public int AccountId { get; set; }
-        public int ItemId { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid ItemId { get; set; }
     }
 }

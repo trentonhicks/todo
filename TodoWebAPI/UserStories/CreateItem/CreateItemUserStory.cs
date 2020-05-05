@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure.Guids;
 
 namespace TodoWebAPI.UserStories.CreateItem
 {
@@ -26,7 +27,9 @@ namespace TodoWebAPI.UserStories.CreateItem
             if (list == null)
                 return null;
 
-            var todoItem = list.CreateListItem(request.Name, request.Notes, request.DueDate);
+            var todoItem = list.CreateListItem(request.ListId, request.Name, request.Notes, request.DueDate);
+
+            todoItem.Id = _todoListItemRepository.NextId();
 
             await _todoListItemRepository.AddTodoListItemAsync(todoItem);
 

@@ -7,9 +7,9 @@ namespace TodoWebAPI.Models
 {
     public class SubItemModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public int ListItemId { get; set; }
+        public Guid ListItemId { get; set; }
         public bool Completed { get; set; }
     }
 }
