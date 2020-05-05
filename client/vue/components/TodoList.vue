@@ -225,7 +225,7 @@ export default {
     },
     updateItemPosition(e) : void {
       let position = e.newIndex;
-      let itemId = parseInt(e.item.dataset.id);
+      let itemId = e.item.dataset.id;
       let data = JSON.stringify({
         position,
         itemId
