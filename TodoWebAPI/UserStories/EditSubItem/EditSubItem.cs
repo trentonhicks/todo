@@ -10,8 +10,8 @@ namespace TodoWebAPI.UserStories.EditSubItem
 {
     public class EditSubItem : IRequest
     {
-        public int AccountId { get; set; }
-        public int SubItemId { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid SubItemId { get; set; }
         [Required]
         [StringLength(50)]
         [FromBody]

@@ -10,9 +10,9 @@ namespace TodoWebAPI.UserStories.ItemLayout
 {
     public class ItemLayoutUserStory : AsyncRequestHandler<ItemLayout>
     {
-        private readonly ISubItemLayout _subItemLayout;
+        private readonly ISubItemLayoutRepository _subItemLayout;
 
-        public ItemLayoutUserStory(ISubItemLayout subItemLayout)
+        public ItemLayoutUserStory(ISubItemLayoutRepository subItemLayout)
         {
             _subItemLayout = subItemLayout;
         }

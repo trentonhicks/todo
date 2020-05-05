@@ -15,7 +15,7 @@ namespace TodoWebAPI.ApplicationServices
             _itemRepository = itemRepository;
             _listRepository = listRepository;
         }
-        public async Task MarkTodoListAsCompletedAsync(int listId)
+        public async Task MarkTodoListAsCompletedAsync(Guid listId)
         {
             var items = await _itemRepository.FindAllTodoListItemsByListIdAsync(listId);
             var list = await _listRepository.FindTodoListIdByIdAsync(listId);

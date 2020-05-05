@@ -7,16 +7,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure.Guids;
 
 namespace Todo.Infrastructure.EFRepositories
 {
-    public class EFSubItemLayout : ISubItemLayout
+    public class EFSubItemLayout : ISubItemLayoutRepository
     {
         private readonly TodoDatabaseContext _context;
+        private readonly ISequentialIdGenerator _idGenerator;
 
-        public EFSubItemLayout(TodoDatabaseContext context)
+        public EFSubItemLayout(TodoDatabaseContext context, ISequentialIdGenerator idGenerator)
         {
             _context = context;
+            _idGenerator = idGenerator;
         }
         public Task AddLayoutAsync(SubItemLayout layout)
         {
@@ -24,9 +27,14 @@ namespace Todo.Infrastructure.EFRepositories
             return Task.CompletedTask;
         }
 
-        public async Task<SubItemLayout> FindLayoutByListItemIdAsync(int listItemId)
+        public async Task<SubItemLayout> FindLayoutByListItemIdAsync(Guid listItemId)
         {
             return await _context.SubItemLayouts.Where(x => x.ItemId == listItemId).FirstOrDefaultAsync();
+        }
+
+        public Guid NextId()
+        {
+            return _idGenerator.NextId();
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

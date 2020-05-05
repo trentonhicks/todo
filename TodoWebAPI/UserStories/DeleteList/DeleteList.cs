@@ -9,7 +9,7 @@ namespace TodoWebAPI.Models
 {
     public class DeleteList : IRequest
     {
-        public int ListId { get; set; }
-        public int AccountId { get; set; }
+        public Guid ListId { get; set; }
+        public Guid AccountId { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace Todo.Domain.DomainEvents
     public class SubItemMovedToTrash : INotification
     {
         public SubItem SubItem { get; set; }
-        public int? ItemId { get; set; }
+        public Guid? ItemId { get; set; }
     }
 }

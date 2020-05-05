@@ -25,7 +25,7 @@ namespace TodoWebAPI
         {
             _connectionString = config.GetSection("ConnectionStrings")["Development"];
         }
-        public async Task<AccountPresentation> GetAccountAsync(int accountId)
+        public async Task<AccountPresentation> GetAccountAsync(Guid accountId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -37,7 +37,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(int accountId, int listId)
+        public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(Guid accountId, Guid listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -49,7 +49,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<TodoListModel> GetListAsync(int accountId, int listId)
+        public async Task<TodoListModel> GetListAsync(Guid accountId, Guid listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -59,7 +59,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<List<TodoListModel>> GetListsAsync(int accountId)
+        public async Task<List<TodoListModel>> GetListsAsync(Guid accountId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -69,7 +69,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<TodoListLayoutPresentation> GetTodoListLayoutAsync(int listId)
+        public async Task<TodoListLayoutPresentation> GetTodoListLayoutAsync(Guid listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -80,7 +80,7 @@ namespace TodoWebAPI
         }
 
 
-        public async Task<List<SubItemModel>> GetSubItems(int listItemId)
+        public async Task<List<SubItemModel>> GetSubItems(Guid listItemId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

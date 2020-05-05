@@ -25,6 +25,8 @@ namespace TodoWebAPI.UserStories
 
             var todoList = new TodoList(request.AccountId, request.ListTitle);
 
+            todoList.Id = _repository.NextId();
+
             await _repository.AddTodoListAsync(todoList);
 
             await _repository.SaveChangesAsync();

@@ -7,8 +7,8 @@ namespace Todo.Domain
 {
     public class SubItem : Entity
     {
-        public int Id { get; set; }
-        public int? ListItemId { get; set; }
+        public Guid Id { get; set; }
+        public Guid? ListItemId { get; set; }
         public bool Completed { get; protected set; }
         public string Name { get; set; }
 

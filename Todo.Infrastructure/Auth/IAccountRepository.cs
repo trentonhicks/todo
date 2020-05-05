@@ -7,12 +7,12 @@ using Todo.Infrastructure;
 
 namespace Todo.Infrastructure.Repositories
 {
-    public interface IAccountRepository : IUnitOfWork
+    public interface IAccountRepository : IRepository
     {
         void AddAccount(Account account);
-        Task<Account> FindAccountByIdAsync(int id);
+        Task<Account> FindAccountByIdAsync(Guid id);
         Task<Account> FindAccountByEmailAsync(string email);
-        Task<bool> DoesAccountWithAccountIdExistAsync(int accountId);
-        Task RemoveAccountAsync(int accountId);
+        Task<bool> DoesAccountWithAccountIdExistAsync(Guid accountId);
+        Task RemoveAccountAsync(Guid accountId);
     }
 }
