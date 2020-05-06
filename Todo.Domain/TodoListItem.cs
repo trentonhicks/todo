@@ -9,7 +9,6 @@ namespace Todo.Domain
     public class TodoListItem : Entity
     {
         public Guid Id { get; set; }
-        public Guid AccountId { get; set; }
         public string Notes { get; set; }
         public bool Completed { get; protected set; }
         public string Name { get; set; }

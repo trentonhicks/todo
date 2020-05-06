@@ -9,9 +9,7 @@ CREATE TABLE [TodoListItems](
     [Name] VARCHAR(50),
 	[DueDate] DATETIME,
     [ListID] UNIQUEIDENTIFIER,
-	[AccountID] UNIQUEIDENTIFIER,
 
-    FOREIGN KEY (AccountID) REFERENCES Accounts (ID),
     FOREIGN KEY (ListID) REFERENCES TodoLists (ID) ON DELETE CASCADE
 )
 

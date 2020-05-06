@@ -37,13 +37,13 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(Guid accountId, Guid listId)
+        public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(Guid listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                var result = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems Where AccountID = @accountId AND ListID = @listId", new { accountId = accountId, listId = listId });
+                var result = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems WHERE ListID = @listId", new { listId = listId });
 
                 return result.ToList();
             }
@@ -54,7 +54,7 @@ namespace TodoWebAPI
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId AND ID = @listId", new { accountId = accountId, listId = listId });
+                var result = await connection.QueryAsync<TodoListModel>("SELECT * FROM TodoLists as t INNER JOIN AccountLists as a ON t.ID = a.ListID WHERE a.AccountID = @accountId AND a.ListID = @listId", new { accountId = accountId, listId = listId });
                 return result.FirstOrDefault();
             }
         }
@@ -64,7 +64,7 @@ namespace TodoWebAPI
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<TodoListModel>("SELECT * From TodoLists Where AccountID = @accountId", new { accountId = accountId });
+                var result = await connection.QueryAsync<TodoListModel>("SELECT * FROM TodoLists as t INNER JOIN AccountLists as a ON t.ID = a.ListID WHERE a.AccountID = @accountId", new { accountId = accountId });
                 return result.ToList();
             }
         }
@@ -99,6 +99,17 @@ namespace TodoWebAPI
                 await connection.OpenAsync();
 
                 var result = await connection.QueryAsync<TodoListItem>("SELECT * FROM TodoListItems WHERE DueDate IS NOT NULL");
+                return result.ToList();
+            }
+        }
+
+        public async Task<List<string>> GetEmailsFromAccountsByListIdAsync(Guid listId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<string>("SELECT Email FROM Accounts as a INNER JOIN AccountLists as l ON a.ID = l.AccountID and l.ListID = @listId", new { listId = listId });
                 return result.ToList();
             }
         }

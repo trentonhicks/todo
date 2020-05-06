@@ -22,9 +22,15 @@ namespace TodoWebAPI.Data
             _context = context;
             _idGenerator = idGenerator;
         }
-        public Task AddTodoListAsync(TodoList todoList)
+        public Task AddTodoListAsync(TodoList todoList, Guid accountId)
         {
             _context.TodoLists.Add(todoList);
+            var accountLists = new AccountLists
+            {
+                AccountId = accountId,
+                ListId = todoList.Id
+            };
+            _context.AccountLists.Add(accountLists);
             return Task.CompletedTask;
         }
 
@@ -42,13 +48,6 @@ namespace TodoWebAPI.Data
             var list = await _context.TodoLists.FindAsync(listId);
 
             _context.Remove(list);
-        }
-
-        public async Task RemoveAllTodoListsFromAccountAsync(Guid accountId)
-        {
-            var todoLists = await _context.TodoLists.Where(t => t.AccountId == accountId).ToListAsync();
-
-            _context.TodoLists.RemoveRange(todoLists);
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

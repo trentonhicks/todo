@@ -20,31 +20,35 @@ namespace TodoWebAPI.DomainEventHandlers
         private readonly IEmailService _emailService;
         private readonly IServiceBusEmail _serviceBusEmail;
         private readonly IConfiguration _config;
+        private readonly DapperQuery _dapper;
 
-        public SendEmailWhenListIsCompletedDomainEventHandler(IAccountRepository accountRepository, ITodoListRepository todoListRepository, IEmailService emailService, IServiceBusEmail serviceBusEmail,IConfiguration config)
+        public SendEmailWhenListIsCompletedDomainEventHandler(IAccountRepository accountRepository, ITodoListRepository todoListRepository, IEmailService emailService, IServiceBusEmail serviceBusEmail, IConfiguration config, DapperQuery dapper)
         {
             _accountRepository = accountRepository;
             _todoListRepository = todoListRepository;
             _emailService = emailService;
             _serviceBusEmail = serviceBusEmail;
             _config = config;
+            _dapper = dapper;
         }
         public async Task Handle(TodoListCompletedStateChanged notification, CancellationToken cancellationToken)
         {
             var list = notification.List;
 
+            var emails = await _dapper.GetEmailsFromAccountsByListIdAsync(list.Id);
+
             if (list.Completed)
             {
-                var account = await _accountRepository.FindAccountByIdAsync(list.AccountId);
-
-                var email = new Email()
+                foreach (var userEmail in emails)
                 {
-                    To = account.Email,
-                    From = _config.GetSection("Emails")["Notifications"],
-                    Subject = $"You finished a list!",
-                    Body = $"List {list.ListTitle} is finished! Nice work!"
-                };
-
+                    var email = new Email()
+                    {
+                        To = userEmail,
+                        From = _config.GetSection("Emails")["Notifications"],
+                        Subject = $"You finished a list!",
+                        Body = $"List {list.ListTitle} is finished! Nice work!"
+                    };
+                }
                 //_serviceBusEmail.SendServiceBusEmail(email);
             }
         }
