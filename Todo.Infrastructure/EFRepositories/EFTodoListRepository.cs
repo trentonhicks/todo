@@ -59,5 +59,17 @@ namespace TodoWebAPI.Data
         {
            return _idGenerator.NextId();
         }
+
+        public Task AddRowToAccountListsAsync(Guid accountId, Guid listId)
+        {
+            var accountLists = new AccountLists
+            {
+                AccountId = accountId,
+                ListId = listId
+            };
+
+            _context.AccountLists.Add(accountLists);
+            return Task.CompletedTask;
+        }
     }
 }

@@ -27211,6 +27211,9 @@ var _default = {
       todoListLayout: [],
       todoListItems: [],
       form: {},
+      invitationToList: {
+        email: ''
+      },
       listIsEmpty: false,
       editingTitle: false,
       confetti: false
@@ -27378,6 +27381,22 @@ var _default = {
           'content-type': 'application/json'
         }
       });
+    },
+    sendInvitation: function sendInvitation() {
+      var data = JSON.stringify({
+        listId: this.id,
+        email: this.invitationToList.email
+      });
+      (0, _axios.default)({
+        method: 'POST',
+        url: "/api/lists/" + this.id + "/email",
+        data: data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      }).then(function () {
+        this.invitationToList.email = '';
+      });
     }
   },
   components: {
@@ -27496,53 +27515,119 @@ exports.default = _default;
         [_vm._v("Title must be between 1 and 50 characters long.")]
       ),
       _c(
-        "draggable",
-        {
-          staticClass: "todo-list-items mb-3",
-          attrs: { handle: ".todo-item-handle" },
-          on: { end: _vm.updateItemPosition },
-          model: {
-            value: _vm.todoListItems,
-            callback: function($$v) {
-              _vm.todoListItems = $$v
-            },
-            expression: "todoListItems"
-          }
-        },
+        "b-row",
         [
-          _vm._l(_vm.todoListItems, function(todo, index) {
-            return _c("todo-item", {
-              key: todo.id,
-              class: "item-" + index,
-              attrs: {
-                listId: _vm.id,
-                id: todo.id,
-                name: todo.name,
-                notes: todo.notes,
-                dueDate: todo.dueDate,
-                completed: todo.completed
-              },
-              on: {
-                "deleted-list-item": _vm.deleteTodoListItem,
-                "toggled-list-item": _vm.updateListCompletedState
-              }
-            })
-          }),
-          _vm.listIsEmpty
-            ? _c("b-list-group-item", { staticClass: "no-items bg-light" }, [
-                _vm._v("Your list is empty. Add a new item to get started.")
-              ])
-            : _vm._e()
+          _c(
+            "b-col",
+            { attrs: { md: "9" } },
+            [
+              _c(
+                "draggable",
+                {
+                  staticClass: "todo-list-items mb-3",
+                  attrs: { handle: ".todo-item-handle" },
+                  on: { end: _vm.updateItemPosition },
+                  model: {
+                    value: _vm.todoListItems,
+                    callback: function($$v) {
+                      _vm.todoListItems = $$v
+                    },
+                    expression: "todoListItems"
+                  }
+                },
+                [
+                  _vm._l(_vm.todoListItems, function(todo, index) {
+                    return _c("todo-item", {
+                      key: todo.id,
+                      class: "item-" + index,
+                      attrs: {
+                        listId: _vm.id,
+                        id: todo.id,
+                        name: todo.name,
+                        notes: todo.notes,
+                        dueDate: todo.dueDate,
+                        completed: todo.completed
+                      },
+                      on: {
+                        "deleted-list-item": _vm.deleteTodoListItem,
+                        "toggled-list-item": _vm.updateListCompletedState
+                      }
+                    })
+                  }),
+                  _vm.listIsEmpty
+                    ? _c(
+                        "b-list-group-item",
+                        { staticClass: "no-items bg-light" },
+                        [
+                          _vm._v(
+                            "Your list is empty. Add a new item to get started."
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ],
+                2
+              ),
+              _c(
+                "b-button",
+                {
+                  staticClass: "mb-3",
+                  attrs: { id: "add-list-item-btn" },
+                  on: { click: _vm.showAddItemModal }
+                },
+                [_vm._v("Add list item")]
+              )
+            ],
+            1
+          ),
+          _c(
+            "b-col",
+            { attrs: { md: "3" } },
+            [
+              _c(
+                "b-form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.sendInvitation($event)
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "b-form-group",
+                    [
+                      _c("b-form-input", {
+                        attrs: {
+                          placeholder: "email",
+                          type: "email",
+                          required: "required"
+                        },
+                        model: {
+                          value: _vm.invitationToList.email,
+                          callback: function($$v) {
+                            _vm.$set(_vm.invitationToList, "email", $$v)
+                          },
+                          expression: "invitationToList.email"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _c(
+                    "b-button",
+                    { staticClass: "btn-block", attrs: { type: "submit" } },
+                    [_vm._v("Invite user")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
         ],
-        2
-      ),
-      _c(
-        "b-button",
-        {
-          attrs: { id: "add-list-item-btn" },
-          on: { click: _vm.showAddItemModal }
-        },
-        [_vm._v("Add list item")]
+        1
       ),
       _c(
         "b-modal",
@@ -74325,7 +74410,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59043" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52771" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
