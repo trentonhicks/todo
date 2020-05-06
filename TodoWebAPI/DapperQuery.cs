@@ -102,5 +102,16 @@ namespace TodoWebAPI
                 return result.ToList();
             }
         }
+
+        public async Task<List<string>> GetEmailsFromAccountsByListIdAsync(Guid listId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<string>("SELECT Email FROM Accounts as a INNER JOIN AccountLists as l ON a.ID = l.AccountID and l.ListID = @listId", new { listId = listId });
+                return result.ToList();
+            }
+        }
     }
 }
