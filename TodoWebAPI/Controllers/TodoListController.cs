@@ -14,6 +14,8 @@ using MediatR;
 using TodoWebAPI.UserStories.ListLayout;
 using Microsoft.AspNetCore.Authorization;
 using TodoWebAPI.Extentions;
+using TodoWebAPI.UserStories.SendInvitation;
+
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
@@ -97,6 +99,15 @@ namespace TodoWebAPI.Controllers
         {
             var layout = await _dapperQuery.GetTodoListLayoutAsync(listId);
             return Ok(layout.Layout);
+        }
+
+        [HttpPost("api/lists/{listId}/email")]
+
+        public async Task<IActionResult> SendInvitaion(string listId, [FromBody] SendInvitation send)
+        {
+            await _mediator.Send(send);
+
+            return Ok();
         }
 
     }

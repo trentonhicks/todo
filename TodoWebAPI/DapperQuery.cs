@@ -113,5 +113,16 @@ namespace TodoWebAPI
                 return result.ToList();
             }
         }
+
+        public async Task<Guid> GetAccountIdByEmailAsync(string email)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<Guid>("SELECT ID FROM Accounts WHERE Email = @email", new { email = email});
+                return result.FirstOrDefault();
+            }
+        }
     }
 }

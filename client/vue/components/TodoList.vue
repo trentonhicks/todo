@@ -259,7 +259,10 @@ export default {
       axios({
         method: 'POST',
         url: `/api/lists/${this.id}/email`,
-        data
+        data, 
+        headers: {
+          'content-type': 'application/json'
+        }
       }).then(function() {
         this.invitationToList.email = '';
       });
