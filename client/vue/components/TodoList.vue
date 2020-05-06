@@ -17,24 +17,34 @@
 
     .invalid-feedback(:class="{ 'd-block mb-3': invalidTitle }") Title must be between 1 and 50 characters long.
 
-    draggable(v-model="todoListItems" @end="updateItemPosition" handle=".todo-item-handle").todo-list-items.mb-3
+    b-row
 
-      todo-item(
-        v-for="(todo, index) in todoListItems"
-        v-on:deleted-list-item="deleteTodoListItem"
-        v-on:toggled-list-item="updateListCompletedState"
-        :key="todo.id"
-        :listId="id"
-        :id="todo.id"
-        :name="todo.name"
-        :notes="todo.notes"
-        :dueDate="todo.dueDate"
-        :completed="todo.completed"
-        :class="`item-${index}`")
+      b-col(md=9)
 
-      b-list-group-item.no-items.bg-light(v-if="listIsEmpty") Your list is empty. Add a new item to get started.
-      
-    b-button(id="add-list-item-btn" @click="showAddItemModal") Add list item
+        draggable(v-model="todoListItems" @end="updateItemPosition" handle=".todo-item-handle").todo-list-items.mb-3
+
+          todo-item(
+            v-for="(todo, index) in todoListItems"
+            v-on:deleted-list-item="deleteTodoListItem"
+            v-on:toggled-list-item="updateListCompletedState"
+            :key="todo.id"
+            :listId="id"
+            :id="todo.id"
+            :name="todo.name"
+            :notes="todo.notes"
+            :dueDate="todo.dueDate"
+            :completed="todo.completed"
+            :class="`item-${index}`")
+
+          b-list-group-item.no-items.bg-light(v-if="listIsEmpty") Your list is empty. Add a new item to get started.
+
+        b-button(id="add-list-item-btn" @click="showAddItemModal").mb-3 Add list item
+
+      b-col(md=3)
+        b-form(@submit.prevent="sendInvitation")
+          b-form-group
+            b-form-input(v-model="invitationToList.email" placeholder="email" type="email" required)
+          b-button(type="submit" class="btn-block") Invite user
 
     b-modal(id="modal-add" title="Add new list item")
       b-form(v-on:submit.prevent="addTodoListItem(form.name, form.notes, form.dueDate)" id="add-list-item-form")
@@ -79,9 +89,12 @@ export default {
       todoListLayout: [],
       todoListItems: [],
       form: {},
+      invitationToList: {
+        email: ''
+      },
       listIsEmpty: false,
       editingTitle: false,
-      confetti: false
+      confetti: false,
     }
   },
   created: function() {
@@ -238,6 +251,17 @@ export default {
         headers: {
           'content-type': 'application/json'
         }
+      });
+    },
+    sendInvitation() : void {
+      let data = JSON.stringify({ listId: this.id, email: this.invitationToList.email });
+
+      axios({
+        method: 'POST',
+        url: `/api/lists/${this.id}/email`,
+        data
+      }).then(function() {
+        this.invitationToList.email = '';
       });
     }
   },
