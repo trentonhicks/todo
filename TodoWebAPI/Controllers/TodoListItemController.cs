@@ -59,10 +59,9 @@ namespace TodoWebAPI.Controllers
         [HttpGet("api/lists/{listId}/todos")]
         public async Task<IActionResult> GetAllTodoItems(Guid listId)
         {
-            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             var dapper = new DapperQuery(_config);
 
-            var items = await dapper.GetAllTodoItemAsync(accountId, listId);
+            var items = await dapper.GetAllTodoItemAsync(listId);
 
             return Ok(items);
         }

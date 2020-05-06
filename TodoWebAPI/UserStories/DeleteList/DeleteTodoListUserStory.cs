@@ -22,8 +22,6 @@ namespace TodoWebAPI.UserStories
         }
         protected override async Task Handle(DeleteList request, CancellationToken cancellationToken)
         {
-            await _todoListItem.RemoveAllTodoListItemsFromAccountAsync(request.ListId);
-
             await _listRepository.RemoveTodoListAsync(request.ListId);
 
             await _listRepository.SaveChangesAsync();

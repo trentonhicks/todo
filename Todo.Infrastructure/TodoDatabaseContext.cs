@@ -35,6 +35,7 @@ namespace Todo.Infrastructure
         public virtual DbSet<TodoListLayout> TodoListLayouts { get; set; }
         public virtual DbSet<SubItem> SubItems { get; set; }
         public virtual DbSet<SubItemLayout> SubItemLayouts {get; set;}
+        public virtual DbSet<AccountLists> AccountLists { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -78,10 +79,6 @@ namespace Todo.Infrastructure
                     .HasColumnName("ID");
 
                 entity
-                    .Property(e => e.AccountId)
-                    .HasColumnName("AccountID");
-
-                entity
                     .Property(e => e.ListTitle)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -97,10 +94,6 @@ namespace Todo.Infrastructure
                 entity
                     .Property(e => e.ListId)
                     .HasColumnName("ListID");
-
-                entity
-                    .Property(e => e.AccountId)
-                    .HasColumnName("AccountID");
 
                 entity
                     .Property(e => e.Name)
@@ -173,6 +166,12 @@ namespace Todo.Infrastructure
                 entity
                     .Property(e => e.Completed)
                     .HasColumnName("Completed");
+            });
+
+            modelBuilder.Entity<AccountLists>(entity =>
+            {
+                entity
+                    .HasKey(o => new { o.AccountId, o.ListId });
             });
         }
     }

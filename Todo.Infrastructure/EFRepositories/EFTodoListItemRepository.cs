@@ -31,12 +31,6 @@ namespace TodoWebAPI.Data
         {
             _context.Remove(todo);
         }
-        public async Task RemoveAllTodoListItemsFromAccountAsync(Guid accountId)
-        {
-            var todoListItems = await _context.TodoListItems.Where(t => t.AccountId == accountId).ToListAsync();
-
-            _context.TodoListItems.RemoveRange(todoListItems);
-        }
         public async Task<TodoListItem> FindToDoListItemByIdAsync(Guid todoListItemId)
         {
             return await _context.TodoListItems.FindAsync(todoListItemId);

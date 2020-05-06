@@ -13,9 +13,8 @@ namespace Todo.Domain
 
         }
 
-        public TodoList(Guid accountId, string title)
+        public TodoList(string title)
         {
-            AccountId = accountId;
             ListTitle = title;
 
             DomainEvents.Add(new TodoListCreated { List = this });
@@ -23,7 +22,6 @@ namespace Todo.Domain
 
         public Guid Id { get; set; }
         public string ListTitle { get; set; }
-        public Guid AccountId { get; private set; }
         public bool Completed { get; private set; }
 
         public TodoListItem CreateListItem(Guid listId, string name, string notes, DateTime? dueDate)
@@ -33,7 +31,6 @@ namespace Todo.Domain
                 ListId = listId,
                 Name = name,
                 Notes = notes,
-                AccountId = AccountId,
                 DueDate = dueDate
             };
 
