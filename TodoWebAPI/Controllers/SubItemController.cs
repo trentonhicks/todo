@@ -66,9 +66,11 @@ namespace TodoWebAPI.Controllers
             return Ok();
         }
 
-        [HttpPut("accounts/{accountId}/subitems/{subitemId}")]
-        public async Task<IActionResult> UpdateSubItem(int accountId, int subitemId, EditSubItem editSubItem)
+        [HttpPut("api/subitems/{subitemId}")]
+        public async Task<IActionResult> UpdateSubItem(int subitemId, [FromBody] EditSubItem editSubItem)
         {
+            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+
             editSubItem.AccountId = accountId;
             editSubItem.SubItemId = subitemId;
 
@@ -77,9 +79,11 @@ namespace TodoWebAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("accounts/{accountId}/subitems/{subitemId}")]
-        public async Task<IActionResult> TrashSubItem(int accountId, int subitemId)
+        [HttpDelete("api/subitems/{subitemId}")]
+        public async Task<IActionResult> TrashSubItem(int subitemId)
         {
+            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+
             var trashSubItem = new TrashSubItem
             {
                 AccountId = accountId,

@@ -110,7 +110,7 @@
   align-items: center;
 }
 .todo-item .todo-item-handle[data-v-c8b3b1] {
-  margin: 5px 12px 0 0;
+  margin: 3px 12px 0 0;
   opacity: 0.3;
   transition: opacity 0.3s ease;
   align-self: flex-start;

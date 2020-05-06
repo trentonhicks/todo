@@ -26148,6 +26148,9 @@ var _default = {
         id: this.id,
         name: this.name,
         completed: this.completed
+      },
+      form: {
+        name: this.name
       }
     };
   },
@@ -26162,6 +26165,26 @@ var _default = {
         },
         data: this.item.completed
       });
+    },
+    editSubItem: function editSubItem() {
+      var data = JSON.stringify(this.form);
+      (0, _axios.default)({
+        method: 'PUT',
+        url: "/api/subitems/" + this.item.id,
+        data: data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+      this.item.name = this.form.name;
+      this.$emit('sub-item-edited', this.item);
+    },
+    deleteSubItem: function deleteSubItem() {
+      (0, _axios.default)({
+        method: 'DELETE',
+        url: "/api/subitems/" + this.item.id
+      });
+      this.$emit('sub-item-deleted', this.item);
     }
   },
   watch: {
@@ -26259,14 +26282,15 @@ exports.default = _default;
                           return null
                         }
                         _vm.editing = false
+                        _vm.editSubItem()
                       }
                     },
                     model: {
-                      value: _vm.item.name,
+                      value: _vm.form.name,
                       callback: function($$v) {
-                        _vm.$set(_vm.item, "name", $$v)
+                        _vm.$set(_vm.form, "name", $$v)
                       },
-                      expression: "item.name"
+                      expression: "form.name"
                     }
                   })
                 ],
@@ -26275,11 +26299,12 @@ exports.default = _default;
               _c(
                 "b-button",
                 {
-                  staticClass: "mr-2",
+                  staticClass: "mr-1",
                   attrs: { variant: "info", size: "sm" },
                   on: {
                     click: function($event) {
                       _vm.editing = false
+                      _vm.editSubItem()
                     }
                   }
                 },
@@ -26288,14 +26313,28 @@ exports.default = _default;
               _c(
                 "b-button",
                 {
+                  staticClass: "mr-1",
                   attrs: { variant: "danger", size: "sm" },
+                  on: {
+                    click: function($event) {
+                      _vm.editing = false
+                      _vm.deleteSubItem()
+                    }
+                  }
+                },
+                [_vm._v("Trash")]
+              ),
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "secondary", size: "sm" },
                   on: {
                     click: function($event) {
                       _vm.editing = false
                     }
                   }
                 },
-                [_vm._v("Delete")]
+                [_vm._v("Cancel")]
               )
             ],
             1
@@ -26450,6 +26489,13 @@ var _default = {
         return id === item.id;
       });
       this.$set(this.subItems, index, item);
+    },
+    removeSubItemFromList: function removeSubItemFromList(item) {
+      var index = this.subItems.findIndex(function (_a) {
+        var id = _a.id;
+        return id === item.id;
+      });
+      this.subItems.splice(index, 1);
     }
   },
   created: function created() {
@@ -26737,7 +26783,11 @@ exports.default = _default;
                           name: item.name,
                           completed: item.completed
                         },
-                        on: { "sub-item-toggled": _vm.refreshSubItems }
+                        on: {
+                          "sub-item-edited": _vm.refreshSubItems,
+                          "sub-item-toggled": _vm.refreshSubItems,
+                          "sub-item-deleted": _vm.removeSubItemFromList
+                        }
                       })
                     }),
                     1
@@ -74325,7 +74375,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58955" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64915" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
