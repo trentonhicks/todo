@@ -14,6 +14,7 @@ using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace TodoWebAPI
 {
@@ -37,6 +38,21 @@ namespace TodoWebAPI
             }
         }
 
+        public async Task<List<AccountCollaboratorPresentation>> GetCollaborators(Guid accountId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var contributorsString = await connection.QueryAsync<string>("SELECT Contributors From Accounts WHERE ID = @accountId", new { accountId = accountId });
+                var contributorsList = JsonConvert.DeserializeObject<List<string>>(contributorsString.FirstOrDefault());
+                var contributers = String.Join(",", contributorsList);
+                var result = await connection.QueryAsync<AccountCollaboratorPresentation>("SELECT FullName, PictureUrl From Accounts WHERE ID IN (@contributors)", new { contributors = contributers});
+
+                return result.ToList();
+            }
+        }
+
         public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(Guid listId)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -44,7 +60,7 @@ namespace TodoWebAPI
                 await connection.OpenAsync();
 
                 var result = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems WHERE ListID = @listId", new { listId = listId });
-
+                
                 return result.ToList();
             }
         }

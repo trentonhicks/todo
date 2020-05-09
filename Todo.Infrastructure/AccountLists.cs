@@ -13,5 +13,6 @@ namespace Todo.Infrastructure
         public Guid AccountId { get; set; }
         [Key, Column(Order = 1)]
         public Guid ListId { get; set; }
+        public byte Role { get; set; }
     }
 }

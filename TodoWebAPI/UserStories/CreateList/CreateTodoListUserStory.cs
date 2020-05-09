@@ -24,7 +24,9 @@ namespace TodoWebAPI.UserStories
             if (String.IsNullOrEmpty(request.ListTitle))
                 return null;
 
-            var todoList = new TodoList(request.ListTitle);
+            var todoList = new TodoList (request.ListTitle);
+
+            todoList.Contributors.Add(request.AccountId);
 
             todoList.Id = _repository.NextId();
 

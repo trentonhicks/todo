@@ -38,6 +38,8 @@ namespace TodoWebAPI.UserStories.CreateAccount
                 PictureUrl = request.PictureUrl
             };
 
+            account.Contributors.Add(account.Id);
+
             _accountRepository.AddAccount(account);
 
             await _accountRepository.SaveChangesAsync();

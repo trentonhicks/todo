@@ -28,7 +28,8 @@ namespace TodoWebAPI.Data
             var accountLists = new AccountLists
             {
                 AccountId = accountId,
-                ListId = todoList.Id
+                ListId = todoList.Id,
+                Role = Roles.Owner
             };
             _context.AccountLists.Add(accountLists);
             return Task.CompletedTask;
