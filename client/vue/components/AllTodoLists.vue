@@ -9,6 +9,8 @@
         :accountId="item.accountId"
         :listTitle="item.listTitle"
         :completed="item.completed"
+        :listContributorIds="item.contributors"
+        :accountContributors="contributors"
         )
 
     b-button(@click="$bvModal.show('modal-add')" id="add-list-btn") Add list
@@ -38,6 +40,7 @@ export default {
     data() {
         return {
             todoLists: [],
+            contributors: [],
             form: {
                 listTitle: ''
             }
@@ -50,7 +53,8 @@ export default {
                 url: '/api/lists',
             })
             .then((response) => {
-                this.todoLists = response.data;
+                this.todoLists = response.data.todoLists;
+                this.contributors = response.data.contributors;
             }).catch((e) => {
                 console.log(e);
             });

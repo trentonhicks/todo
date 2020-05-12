@@ -15,6 +15,7 @@ using TodoWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using TodoWebAPI.TypeHandlers;
 
 namespace TodoWebAPI
 {
@@ -38,16 +39,13 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<List<AccountCollaboratorPresentation>> GetCollaborators(Guid accountId)
+        public async Task<List<AccountContributorsPresentation>> GetContributors(Guid accountId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-
-                var contributorsString = await connection.QueryAsync<string>("SELECT Contributors From Accounts WHERE ID = @accountId", new { accountId = accountId });
-                var contributorsList = JsonConvert.DeserializeObject<List<string>>(contributorsString.FirstOrDefault());
-                var contributers = String.Join(",", contributorsList);
-                var result = await connection.QueryAsync<AccountCollaboratorPresentation>("SELECT FullName, PictureUrl From Accounts WHERE ID IN (@contributors)", new { contributors = contributers});
+                var contributors = await connection.QuerySingleAsync<List<Guid>>("SELECT Contributors From Accounts WHERE ID = @accountId", new { accountId = accountId });
+                var result = await connection.QueryAsync<AccountContributorsPresentation>("SELECT FullName, PictureUrl From Accounts WHERE ID IN @contributors", new { contributors = contributors });
 
                 return result.ToList();
             }

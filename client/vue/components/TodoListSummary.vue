@@ -15,7 +15,7 @@
 
 export default {
     name: 'TodoListSummary',
-    props: ['id', 'accountId', 'listTitle', 'completed'],
+    props: ['id', 'accountId', 'listTitle', 'completed', 'listContributorIds', 'accountContributors'],
     data() {
         return {
             item: {
@@ -25,7 +25,12 @@ export default {
                 completed: this.completed
             }
         };
-    }
+    },
+    computed: {
+        contributors() {
+            return this.accountContributors.filter(({id}) => this.listContributorIds.includes(id));
+        }
+    },
 };
 
 </script>

@@ -47,9 +47,10 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> GetLists()
         {
             var lists = await _dapperQuery.GetListsAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
-            var accounts = await _dapperQuery.GetCollaborators(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var accounts = await _dapperQuery.GetContributors(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var todoListsPresentation = new TodoListsPresentation(lists, accounts);
 
-            return Ok(lists);
+            return Ok(todoListsPresentation);
         }
 
         [HttpGet("api/lists/{listId}")]

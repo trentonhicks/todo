@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TodoWebAPI.Presentation
 {
-    public class AccountCollaboratorPresentation
+    public class AccountContributorsPresentation
     {
         public string FullName { get; set; }
         public string PictureUrl { get; set; }
