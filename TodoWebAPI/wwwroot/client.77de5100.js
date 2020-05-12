@@ -29190,8 +29190,7 @@ var router = new _vueRouter.default({
     path: '/lists/:id',
     component: _TodoListDetails.default,
     props: true
-  }],
-  mode: 'history'
+  }]
 });
 var _default = router;
 exports.default = _default;

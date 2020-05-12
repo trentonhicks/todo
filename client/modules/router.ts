@@ -16,7 +16,6 @@ const router = new VueRouter({
     { path: '/lists', component: Home, name: 'My Lists' },
     { path: '/lists/:id', component: TodoListDetails, props: true },
   ],
-  mode: 'history'
 });
 
 export default router;
