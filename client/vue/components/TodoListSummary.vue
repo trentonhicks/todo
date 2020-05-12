@@ -28,7 +28,7 @@ export default {
     },
     computed: {
         contributors() {
-            return this.accountContributors.filter(({id}) => this.listContributorIds.includes(id));
+            return this.accountContributors.filter(({email}) => this.listContributorIds.includes(email));
         }
     },
 };

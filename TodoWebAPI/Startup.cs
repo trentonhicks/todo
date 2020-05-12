@@ -156,7 +156,7 @@ namespace TodoWebAPI
                 });
 
             // Register type handlers for Dapper
-            SqlMapper.AddTypeHandler(typeof(List<Guid>), new JsonObjectTypeHandler());
+            SqlMapper.AddTypeHandler(typeof(List<string>), new JsonObjectTypeHandler());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,6 +10,6 @@ namespace TodoWebAPI.Models
         public string ListTitle { get; set; }
         public Guid AccountId { get; set; }
         public bool Completed { get; set; }
-        public List<Guid> Contributors { get; set; }
+        public List<string> Contributors { get; set; }
     }
 }

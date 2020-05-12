@@ -23,7 +23,7 @@ namespace Todo.Domain
         public Guid Id { get; set; }
         public string ListTitle { get; set; }
         public bool Completed { get; private set; }
-        public List<Guid> Contributors { get; set; } = new List<Guid>();
+        public List<string> Contributors { get; set; } = new List<string>();
 
         public TodoListItem CreateListItem(Guid listId, string name, string notes, DateTime? dueDate)
         {

@@ -63,7 +63,8 @@ export default {
             this.$bvModal.hide('modal-add');
 
             let data = JSON.stringify({
-                listTitle
+                listTitle,
+                email: this.$store.state.user.email
             });
 
             axios({

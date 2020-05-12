@@ -9,5 +9,6 @@ namespace TodoWebAPI.Presentation
     {
         public string FullName { get; set; }
         public string PictureUrl { get; set; }
+        public string Email { get; set; }
     }
 }

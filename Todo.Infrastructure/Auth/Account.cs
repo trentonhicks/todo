@@ -8,12 +8,12 @@ namespace Todo.Infrastructure
     {
         public Account()
         {
-            Contributors = new List<Guid>();
+            Contributors = new List<string>();
         }
         public Guid Id { get; set; }
         public string FullName { get; set; }
         public string PictureUrl { get; set; }
         public string Email { get; set; }
-        public List<Guid> Contributors { get; set; }
+        public List<string> Contributors { get; set; }
     }
 }

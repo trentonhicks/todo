@@ -74,7 +74,7 @@ namespace Todo.Infrastructure
                     .Property(e => e.Contributors).HasColumnName("Contributors")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<Guid>>(v));
+                        v => JsonConvert.DeserializeObject<List<string>>(v));
             });
 
             modelBuilder.Entity<TodoList>(entity =>
@@ -92,7 +92,7 @@ namespace Todo.Infrastructure
                     .Property(e => e.Contributors).HasColumnName("Contributors")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<Guid>>(v));
+                        v => JsonConvert.DeserializeObject<List<string>>(v));
             });
 
             modelBuilder.Entity<TodoListItem>(entity =>

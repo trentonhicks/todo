@@ -36,19 +36,21 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> CreateList(Guid accountId, CreateList createTodoList)
         {
             createTodoList.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-           var todoList = await _mediator.Send(createTodoList);
+            
+            var todoList = await _mediator.Send(createTodoList);
+
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
 
-            return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
+                return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
         }
 
         [HttpGet("api/lists")]
         public async Task<IActionResult> GetLists()
         {
             var lists = await _dapperQuery.GetListsAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
-            var accounts = await _dapperQuery.GetContributors(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
-            var todoListsPresentation = new TodoListsPresentation(lists, accounts);
+            var accountContributors = await _dapperQuery.GetContributorsAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var todoListsPresentation = new TodoListsPresentation(lists, accountContributors);
 
             return Ok(todoListsPresentation);
         }

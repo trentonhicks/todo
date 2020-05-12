@@ -26,7 +26,7 @@ namespace TodoWebAPI.UserStories
 
             var todoList = new TodoList (request.ListTitle);
 
-            todoList.Contributors.Add(request.AccountId);
+            todoList.Contributors.Add(request.Email);
 
             todoList.Id = _repository.NextId();
 
