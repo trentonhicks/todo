@@ -8,12 +8,15 @@ using System.Threading;
 using System.Data.SqlClient;
 using TodoWebAPI.Presentation;
 using Dapper;
+using Dapper.Transaction;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Infrastructure;
 using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using TodoWebAPI.TypeHandlers;
 
 namespace TodoWebAPI
 {
@@ -37,6 +40,36 @@ namespace TodoWebAPI
             }
         }
 
+        public async Task<Dictionary<string, AccountContributorsPresentation>> GetContributorsAsync(Guid accountId)
+        {
+            Dictionary<string, AccountContributorsPresentation> contributors = null;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using(var transaction = await connection.BeginTransactionAsync())
+                {
+                    var contributorEmails = await transaction.QueryFirstOrDefaultAsync<List<string>>(@"
+                        SELECT Contributors From Accounts WHERE ID = @accountId",
+                        new { accountId });
+
+                    if(contributorEmails == null)
+                        return null;
+
+                    var contributorsQueryResult = await transaction.QueryAsync<AccountContributorsPresentation>(@"
+                        SELECT FullName, PictureUrl, Email From Accounts WHERE Email IN @contributorEmails",
+                        new { contributorEmails = contributorEmails.ToArray() });
+
+                    contributors = contributorsQueryResult.ToDictionary(kvp => kvp.Email, kvp => kvp);
+
+                    transaction.Commit();
+                }
+
+                return contributors;
+            }
+        }
+
         public async Task<List<TodoListItemModel>> GetAllTodoItemAsync(Guid listId)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -44,7 +77,7 @@ namespace TodoWebAPI
                 await connection.OpenAsync();
 
                 var result = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems WHERE ListID = @listId", new { listId = listId });
-
+                
                 return result.ToList();
             }
         }
@@ -64,7 +97,9 @@ namespace TodoWebAPI
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
+
                 var result = await connection.QueryAsync<TodoListModel>("SELECT * FROM TodoLists as t INNER JOIN AccountLists as a ON t.ID = a.ListID WHERE a.AccountID = @accountId", new { accountId = accountId });
+
                 return result.ToList();
             }
         }

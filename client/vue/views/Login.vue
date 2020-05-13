@@ -7,15 +7,12 @@ b-container
 
 <script lang="ts">
 
-import store from '../../modules/store';
 import axios from 'axios';
 
 export default {
   name: 'Login',
   data() {
-    return {
-      isAuthenticated: store.isAuthenticated
-    };
+    return {};
   },
   methods: {
     logout() {
