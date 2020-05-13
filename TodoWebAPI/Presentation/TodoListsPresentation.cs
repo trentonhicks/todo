@@ -8,8 +8,8 @@ namespace TodoWebAPI.Presentation
     public class TodoListsPresentation
     {
         public List<TodoListModel> TodoLists { get; set; }
-        public List<AccountContributorsPresentation> Contributors { get; set; }
-        public TodoListsPresentation(List<TodoListModel> todoLists, List<AccountContributorsPresentation> contributors)
+        public Dictionary<string, AccountContributorsPresentation> Contributors { get; set; }
+        public TodoListsPresentation(List<TodoListModel> todoLists, Dictionary<string, AccountContributorsPresentation> contributors)
         {
             TodoLists = todoLists;
             Contributors = contributors;

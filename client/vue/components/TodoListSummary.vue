@@ -2,12 +2,17 @@
     
 .todo-list-summary
     b-card(class="mb-3 bg-light")
-        b-button(:to="'/lists/'+ item.id").card-title
-            | {{item.listTitle}}
-        .todo-list-options
-            b-badge(:class="{ 'badge-success': item.completed }").mr-3 {{ item.completed ? 'Completed' : 'In progress' }}
-            b-button(variant="info" size="sm" :to="'/lists/'+ item.id").mr-2: b-icon-list-ul
-            b-button(variant="danger" size="sm"  @click="$emit('delete-list', item)"): b-icon-trash
+        .card-left
+            b-button(:to="'/lists/'+ item.id").card-title
+                | {{item.listTitle}}
+        .card-right
+            ul.contributors
+                li(v-for="item in listContributorIds")
+                    img(:src="accountContributors[item].pictureUrl")
+            .todo-list-options
+                b-badge(:class="{ 'badge-success': item.completed }").mr-3 {{ item.completed ? 'Completed' : 'In progress' }}
+                b-button(variant="info" size="sm" :to="'/lists/'+ item.id").mr-2: b-icon-list-ul
+                b-button(variant="danger" size="sm"  @click="$emit('delete-list', item)"): b-icon-trash
 
 </template>
 
@@ -25,17 +30,45 @@ export default {
                 completed: this.completed
             }
         };
-    },
-    computed: {
-        contributors() {
-            return this.accountContributors.filter(({email}) => this.listContributorIds.includes(email));
-        }
-    },
+    }
 };
 
 </script>
 
 <style lang="scss" scoped>
+
+    .contributors {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        margin-bottom: 0;
+        padding: 0;
+
+        li {
+            transition: transform .3s ease;
+        }
+
+        li:first-child {
+            position: relative;
+            z-index: 10;
+        }
+
+        li:not(:first-child) {
+            position: relative;
+            z-index: 0;
+            left: -12px;
+        }
+
+        li:hover {
+            z-index: 15;
+            transform: translateY(-3px);
+        }
+
+        img {
+            max-width: 32px;
+            border-radius: 100px;
+        }
+    }
 
     .card {
     
@@ -50,6 +83,10 @@ export default {
                 flex-direction: row;
                 align-items: center;
             }
+        }
+
+        .card-right {
+            display: flex;
         }
 
         .card-title {

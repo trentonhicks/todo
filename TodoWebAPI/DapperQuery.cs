@@ -40,9 +40,9 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<List<AccountContributorsPresentation>> GetContributorsAsync(Guid accountId)
+        public async Task<Dictionary<string, AccountContributorsPresentation>> GetContributorsAsync(Guid accountId)
         {
-            List<AccountContributorsPresentation> contributors = null;
+            Dictionary<string, AccountContributorsPresentation> contributors = null;
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -61,7 +61,7 @@ namespace TodoWebAPI
                         SELECT FullName, PictureUrl, Email From Accounts WHERE Email IN @contributorEmails",
                         new { contributorEmails = contributorEmails.ToArray() });
 
-                    contributors = contributorsQueryResult.ToList();
+                    contributors = contributorsQueryResult.ToDictionary(kvp => kvp.Email, kvp => kvp);
 
                     transaction.Commit();
                 }

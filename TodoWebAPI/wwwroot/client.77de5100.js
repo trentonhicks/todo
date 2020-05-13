@@ -14673,16 +14673,6 @@ var _default = {
         completed: this.completed
       }
     };
-  },
-  computed: {
-    contributors: function contributors() {
-      var _this = this;
-
-      return this.accountContributors.filter(function (_a) {
-        var email = _a.email;
-        return _this.listContributorIds.includes(email);
-      });
-    }
   }
 };
 exports.default = _default;
@@ -14702,17 +14692,34 @@ exports.default = _default;
     "div",
     { staticClass: "todo-list-summary" },
     [
-      _c(
-        "b-card",
-        { staticClass: "mb-3 bg-light" },
-        [
+      _c("b-card", { staticClass: "mb-3 bg-light" }, [
+        _c(
+          "div",
+          { staticClass: "card-left" },
+          [
+            _c(
+              "b-button",
+              {
+                staticClass: "card-title",
+                attrs: { to: "/lists/" + _vm.item.id }
+              },
+              [_vm._v(_vm._s(_vm.item.listTitle))]
+            )
+          ],
+          1
+        ),
+        _c("div", { staticClass: "card-right" }, [
           _c(
-            "b-button",
-            {
-              staticClass: "card-title",
-              attrs: { to: "/lists/" + _vm.item.id }
-            },
-            [_vm._v(_vm._s(_vm.item.listTitle))]
+            "ul",
+            { staticClass: "contributors" },
+            _vm._l(_vm.listContributorIds, function(item) {
+              return _c("li", [
+                _c("img", {
+                  attrs: { src: _vm.accountContributors[item].pictureUrl }
+                })
+              ])
+            }),
+            0
           ),
           _c(
             "div",
@@ -14759,9 +14766,8 @@ exports.default = _default;
             ],
             1
           )
-        ],
-        1
-      )
+        ])
+      ])
     ],
     1
   )
