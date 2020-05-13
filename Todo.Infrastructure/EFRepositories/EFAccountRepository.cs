@@ -45,5 +45,10 @@ namespace Todo.Infrastructure.EFRepositories
         {
             return _idGenerator.NextId();
         }
+
+        public void UpdateContributorsAsync(Account account)
+        {
+            _context.Accounts.Update(account);
+        }
     }
 }

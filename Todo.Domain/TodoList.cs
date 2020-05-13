@@ -23,7 +23,7 @@ namespace Todo.Domain
         public Guid Id { get; set; }
         public string ListTitle { get; set; }
         public bool Completed { get; private set; }
-        public List<string> Contributors { get; set; } = new List<string>();
+        public List<string> Contributors { get; private set; } = new List<string>();
 
         public TodoListItem CreateListItem(Guid listId, string name, string notes, DateTime? dueDate)
         {
@@ -50,13 +50,25 @@ namespace Todo.Domain
             {
                 Completed = false;
                 DomainEvents.Add(new TodoListCompletedStateChanged { List = this});
-            }
+            } 
             else if(!Completed && itemsCompleted)
             {
                 Completed = true;
                 DomainEvents.Add(new TodoListCompletedStateChanged { List = this });
             }
         }
-       
+
+        public void StoreColaborator(string email, Guid accountId)
+        {
+            DomainEvents.Add(new InvitationSent { List = this, Email = email, AccountId =  accountId});
+        }
+
+        public void AddCollaborator(string email)
+        {
+            if (email == null)
+                return;
+            Contributors.Add(email);
+        }
     }
 }
+ 

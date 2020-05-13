@@ -5,25 +5,34 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.Repositories;
+using Todo.Domain.DomainEvents;
+using Todo.Infrastructure.Repositories;
 
 namespace TodoWebAPI.UserStories.SendInvitation
 {
     public class SendInvitationUserStory : AsyncRequestHandler<SendInvitation>
     {
-        private readonly DapperQuery _dapper;
         private readonly ITodoListRepository _todoList;
+        private readonly IAccountRepository _account;
+        private readonly IAccountRepository _accountRepository;
 
-        public SendInvitationUserStory(DapperQuery dapper, ITodoListRepository todoList)
+        public SendInvitationUserStory(ITodoListRepository todoList, IAccountRepository account, IAccountRepository accountRepository)
         {
-            _dapper = dapper;
             _todoList = todoList;
+            _account = account;
+            _accountRepository = accountRepository;
         }
         protected override async Task Handle(SendInvitation request, CancellationToken cancellationToken)
         {
-            var accountId = await _dapper.GetAccountIdByEmailAsync(request.Email);
+            var account = await _account.FindAccountByEmailAsync(request.Email);
             var listId = Guid.Parse(request.ListId);
+            var accountId = account.Id;
 
             await _todoList.AddRowToAccountListsAsync(accountId, listId);
+
+            var list = await _todoList.FindTodoListIdByIdAsync(listId);
+
+            list.StoreColaborator(request.Email, request.AccountId);
 
             await _todoList.SaveChangesAsync();
         }

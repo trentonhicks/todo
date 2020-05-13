@@ -14,5 +14,6 @@ namespace Todo.Infrastructure.Repositories
         Task<Account> FindAccountByEmailAsync(string email);
         Task<bool> DoesAccountWithAccountIdExistAsync(Guid accountId);
         Task RemoveAccountAsync(Guid accountId);
+        void UpdateContributorsAsync(Account account);
     }
 }
