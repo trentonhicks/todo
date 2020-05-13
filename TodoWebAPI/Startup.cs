@@ -39,6 +39,8 @@ using Todo.Infrastructure.Guids;
 using Dapper;
 using TodoWebAPI.TypeHandlers;
 using TodoWebAPI.DomainEventHandlers;
+using TodoWebAPI.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace TodoWebAPI
 {
@@ -72,6 +74,7 @@ namespace TodoWebAPI
             services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
             services.AddScoped<SubItemLayoutApplicationService>();
             services.AddSingleton<DapperQuery>();
+            services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
             services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
