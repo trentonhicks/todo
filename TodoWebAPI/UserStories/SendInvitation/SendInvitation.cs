@@ -10,5 +10,6 @@ namespace TodoWebAPI.UserStories.SendInvitation
     {
         public string ListId { get; set; }
         public string Email { get; set; }
+        public Guid AccountId { get; set; }
     }
 }

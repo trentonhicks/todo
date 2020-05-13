@@ -12,5 +12,6 @@ namespace Todo.Domain.Repositories
         Task<TodoList> FindTodoListIdByIdAsync(Guid listId);
         Task RemoveTodoListAsync(Guid listId);
         Task AddRowToAccountListsAsync(Guid accountId, Guid listId);
+        void UpdateListAsync(TodoList list);
     }
 }

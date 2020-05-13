@@ -66,11 +66,18 @@ namespace TodoWebAPI.Data
             var accountLists = new AccountLists
             {
                 AccountId = accountId,
-                ListId = listId
+                ListId = listId,
+                Role = Roles.Contributer
             };
 
             _context.AccountLists.Add(accountLists);
             return Task.CompletedTask;
         }
+
+        public void UpdateListAsync(TodoList list)
+        {
+            _context.TodoLists.Update(list);
+        }
+      
     }
 }
