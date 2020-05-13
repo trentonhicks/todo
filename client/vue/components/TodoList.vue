@@ -47,7 +47,7 @@
           b-button(type="submit" class="btn-block") Invite user
 
     b-modal(id="modal-add" title="Add new list item")
-      b-form(v-on:submit.prevent="addTodoListItem(form.name, form.notes, form.dueDate)" id="add-list-item-form")
+      b-form(v-on:submit.prevent="saveTodoListItem(form.name, form.notes, form.dueDate)" id="add-list-item-form")
 
         b-form-group(label="Name")
           b-form-input(
@@ -92,23 +92,12 @@ export default {
       invitationToList: {
         email: ''
       },
-      listIsEmpty: false,
       editingTitle: false,
       confetti: false,
     }
   },
   created: function() {
     this.getTodoList(this.id);
-  },
-  mounted() {
-    var confettiSettings = { target: 'confetti' };
-    var confetti = new ConfettiGenerator(confettiSettings);
-    confetti.render();
-
-    this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
-      let formInput = document.querySelector(`#${modalId} .form-input-focus`);
-      formInput.focus();
-    });
   },
   methods: {
     showAddItemModal() {
@@ -145,13 +134,6 @@ export default {
               this.todoListItems.push(response.data[index]);
             }
           });
-
-          if(this.todoListItems.length < 1) {
-            this.listIsEmpty = true;
-          }
-          else {
-            this.listIsEmpty = false;
-          }
         });
       });
     },
@@ -180,7 +162,7 @@ export default {
         }
       });
     },
-    addTodoListItem(name : string, notes : string, dueDate : Date) : void {
+    saveTodoListItem(name : string, notes : string, dueDate : Date) : void {
       this.$bvModal.hide('modal-add');
 
       let data = JSON.stringify({
@@ -197,11 +179,14 @@ export default {
           'content-type': 'application/json'
         }
       }).then((response) => {
-          this.todoListItems.unshift(response.data);
           this.form.name = '';
           this.form.notes = '';
-          this.listIsEmpty = false;
       });
+    },
+    addTodoListItemToList(listId, item) {
+      if(this.id == listId) {
+        this.todoListItems.unshift(item);
+      }
     },
     deleteTodoListItem(item) : void {
       this.$bvModal.msgBoxConfirm(`Are you sure you want to delete ${item.name}?`, {
@@ -282,6 +267,9 @@ export default {
       }
       return false;
     },
+    listIsEmpty(){
+      return this.todoListItems.length < 1;
+    }
   },
   watch: {
     allItemsCompleted: {
@@ -295,6 +283,18 @@ export default {
       },
       immediate: true
     }
+  },
+  mounted: function() {
+    var confettiSettings = { target: 'confetti' };
+    var confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
+
+    this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
+      let formInput = document.querySelector(`#${modalId} .form-input-focus`);
+      formInput.focus();
+    });
+
+    this.$store.state.connection.on("ItemCreated", (listId, item) => this.addTodoListItemToList(listId, item));
   },
   directives: {
     focus: {
