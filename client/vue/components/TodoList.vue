@@ -298,6 +298,7 @@ export default {
     this.$store.state.connection.on("ItemCreated", (listId, item) => this.addTodoListItemToList(listId, item));
     this.$store.state.connection.on("ItemTrashed", (listId, item) => this.removeTodoListItem(listId, item));
 
+
   },
   directives: {
     focus: {

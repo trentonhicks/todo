@@ -35164,6 +35164,9 @@ var _default = {
     };
   },
   methods: {
+    refreshItemCompletedState: function refreshItemCompletedState(item) {
+      if (item.id == this.item.id) this.item.completed = item.completed;
+    },
     toggleCompleted: function toggleCompleted() {
       if (this.subItems < 1) {
         (0, _axios.default)({
@@ -35245,9 +35248,14 @@ var _default = {
     this.getSubItems();
   },
   mounted: function mounted() {
+    var _this = this;
+
     this.$root.$on('bv::modal::shown', function (bvEvent, modalId) {
       var formInput = document.querySelector("#" + modalId + " .form-input-focus");
       formInput.focus();
+    });
+    this.$store.state.connection.on("ItemCompleted", function (item) {
+      return _this.refreshItemCompletedState(item);
     });
   },
   watch: {

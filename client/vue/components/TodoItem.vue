@@ -117,6 +117,10 @@ export default {
     };
   },
   methods: {
+    refreshItemCompletedState(item) {
+      if(item.id == this.item.id)
+        this.item.completed = item.completed;
+    }
     toggleCompleted() {
       if(this.subItems < 1) {
         axios({
@@ -191,6 +195,7 @@ export default {
       let formInput = document.querySelector(`#${modalId} .form-input-focus`);
       formInput.focus();
     });
+    this.$store.state.connection.on("ItemCompleted", (item) => this.refreshItemCompletedState(item));
   },
   watch: {
     checkboxToggle: function() {
