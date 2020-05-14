@@ -72,9 +72,9 @@
               b-form-input(
                 :class="{'is-invalid': subitemFormLengthExceeded}"
                 id="add-sub-item"
-                v-model="subItemForm.name" @keydown.enter.prevent="addSubItem()" placeholder="Add sub-item" v-focus)
+                v-model="subItemForm.name" @keydown.enter.prevent="createSubItem()" placeholder="Add sub-item" v-focus)
               .invalid-feedback(v-if="subitemFormLengthExceeded") Name must be less than 50 characters.
-              b-button(variant="success" @click="addSubItem()").mt-2 Add
+              b-button(variant="success" @click="createSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false; subItemForm.name = ''").mt-2.ml-2 Cancel
 
         b-form-group.mb-0.text-right
@@ -117,6 +117,10 @@ export default {
     };
   },
   methods: {
+    addSubItem(subitem){
+      if(this.item.id == subitem.listItemId)
+        this.subItems.unshift(subitem);
+    }
     refreshItemCompletedState(item) {
       if(item.id == this.item.id)
         this.item.completed = item.completed;
@@ -157,13 +161,13 @@ export default {
         this.subItems = response.data;
       });
     },
-    addSubItem() {
+    createSubItem() {
       if(this.subitemFormValid) {
         let data = JSON.stringify({ name: this.subItemForm.name });
 
         this.subItemForm.name = '';
-        let addSubItemInput = document.getElementById("add-sub-item");
-        addSubItemInput.focus();
+        let createSubItemInput = document.getElementById("add-sub-item");
+        createSubItemInput.focus();
 
         axios({
           method: 'POST',
@@ -172,10 +176,7 @@ export default {
           headers: {
             'content-type': 'application/json'
           }
-        }).then(response => {
-          this.subItems.unshift(response.data);
-        });
-
+        });   
       }
     },
     refreshSubItems(item) {
@@ -196,6 +197,7 @@ export default {
       formInput.focus();
     });
     this.$store.state.connection.on("ItemCompleted", (item) => this.refreshItemCompletedState(item));
+    this.$store.state.connection.on("SubItemCreated", (subitem) => this.addSubItem(subitem));
   },
   watch: {
     checkboxToggle: function() {

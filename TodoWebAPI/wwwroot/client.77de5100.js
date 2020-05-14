@@ -35184,6 +35184,9 @@ var _default = {
     };
   },
   methods: {
+    addSubItem: function addSubItem(subitem) {
+      if (this.item.id == subitem.listItemId) this.subItems.unshift(subitem);
+    },
     refreshItemCompletedState: function refreshItemCompletedState(item) {
       if (item.id == this.item.id) this.item.completed = item.completed;
     },
@@ -35227,16 +35230,14 @@ var _default = {
         _this.subItems = response.data;
       });
     },
-    addSubItem: function addSubItem() {
-      var _this = this;
-
+    createSubItem: function createSubItem() {
       if (this.subitemFormValid) {
         var data = JSON.stringify({
           name: this.subItemForm.name
         });
         this.subItemForm.name = '';
-        var addSubItemInput = document.getElementById("add-sub-item");
-        addSubItemInput.focus();
+        var createSubItemInput = document.getElementById("add-sub-item");
+        createSubItemInput.focus();
         (0, _axios.default)({
           method: 'POST',
           url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems",
@@ -35244,8 +35245,6 @@ var _default = {
           headers: {
             'content-type': 'application/json'
           }
-        }).then(function (response) {
-          _this.subItems.unshift(response.data);
         });
       }
     },
@@ -35276,6 +35275,9 @@ var _default = {
     });
     this.$store.state.connection.on("ItemCompleted", function (item) {
       return _this.refreshItemCompletedState(item);
+    });
+    this.$store.state.connection.on("SubItemCreated", function (subitem) {
+      return _this.addSubItem(subitem);
     });
   },
   watch: {
@@ -35617,7 +35619,7 @@ exports.default = _default;
                                       return null
                                     }
                                     $event.preventDefault()
-                                    return _vm.addSubItem()
+                                    return _vm.createSubItem()
                                   }
                                 },
                                 model: {
@@ -35646,7 +35648,7 @@ exports.default = _default;
                                   attrs: { variant: "success" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.addSubItem()
+                                      return _vm.createSubItem()
                                     }
                                   }
                                 },
@@ -83231,7 +83233,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51672" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60673" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
