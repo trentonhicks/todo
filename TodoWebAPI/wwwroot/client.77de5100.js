@@ -36051,39 +36051,43 @@ var _default = {
       this.$bvModal.show('modal-add');
     },
     getTodoList: function getTodoList(id) {
-      var _this = this; // Get list
+      var _this = this;
 
-
-      (0, _axios.default)({
-        method: 'get',
-        url: '/api/lists/' + id
-      }).then(function (response) {
-        _this.todoList = response.data;
-      }).catch(function (e) {
-        console.log(e);
-      }); // Get list layout
-
-      (0, _axios.default)({
-        method: 'get',
-        url: "/api/lists/" + id + "/layout"
-      }).then(function (response) {
-        _this.todoListLayout = response.data; // Get todo list items
+      if (id == this.id) {
+        // Get list
+        (0, _axios.default)({
+          method: 'get',
+          url: '/api/lists/' + id
+        }).then(function (response) {
+          _this.todoList = response.data;
+        }).catch(function (e) {
+          console.log(e);
+        }); // Get list layout
 
         (0, _axios.default)({
           method: 'get',
-          url: '/api/lists/' + id + '/todos'
+          url: "/api/lists/" + id + "/layout"
         }).then(function (response) {
-          _this.todoListLayout.forEach(function (position) {
-            var index = response.data.findIndex(function (item) {
-              return item.id === position;
-            });
+          _this.todoListLayout = response.data; // Get todo list items
 
-            if (index !== -1) {
-              _this.todoListItems.push(response.data[index]);
-            }
+          (0, _axios.default)({
+            method: 'get',
+            url: '/api/lists/' + id + '/todos'
+          }).then(function (response) {
+            _this.todoListItems = [];
+
+            _this.todoListLayout.forEach(function (position) {
+              var index = response.data.findIndex(function (item) {
+                return item.id === position;
+              });
+
+              if (index !== -1) {
+                _this.todoListItems.push(response.data[index]);
+              }
+            });
           });
         });
-      });
+      }
     },
     toggleTitleEditor: function toggleTitleEditor() {
       // User wants to save changes
@@ -36257,6 +36261,9 @@ var _default = {
     });
     this.$store.state.connection.on("ItemTrashed", function (listId, item) {
       return _this.removeTodoListItem(listId, item);
+    });
+    this.$store.state.connection.on("ListLayoutChanged", function (listId) {
+      return _this.getTodoList(listId);
     });
   },
   directives: {
