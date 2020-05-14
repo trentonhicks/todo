@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from './store';
 import axios from 'axios';
 
 Vue.use(VueRouter);
@@ -17,7 +16,6 @@ const router = new VueRouter({
     { path: '/lists', component: Home, name: 'My Lists' },
     { path: '/lists/:id', component: TodoListDetails, props: true },
   ],
-  mode: 'history'
 });
 
 export default router;

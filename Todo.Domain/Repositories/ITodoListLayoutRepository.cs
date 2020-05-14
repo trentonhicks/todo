@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Todo.Domain.Repositories
 {
-    public interface ITodoListLayoutRepository : IUnitOfWork
+    public interface ITodoListLayoutRepository : IRepository
     {
         Task AddLayoutAsync(TodoListLayout layout);
-        Task<TodoListLayout> FindLayoutByListIdAsync(int listId);
+        Task<TodoListLayout> FindLayoutByListIdAsync(Guid listId);
         void Update(TodoListLayout todoListLayout);
     }
 }

@@ -3,8 +3,8 @@ USE [ToDo]
 GO
 
 CREATE TABLE [SubItems](
-    [ID] INT PRIMARY KEY IDENTITY(1,1),
-    [ListItemID] INT,
+    [ID] UNIQUEIDENTIFIER PRIMARY KEY,
+    [ListItemID] UNIQUEIDENTIFIER,
     [Name] VARCHAR(50),
     [Completed] BIT NOT NULL DEFAULT(0)
 

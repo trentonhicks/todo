@@ -8,8 +8,8 @@ namespace TodoWebAPI.UserStories.ItemCompletedState
 {
     public class ItemCompletedState : IRequest
     {
-        public int AccountId { get; set; }
-        public int ItemId { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid ItemId { get; set; }
         public bool Completed { get; set; }
     }
 }

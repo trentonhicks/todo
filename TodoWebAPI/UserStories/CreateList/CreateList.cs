@@ -15,7 +15,13 @@ namespace TodoWebAPI.Models
         [StringLength(50, MinimumLength = 1)]
         [FromBody]
         public string ListTitle { get; set; }
+
+        [Required]
+        [EmailAddress(ErrorMessage = "Email Required")]
+        [FromBody]
+        public string Email { get; set; }
+
         [FromRoute]
-        public int AccountId { get; set; }
+        public Guid AccountId { get; set; }
     }
 }

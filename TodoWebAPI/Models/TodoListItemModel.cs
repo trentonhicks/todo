@@ -7,10 +7,10 @@ namespace TodoWebAPI.Models
 {
     public class TodoListItemModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Notes { get; set; }
         public string Name { get; set; }
-        public int ListId { get; set; }
+        public Guid ListId { get; set; }
         public bool Completed { get; set; }
         public DateTime? DueDate { get; set; }
     }

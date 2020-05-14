@@ -4,26 +4,30 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using Todo.Infrastructure.Repositories;
+using Todo.Infrastructure.Guids;
 
 namespace Todo.Infrastructure.EFRepositories
 {
     public class EFAccountRepository : IAccountRepository
     {
         private TodoDatabaseContext _context;
-        public EFAccountRepository(TodoDatabaseContext context)
+        private readonly ISequentialIdGenerator _idGenerator;
+
+        public EFAccountRepository(TodoDatabaseContext context, ISequentialIdGenerator idGenerator)
         {
             _context = context;
+            _idGenerator = idGenerator;
         }
         public void AddAccount(Account account)
         {
             _context.Accounts.Add(account);
         }
-        public async Task<Account> FindAccountByIdAsync(int id) => await _context.Accounts.FindAsync(id);
-        public async Task<bool> DoesAccountWithAccountIdExistAsync(int accountId) => await _context.Accounts.FindAsync(accountId) != null;
-        public async Task RemoveAccountAsync(int accountId)
+        public async Task<Account> FindAccountByIdAsync(Guid id) => await _context.Accounts.FindAsync(id);
+        public async Task<bool> DoesAccountWithAccountIdExistAsync(Guid accountId) => await _context.Accounts.FindAsync(accountId) != null;
+        public async Task RemoveAccountAsync(Guid accountId)
         {
             var account = await _context.Accounts.FindAsync(accountId);
-
+            
             _context.Accounts.Remove(account);
         }
 
@@ -35,6 +39,11 @@ namespace Todo.Infrastructure.EFRepositories
         public async Task<Account> FindAccountByEmailAsync(string email)
         {
             return await _context.Accounts.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public Guid NextId()
+        {
+            return _idGenerator.NextId();
         }
     }
 }

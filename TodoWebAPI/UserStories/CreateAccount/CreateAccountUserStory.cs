@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
+using Todo.Infrastructure.Guids;
 using Todo.Infrastructure.Repositories;
 using TodoWebAPI.Models;
 
@@ -31,10 +32,13 @@ namespace TodoWebAPI.UserStories.CreateAccount
 
             account = new Account()
             {
+                Id = _accountRepository.NextId(),
                 FullName = request.FullName,
                 Email = request.Email,
                 PictureUrl = request.PictureUrl
             };
+
+            account.Contributors.Add(account.Email);
 
             _accountRepository.AddAccount(account);
 

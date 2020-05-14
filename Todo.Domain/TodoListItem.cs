@@ -8,12 +8,11 @@ namespace Todo.Domain
 {
     public class TodoListItem : Entity
     {
-        public int Id { get; set; }
-        public int AccountId { get; set; }
+        public Guid Id { get; set; }
         public string Notes { get; set; }
         public bool Completed { get; protected set; }
         public string Name { get; set; }
-        public int? ListId { get; set; }
+        public Guid? ListId { get; set; }
         public DateTime? DueDate { get; set; }
         public void SetCompleted(List<SubItem> items)
         {

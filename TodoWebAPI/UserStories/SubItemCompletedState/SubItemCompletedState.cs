@@ -8,8 +8,8 @@ namespace TodoWebAPI.UserStories.SubItemCompletedState
 {
     public class SubItemCompletedState : IRequest
     {
-        public int AccountId { get; set; }
-        public int SubItemId { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid SubItemId { get; set; }
         public bool Completed { get; set; }
     }
 }

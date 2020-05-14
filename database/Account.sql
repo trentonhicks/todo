@@ -3,10 +3,11 @@ USE [ToDo]
 GO
 
 Create Table [Accounts](
-    [ID] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+    [ID] UNIQUEIDENTIFIER PRIMARY KEY,
     [FullName] VARCHAR(50),
     [PictureUrl] VARCHAR(255),
-	[Email] VARCHAR(50) NOT NULL
+	[Email] VARCHAR(50) NOT NULL,
+    [Contributors] VARCHAR(max) NOT NULL
 )
 
 GO

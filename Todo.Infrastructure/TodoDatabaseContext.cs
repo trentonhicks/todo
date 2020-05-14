@@ -34,7 +34,8 @@ namespace Todo.Infrastructure
         public virtual DbSet<TodoListItem> TodoListItems { get; set; }
         public virtual DbSet<TodoListLayout> TodoListLayouts { get; set; }
         public virtual DbSet<SubItem> SubItems { get; set; }
-        public virtual DbSet<SubItemLayout> SubItemLayouts {get; set;}
+        public virtual DbSet<SubItemLayout> SubItemLayouts { get; set; }
+        public virtual DbSet<AccountLists> AccountLists { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -69,6 +70,11 @@ namespace Todo.Infrastructure
                     .Property(e => e.FullName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+                entity
+                    .Property(e => e.Contributors).HasColumnName("Contributors")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<List<string>>(v));
             });
 
             modelBuilder.Entity<TodoList>(entity =>
@@ -78,14 +84,15 @@ namespace Todo.Infrastructure
                     .HasColumnName("ID");
 
                 entity
-                    .Property(e => e.AccountId)
-                    .HasColumnName("AccountID");
-
-                entity
                     .Property(e => e.ListTitle)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+                entity
+                    .Property(e => e.Contributors).HasColumnName("Contributors")
+                    .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<List<string>>(v));
             });
 
             modelBuilder.Entity<TodoListItem>(entity =>
@@ -97,10 +104,6 @@ namespace Todo.Infrastructure
                 entity
                     .Property(e => e.ListId)
                     .HasColumnName("ListID");
-
-                entity
-                    .Property(e => e.AccountId)
-                    .HasColumnName("AccountID");
 
                 entity
                     .Property(e => e.Name)
@@ -133,7 +136,7 @@ namespace Todo.Infrastructure
                     .HasColumnName("Layout")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<int>>(v)
+                        v => JsonConvert.DeserializeObject<List<Guid>>(v)
                     );
             });
 
@@ -150,7 +153,7 @@ namespace Todo.Infrastructure
                     .Property(e => e.Layout).HasColumnName("Layout")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<int>>(v)
+                        v => JsonConvert.DeserializeObject<List<Guid>>(v)
                     );
             });
 
@@ -173,6 +176,14 @@ namespace Todo.Infrastructure
                 entity
                     .Property(e => e.Completed)
                     .HasColumnName("Completed");
+            });
+
+            modelBuilder.Entity<AccountLists>(entity =>
+            {
+                entity
+                    .HasKey(o => new { o.AccountId, o.ListId });
+                entity
+                    .Property(e => e.Role).HasColumnName("Role");
             });
         }
     }

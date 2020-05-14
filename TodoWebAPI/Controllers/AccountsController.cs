@@ -58,7 +58,7 @@ namespace TodoWebAPI.Controllers
         [HttpGet("api/accounts")]
         public async Task<IActionResult> GetAccount()
         {
-            var accountId = Convert.ToInt32(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
+            var accountId = Guid.Parse(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
 
             var dapper = new DapperQuery(_config);
 
@@ -71,7 +71,7 @@ namespace TodoWebAPI.Controllers
         [HttpDelete("api/accounts")]
         public async Task<IActionResult> DeleteAccountAsync()
         {
-            var accountId = Convert.ToInt32(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
+            var accountId = Guid.Parse(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
 
             var deleteAccount = new DeleteAccount
             {

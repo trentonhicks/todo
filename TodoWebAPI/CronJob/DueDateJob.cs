@@ -37,28 +37,28 @@ namespace TodoWebAPI.CronJob
             return base.StartAsync(cancellationToken);
         }
 
-        public override async Task DoWork(CancellationToken cancellationToken)
-        {
-            var dueDates = await _dapperQuery.GetDueDatesFromListItemsAsync();
+        //public override async Task DoWork(CancellationToken cancellationToken)
+        //{
+        //    var dueDates = await _dapperQuery.GetDueDatesFromListItemsAsync();
 
-            foreach(var item in dueDates)
-            {
-                if(item.DueDate?.Date == DateTime.Now.Date && item.DueDate?.Year == DateTime.Now.Year)
-                {
-                    var account = await _dapperQuery.GetAccountAsync(item.AccountId);
+        //    foreach(var item in dueDates)
+        //    {
+        //        if(item.DueDate?.Date == DateTime.Now.Date && item.DueDate?.Year == DateTime.Now.Year)
+        //        {
+        //            var account = await _dapperQuery.GetAccountAsync(item.AccountId);
 
-                    var email = new Email() {
-                        To = account.Email,
-                        From = _configuration.GetSection("Emails")["Notifications"],
-                        Subject = $"{item.Name} is due today. | {item.DueDate}",
-                        Body = $"{item.Name} is due today. Better hurry!" 
-                    };
-                    await _emailService.SendEmailAsync(email);
-                }
-            }
+        //            var email = new Email() {
+        //                To = account.Email,
+        //                From = _configuration.GetSection("Emails")["Notifications"],
+        //                Subject = $"{item.Name} is due today. | {item.DueDate}",
+        //                Body = $"{item.Name} is due today. Better hurry!" 
+        //            };
+        //            await _emailService.SendEmailAsync(email);
+        //        }
+        //    }
 
-            _logger.LogInformation($"{DateTime.Now:hh:mm:ss} Due Date Job is working.");
-        }
+        //    _logger.LogInformation($"{DateTime.Now:hh:mm:ss} Due Date Job is working.");
+        //}
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {

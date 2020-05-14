@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 
 namespace Todo.Domain.Repositories
 {
-    public interface ITodoListItemRepository : IUnitOfWork
+    public interface ITodoListItemRepository : IRepository
     {
         Task AddTodoListItemAsync(TodoListItem todo);
-        Task<TodoListItem> FindToDoListItemByIdAsync(int todoListItemId);
+        Task<TodoListItem> FindToDoListItemByIdAsync(Guid todoListItemId);
         void RemoveTodoListItemAsync(TodoListItem item);
-        Task RemoveAllTodoListItemsFromAccountAsync(int listId);
-        Task<List<TodoListItem>> FindAllTodoListItemsByListIdAsync(int listId);
-        Task<int> GetSubItemCountAsync(int listItemId);
+        Task<List<TodoListItem>> FindAllTodoListItemsByListIdAsync(Guid listId);
+        Task<int> GetSubItemCountAsync(Guid listItemId);
     }
 }

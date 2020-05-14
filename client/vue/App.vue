@@ -4,7 +4,7 @@
   b-navbar(toggleable="sm" type="light" variant="light").fixed-top
     b-navbar-brand Todo
     b-button(v-if="isAuthenticated" @click="logout").ml-auto.mr-2 Logout
-    b-avatar(:src="user.avatar" @click="")
+    b-avatar(v-if="isAuthenticated" :src="$store.state.user.pictureUrl" @click="")
 
   router-view
 
@@ -13,15 +13,11 @@
 <script lang="ts">
 
 import axios from 'axios';
-import store from '../modules/store';
 
 export default {
   name: 'App',
   data() {
     return {
-      user: {
-        avatar: null
-      },
       isAuthenticated: false
     }
   },
@@ -31,10 +27,19 @@ export default {
         method: 'GET',
         url: 'api/accounts/login'
       }).then((response) => {
-        this.user.avatar = response.data;
+
+        axios({
+          method: 'GET',
+          url: 'api/accounts'
+        }).then((user) => {
+          this.$store.commit('setUserData', user.data);
+        });
+
         this.isAuthenticated = true;
+
       }).catch(() => {
         if(this.$router.name !== 'Login') {
+
           this.$router.push('/login');
         }
       });
@@ -46,7 +51,6 @@ export default {
       }).then(() => {
         this.$router.push('/login');
         this.isAuthenticated = false;
-        this.user = {};
       });
     }
   },

@@ -35,6 +35,9 @@ using Octokit.Internal;
 using TodoWebAPI.Models;
 using TodoWebAPI.Extentions;
 using Todo.Infrastructure.Repositories;
+using Todo.Infrastructure.Guids;
+using Dapper;
+using TodoWebAPI.TypeHandlers;
 
 namespace TodoWebAPI
 {
@@ -75,9 +78,10 @@ namespace TodoWebAPI
             services.AddScoped<TodoListItemApplicationService>();
             services.AddScoped<TodoListLayoutApplicationService>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
-            services.AddScoped<ISubItemLayout, EFSubItemLayout>();
+            services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
             services.AddScoped<SubItemLayoutApplicationService>();
             services.AddSingleton<DapperQuery>();
+            services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
@@ -151,7 +155,8 @@ namespace TodoWebAPI
                     };
                 });
 
-
+            // Register type handlers for Dapper
+            SqlMapper.AddTypeHandler(typeof(List<string>), new JsonObjectTypeHandler());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

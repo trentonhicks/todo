@@ -10,9 +10,9 @@ namespace TodoWebAPI.UserStories.CreateSubItem
 {
     public class CreateSubItem : IRequest<SubItem>
     {
-        public int AccountId { get; set; }
-        public int ListId { get; set; }
-        public int ListItemId { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid ListId { get; set; }
+        public Guid ListItemId { get; set; }
         [Required]
         [StringLength(50)]
         public string Name { get; set; }

@@ -31,7 +31,7 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("api/lists/{listId}/todos/{todoItemId}/subitems")]
-        public async Task<IActionResult> GetSubItems(int todoItemId)
+        public async Task<IActionResult> GetSubItems(Guid todoItemId)
         {
             var dapper = new DapperQuery(_config);
 
@@ -41,9 +41,9 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("api/lists/{listId}/todos/{todoItemId}/subitems")]
-        public async Task<IActionResult> CreateSubItem(int listId, int todoItemId, [FromBody] CreateSubItem createSubItem)
+        public async Task<IActionResult> CreateSubItem(Guid listId, Guid todoItemId, [FromBody] CreateSubItem createSubItem)
         {
-            createSubItem.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+            createSubItem.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             createSubItem.ListId = listId;
             createSubItem.ListItemId = todoItemId;
             var subItem = await _mediator.Send(createSubItem);
@@ -52,9 +52,9 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("api/subitems/{subitemId}/completed")]
-        public async Task<IActionResult> ToggleCompletedState(int subItemId, [FromBody] bool completed)
+        public async Task<IActionResult> ToggleCompletedState(Guid subItemId, [FromBody] bool completed)
         {
-            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
             var subItemCompleted = new SubItemCompletedState
             {
@@ -67,9 +67,9 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("api/subitems/{subitemId}")]
-        public async Task<IActionResult> UpdateSubItem(int subitemId, [FromBody] EditSubItem editSubItem)
+        public async Task<IActionResult> UpdateSubItem(Guid subitemId, [FromBody] EditSubItem editSubItem)
         {
-            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
             editSubItem.AccountId = accountId;
             editSubItem.SubItemId = subitemId;
@@ -80,9 +80,9 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpDelete("api/subitems/{subitemId}")]
-        public async Task<IActionResult> TrashSubItem(int subitemId)
+        public async Task<IActionResult> TrashSubItem(Guid subitemId)
         {
-            var accountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
             var trashSubItem = new TrashSubItem
             {

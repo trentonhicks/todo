@@ -7,10 +7,10 @@ namespace Todo.Domain
 {
     public class TodoListLayout : Entity
     {
-        public int Id { get; set; }
-        public int ListId { get; set; }
-        public List<int> Layout { get; set; } = new List<int>();
-        public void UpdateLayout(int todoListItemId,  int todoListItemPosition)
+        public Guid Id { get; set; }
+        public Guid ListId { get; set; }
+        public List<Guid> Layout { get; set; } = new List<Guid>();
+        public void UpdateLayout(Guid todoListItemId,  int todoListItemPosition)
         {
             Layout.Remove(todoListItemId);
             Layout.Insert(todoListItemPosition, todoListItemId);
@@ -21,7 +21,7 @@ namespace Todo.Domain
             }
         }
         
-        public void RemoveItemFromLayout(int todoListItemId)
+        public void RemoveItemFromLayout(Guid todoListItemId)
         {
             Layout.Remove(todoListItemId);
         }

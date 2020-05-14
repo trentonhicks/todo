@@ -8,9 +8,9 @@ namespace TodoWebAPI.Extentions
 {
     public static class OAuthExtentions
     {
-        public static int ReadClaimAsIntValue(this ClaimsPrincipal user, string type)
+        public static Guid ReadClaimAsGuidValue(this ClaimsPrincipal user, string type)
         {
-            return Convert.ToInt32(user.FindFirst(type).Value);
+            return Guid.Parse(user.FindFirst(type).Value);
         }
     }
 }

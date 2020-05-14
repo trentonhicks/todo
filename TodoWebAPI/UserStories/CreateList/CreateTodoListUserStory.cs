@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories
@@ -23,9 +24,13 @@ namespace TodoWebAPI.UserStories
             if (String.IsNullOrEmpty(request.ListTitle))
                 return null;
 
-            var todoList = new TodoList(request.AccountId, request.ListTitle);
+            var todoList = new TodoList (request.ListTitle);
 
-            await _repository.AddTodoListAsync(todoList);
+            todoList.Contributors.Add(request.Email);
+
+            todoList.Id = _repository.NextId();
+
+            await _repository.AddTodoListAsync(todoList, request.AccountId);
 
             await _repository.SaveChangesAsync();
 

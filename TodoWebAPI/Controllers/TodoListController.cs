@@ -14,6 +14,8 @@ using MediatR;
 using TodoWebAPI.UserStories.ListLayout;
 using Microsoft.AspNetCore.Authorization;
 using TodoWebAPI.Extentions;
+using TodoWebAPI.UserStories.SendInvitation;
+
 namespace TodoWebAPI.Controllers
 {
     [ApiController]
@@ -31,35 +33,39 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("api/lists")]
-        public async Task<IActionResult> CreateList(int accountId, CreateList createTodoList)
+        public async Task<IActionResult> CreateList(Guid accountId, CreateList createTodoList)
         {
-            createTodoList.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
-           var todoList = await _mediator.Send(createTodoList);
+            createTodoList.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            
+            var todoList = await _mediator.Send(createTodoList);
+
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
 
-            return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
+                return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
         }
 
         [HttpGet("api/lists")]
         public async Task<IActionResult> GetLists()
         {
-            var lists = await _dapperQuery.GetListsAsync(User.ReadClaimAsIntValue("urn:codefliptodo:accountid"));
+            var lists = await _dapperQuery.GetListsAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var accountContributors = await _dapperQuery.GetContributorsAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var todoListsPresentation = new TodoListsPresentation(lists, accountContributors);
 
-            return Ok(lists);
+            return Ok(todoListsPresentation);
         }
 
         [HttpGet("api/lists/{listId}")]
 
-        public async Task<IActionResult> GetList(int listId)
+        public async Task<IActionResult> GetList(Guid listId)
         {
-            var list = await _dapperQuery.GetListAsync(User.ReadClaimAsIntValue("urn:codefliptodo:accountid"), listId);
+            var list = await _dapperQuery.GetListAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"), listId);
 
             return Ok(list);
         }
 
         [HttpPut("api/lists/{listId}")]
-        public async Task<IActionResult> UpdateList(int listId, UpdateList updatedList)
+        public async Task<IActionResult> UpdateList(Guid listId, UpdateList updatedList)
         {
             updatedList.ListId = listId;
 
@@ -69,11 +75,11 @@ namespace TodoWebAPI.Controllers
         }
         
         [HttpDelete("api/lists/{listId}")]
-        public async Task<IActionResult> DeleteList(int listId)
+        public async Task<IActionResult> DeleteList(Guid listId)
         {
             var deleteTodoModel = new DeleteList();
 
-            deleteTodoModel.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+            deleteTodoModel.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             deleteTodoModel.ListId = listId;
 
             await _mediator.Send(deleteTodoModel);
@@ -82,9 +88,9 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPut("api/lists/{listId}/layout")]
-        public async Task<IActionResult> UpdateLayout(int listId, [FromBody] ListLayout todoListLayoutModel)
+        public async Task<IActionResult> UpdateLayout(Guid listId, [FromBody] ListLayout todoListLayoutModel)
         {
-            todoListLayoutModel.AccountId = User.ReadClaimAsIntValue("urn:codefliptodo:accountid");
+            todoListLayoutModel.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             todoListLayoutModel.ListId = listId;
 
             await _mediator.Send(todoListLayoutModel);
@@ -93,10 +99,19 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpGet("api/lists/{listId}/layout")]
-        public async Task<IActionResult> GetTodoListLayout(int listId)
+        public async Task<IActionResult> GetTodoListLayout(Guid listId)
         {
             var layout = await _dapperQuery.GetTodoListLayoutAsync(listId);
             return Ok(layout.Layout);
+        }
+
+        [HttpPost("api/lists/{listId}/email")]
+
+        public async Task<IActionResult> SendInvitaion(string listId, [FromBody] SendInvitation send)
+        {
+            await _mediator.Send(send);
+
+            return Ok();
         }
 
     }

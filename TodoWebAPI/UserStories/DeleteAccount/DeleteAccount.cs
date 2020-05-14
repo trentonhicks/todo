@@ -9,6 +9,6 @@ namespace TodoWebAPI.UserStories.DeleteAccount
 {
     public class DeleteAccount : IRequest
     {
-        public int AccountId { get; set; }
+        public Guid AccountId { get; set; }
     }
 }
