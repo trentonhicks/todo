@@ -61,8 +61,7 @@
               :name="item.name"
               :completed="item.completed"
               @sub-item-edited="refreshSubItems"
-              @sub-item-toggled="refreshSubItems"
-              @sub-item-deleted="removeSubItemFromList")
+              @sub-item-toggled="refreshSubItems")
 
           //- Add sub-item
           b-button(variant="secondary" class="btn-block mt-2" @click="addingSubItem = true" v-if="!addingSubItem") Add sub-item
@@ -198,6 +197,7 @@ export default {
     });
     this.$store.state.connection.on("ItemCompleted", (item) => this.refreshItemCompletedState(item));
     this.$store.state.connection.on("SubItemCreated", (subitem) => this.addSubItem(subitem));
+    this.$store.state.connection.on("SubItemTrashed", (subitem) => this.removeSubItemFromList(subitem));
   },
   watch: {
     checkboxToggle: function() {

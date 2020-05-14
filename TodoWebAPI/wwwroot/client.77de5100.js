@@ -35279,6 +35279,9 @@ var _default = {
     this.$store.state.connection.on("SubItemCreated", function (subitem) {
       return _this.addSubItem(subitem);
     });
+    this.$store.state.connection.on("SubItemTrashed", function (subitem) {
+      return _this.removeSubItemFromList(subitem);
+    });
   },
   watch: {
     checkboxToggle: function checkboxToggle() {
@@ -35558,8 +35561,7 @@ exports.default = _default;
                         },
                         on: {
                           "sub-item-edited": _vm.refreshSubItems,
-                          "sub-item-toggled": _vm.refreshSubItems,
-                          "sub-item-deleted": _vm.removeSubItemFromList
+                          "sub-item-toggled": _vm.refreshSubItems
                         }
                       })
                     }),
