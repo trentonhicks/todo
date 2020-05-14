@@ -105,7 +105,7 @@ export default {
         },
         showListFromInvitation(list) {
             this.todoLists.push(list);
-        }
+        },
     },
     created: function() {
         this.getTodoLists();

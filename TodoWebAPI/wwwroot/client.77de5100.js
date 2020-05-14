@@ -22179,6 +22179,20 @@ var _default = {
         completed: this.completed
       }
     };
+  },
+  methods: {
+    refreshListCompletedState: function refreshListCompletedState(listId, listCompletedState) {
+      if (this.item.id === listId) {
+        this.item.completed = listCompletedState;
+      }
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$store.state.connection.on("ListCompletedStateChanged", function (listId, listCompletedState) {
+      return _this.refreshListCompletedState(listId, listCompletedState);
+    });
   }
 };
 exports.default = _default;

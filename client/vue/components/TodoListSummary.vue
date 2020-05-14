@@ -30,6 +30,16 @@ export default {
                 completed: this.completed
             }
         };
+    },
+    methods: {
+        refreshListCompletedState(listId, listCompletedState) {
+            if(this.item.id === listId) {
+                this.item.completed = listCompletedState;
+            }
+        }
+    },
+    mounted: function() {
+        this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.refreshListCompletedState(listId, listCompletedState));
     }
 };
 
