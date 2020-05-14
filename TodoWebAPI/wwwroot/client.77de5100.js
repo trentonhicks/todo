@@ -22404,6 +22404,9 @@ var _default = {
           });
         }
       });
+    },
+    showListFromInvitation: function showListFromInvitation(list) {
+      this.todoLists.push(list);
     }
   },
   created: function created() {
@@ -22414,6 +22417,9 @@ var _default = {
 
     this.$store.state.connection.on("RefreshList", function () {
       return _this.getTodoLists();
+    });
+    this.$store.state.connection.on("InvitationSent", function (list) {
+      return _this.showListFromInvitation(list);
     });
   },
   components: {

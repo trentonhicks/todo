@@ -102,6 +102,9 @@ export default {
                     });
                 }
             })
+        },
+        showListFromInvitation(list) {
+            this.todoLists.push(list);
         }
     },
     created: function() {
@@ -109,6 +112,7 @@ export default {
     },
     mounted: function() {
         this.$store.state.connection.on("RefreshList", () => this.getTodoLists());
+        this.$store.state.connection.on("InvitationSent", (list) => this.showListFromInvitation(list));
     },
     components: {
         TodoListSummary
