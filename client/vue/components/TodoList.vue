@@ -202,14 +202,15 @@ export default {
               axios({
                 url: `/api/todos/${item.id}`,
                 method: 'DELETE'
-              }).then((response) => {
-                  let index = this.todoListItems.findIndex(({id}) => id === item.id);
-                  if(index !== -1) {
-                      this.todoListItems.splice(index, 1);
-                  }
               });
           }
       });
+    },
+    removeTodoListItem(listId, item) : void {
+      let index = this.todoListItems.findIndex(({id}) => id === item.id);
+      if(index !== -1) {
+          this.todoListItems.splice(index, 1);
+      }
     },
     updateListCompletedState(item) : void {
       let index = this.todoListItems.findIndex(({id}) => id === item.id);
@@ -295,6 +296,8 @@ export default {
     });
 
     this.$store.state.connection.on("ItemCreated", (listId, item) => this.addTodoListItemToList(listId, item));
+    this.$store.state.connection.on("ItemTrashed", (listId, item) => this.removeTodoListItem(listId, item));
+
   },
   directives: {
     focus: {

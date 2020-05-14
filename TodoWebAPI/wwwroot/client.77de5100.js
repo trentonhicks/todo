@@ -22182,14 +22182,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $c99d36 = exports.default || module.exports;
+        var $64c23c = exports.default || module.exports;
       
-      if (typeof $c99d36 === 'function') {
-        $c99d36 = $c99d36.options;
+      if (typeof $64c23c === 'function') {
+        $64c23c = $64c23c.options;
       }
     
         /* template */
-        Object.assign($c99d36, (function () {
+        Object.assign($64c23c, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22291,7 +22291,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-c99d36",
+            _scopeId: "data-v-64c23c",
             functional: undefined
           };
         })());
@@ -22304,9 +22304,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$c99d36', $c99d36);
+            api.createRecord('$64c23c', $64c23c);
           } else {
-            api.reload('$c99d36', $c99d36);
+            api.reload('$64c23c', $64c23c);
           }
         }
 
@@ -22421,14 +22421,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d1081b = exports.default || module.exports;
+        var $740ee6 = exports.default || module.exports;
       
-      if (typeof $d1081b === 'function') {
-        $d1081b = $d1081b.options;
+      if (typeof $740ee6 === 'function') {
+        $740ee6 = $740ee6.options;
       }
     
         /* template */
-        Object.assign($d1081b, (function () {
+        Object.assign($740ee6, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22551,9 +22551,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$d1081b', $d1081b);
+            api.createRecord('$740ee6', $740ee6);
           } else {
-            api.reload('$d1081b', $d1081b);
+            api.reload('$740ee6', $740ee6);
           }
         }
 
@@ -22585,14 +22585,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $1d3a36 = exports.default || module.exports;
+        var $f566ec = exports.default || module.exports;
       
-      if (typeof $1d3a36 === 'function') {
-        $1d3a36 = $1d3a36.options;
+      if (typeof $f566ec === 'function') {
+        $f566ec = $f566ec.options;
       }
     
         /* template */
-        Object.assign($1d3a36, (function () {
+        Object.assign($f566ec, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22626,9 +22626,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$1d3a36', $1d3a36);
+            api.createRecord('$f566ec', $f566ec);
           } else {
-            api.reload('$1d3a36', $1d3a36);
+            api.reload('$f566ec', $f566ec);
           }
         }
 
@@ -34949,14 +34949,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $89908c = exports.default || module.exports;
+        var $4f5ec9 = exports.default || module.exports;
       
-      if (typeof $89908c === 'function') {
-        $89908c = $89908c.options;
+      if (typeof $4f5ec9 === 'function') {
+        $4f5ec9 = $4f5ec9.options;
       }
     
         /* template */
-        Object.assign($89908c, (function () {
+        Object.assign($4f5ec9, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -35093,7 +35093,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-89908c",
+            _scopeId: "data-v-4f5ec9",
             functional: undefined
           };
         })());
@@ -35106,9 +35106,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$89908c', $89908c);
+            api.createRecord('$4f5ec9', $4f5ec9);
           } else {
-            api.reload('$89908c', $89908c);
+            api.reload('$4f5ec9', $4f5ec9);
           }
         }
 
@@ -35315,14 +35315,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $c8b3b1 = exports.default || module.exports;
+        var $2162c0 = exports.default || module.exports;
       
-      if (typeof $c8b3b1 === 'function') {
-        $c8b3b1 = $c8b3b1.options;
+      if (typeof $2162c0 === 'function') {
+        $2162c0 = $2162c0.options;
       }
     
         /* template */
-        Object.assign($c8b3b1, (function () {
+        Object.assign($2162c0, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -35692,7 +35692,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-c8b3b1",
+            _scopeId: "data-v-2162c0",
             functional: undefined
           };
         })());
@@ -35705,9 +35705,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$c8b3b1', $c8b3b1);
+            api.createRecord('$2162c0', $2162c0);
           } else {
-            api.reload('$c8b3b1', $c8b3b1);
+            api.reload('$2162c0', $2162c0);
           }
         }
 
@@ -36103,8 +36103,6 @@ var _default = {
       }
     },
     deleteTodoListItem: function deleteTodoListItem(item) {
-      var _this = this;
-
       this.$bvModal.msgBoxConfirm("Are you sure you want to delete " + item.name + "?", {
         size: 'sm',
         okVariant: 'danger',
@@ -36117,18 +36115,19 @@ var _default = {
           (0, _axios.default)({
             url: "/api/todos/" + item.id,
             method: 'DELETE'
-          }).then(function (response) {
-            var index = _this.todoListItems.findIndex(function (_a) {
-              var id = _a.id;
-              return id === item.id;
-            });
-
-            if (index !== -1) {
-              _this.todoListItems.splice(index, 1);
-            }
           });
         }
       });
+    },
+    removeTodoListItem: function removeTodoListItem(listId, item) {
+      var index = this.todoListItems.findIndex(function (_a) {
+        var id = _a.id;
+        return id === item.id;
+      });
+
+      if (index !== -1) {
+        this.todoListItems.splice(index, 1);
+      }
     },
     updateListCompletedState: function updateListCompletedState(item) {
       var index = this.todoListItems.findIndex(function (_a) {
@@ -36224,6 +36223,9 @@ var _default = {
     this.$store.state.connection.on("ItemCreated", function (listId, item) {
       return _this.addTodoListItemToList(listId, item);
     });
+    this.$store.state.connection.on("ItemTrashed", function (listId, item) {
+      return _this.removeTodoListItem(listId, item);
+    });
   },
   directives: {
     focus: {
@@ -36234,14 +36236,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $9edb9b = exports.default || module.exports;
+        var $032e85 = exports.default || module.exports;
       
-      if (typeof $9edb9b === 'function') {
-        $9edb9b = $9edb9b.options;
+      if (typeof $032e85 === 'function') {
+        $032e85 = $032e85.options;
       }
     
         /* template */
-        Object.assign($9edb9b, (function () {
+        Object.assign($032e85, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -36542,7 +36544,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-9edb9b",
+            _scopeId: "data-v-032e85",
             functional: undefined
           };
         })());
@@ -36555,9 +36557,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$9edb9b', $9edb9b);
+            api.createRecord('$032e85', $032e85);
           } else {
-            api.reload('$9edb9b', $9edb9b);
+            api.reload('$032e85', $032e85);
           }
         }
 
@@ -36589,14 +36591,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $5d99f9 = exports.default || module.exports;
+        var $72e1c2 = exports.default || module.exports;
       
-      if (typeof $5d99f9 === 'function') {
-        $5d99f9 = $5d99f9.options;
+      if (typeof $72e1c2 === 'function') {
+        $72e1c2 = $72e1c2.options;
       }
     
         /* template */
-        Object.assign($5d99f9, (function () {
+        Object.assign($72e1c2, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -36622,7 +36624,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-5d99f9",
+            _scopeId: "data-v-72e1c2",
             functional: undefined
           };
         })());
@@ -36635,9 +36637,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$5d99f9', $5d99f9);
+            api.createRecord('$72e1c2', $72e1c2);
           } else {
-            api.reload('$5d99f9', $5d99f9);
+            api.reload('$72e1c2', $72e1c2);
           }
         }
 
@@ -36675,14 +36677,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $197150 = exports.default || module.exports;
+        var $9f9b60 = exports.default || module.exports;
       
-      if (typeof $197150 === 'function') {
-        $197150 = $197150.options;
+      if (typeof $9f9b60 === 'function') {
+        $9f9b60 = $9f9b60.options;
       }
     
         /* template */
-        Object.assign($197150, (function () {
+        Object.assign($9f9b60, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -36717,9 +36719,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$197150', $197150);
+            api.createRecord('$9f9b60', $9f9b60);
           } else {
-            api.reload('$197150', $197150);
+            api.reload('$9f9b60', $9f9b60);
           }
         }
 
@@ -36834,14 +36836,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $4aefae = exports.default || module.exports;
+        var $0419d9 = exports.default || module.exports;
       
-      if (typeof $4aefae === 'function') {
-        $4aefae = $4aefae.options;
+      if (typeof $0419d9 === 'function') {
+        $0419d9 = $0419d9.options;
       }
     
         /* template */
-        Object.assign($4aefae, (function () {
+        Object.assign($0419d9, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -36899,9 +36901,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$4aefae', $4aefae);
+            api.createRecord('$0419d9', $0419d9);
           } else {
-            api.reload('$4aefae', $4aefae);
+            api.reload('$0419d9', $0419d9);
           }
         }
 
@@ -83201,7 +83203,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63667" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51672" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
