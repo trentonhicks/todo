@@ -76,7 +76,6 @@ export default {
                 }
             }).then((response) => {
                 if(response.status == 200) {
-                    this.todoLists.push(response.data);
                     this.form.listTitle = ''
                 }
             });
@@ -107,6 +106,9 @@ export default {
     },
     created: function() {
         this.getTodoLists();
+    },
+    mounted: function() {
+        this.$store.state.connection.on("RefreshList", () => this.getTodoLists());
     },
     components: {
         TodoListSummary

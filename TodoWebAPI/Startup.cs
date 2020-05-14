@@ -38,6 +38,9 @@ using Todo.Infrastructure.Repositories;
 using Todo.Infrastructure.Guids;
 using Dapper;
 using TodoWebAPI.TypeHandlers;
+using TodoWebAPI.DomainEventHandlers;
+using TodoWebAPI.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace TodoWebAPI
 {
@@ -55,16 +58,6 @@ namespace TodoWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Policy", builder => builder
-                    .WithOrigins("http://localhost:5002")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                );
-            });
-
             services.AddDbContext<TodoDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
@@ -81,6 +74,7 @@ namespace TodoWebAPI
             services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
             services.AddScoped<SubItemLayoutApplicationService>();
             services.AddSingleton<DapperQuery>();
+            services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
             services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
@@ -90,6 +84,8 @@ namespace TodoWebAPI
                 c.TimeZoneInfo = TimeZoneInfo.Local;
                 c.CronExpression = @"00 12 * * *";
             });
+
+            services.AddSignalR();
 
             services.AddMvc();
 
@@ -185,6 +181,7 @@ namespace TodoWebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/notifications");
             });
         }
     }

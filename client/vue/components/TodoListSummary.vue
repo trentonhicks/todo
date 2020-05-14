@@ -7,7 +7,7 @@
                 | {{item.listTitle}}
         .card-right
             ul.contributors
-                li(v-for="item in listContributorIds")
+                li(v-for="(item, index) in listContributorIds" :style="`z-index: ${listContributorIds.length - index}`")
                     img(:src="accountContributors[item].pictureUrl")
             .todo-list-options
                 b-badge(:class="{ 'badge-success': item.completed }").mr-3 {{ item.completed ? 'Completed' : 'In progress' }}
@@ -48,19 +48,13 @@ export default {
             transition: transform .3s ease;
         }
 
-        li:first-child {
-            position: relative;
-            z-index: 10;
-        }
-
         li:not(:first-child) {
             position: relative;
-            z-index: 0;
-            left: -12px;
+            margin-left: -12px;
         }
 
         li:hover {
-            z-index: 15;
+            z-index: 15 !important;
             transform: translateY(-3px);
         }
 

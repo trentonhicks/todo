@@ -18,7 +18,8 @@ export default {
   name: 'App',
   data() {
     return {
-      isAuthenticated: false
+      isAuthenticated: false,
+      connection: '',
     }
   },
   methods: {
@@ -56,7 +57,10 @@ export default {
   },
   created: function() {
     this.checkAuthState();
-  }
+  },
+  mounted: function() {
+    this.$store.state.connection.start().catch(err => console.error(err.toString()));
+  },
 };
 
 </script>
