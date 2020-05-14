@@ -8,9 +8,10 @@
       div.item-name {{ item.name }}
     .item-editing(v-else)
       b-form-group
-        b-form-input.item-name(v-focus="" @keydown.enter="editing = false" placeholder="Name" maxlength="50" v-model="item.name")
-      b-button(variant="info" size="sm" @click="editing = false").mr-2 Update
-      b-button(variant="danger" size="sm" @click="editing = false") Delete
+        b-form-input.item-name(v-focus="" @keydown.enter="editing = false; editSubItem();" placeholder="Name" maxlength="50" v-model="form.name")
+      b-button(variant="info" size="sm" @click="editing = false; editSubItem();").mr-1 Update
+      b-button(variant="danger" size="sm" @click="editing = false; deleteSubItem();").mr-1 Trash
+      b-button(variant="secondary" size="sm" @click="editing = false") Cancel
       
 </template>
 
@@ -29,6 +30,9 @@ export default {
         id: this.id,
         name: this.name,
         completed: this.completed
+      },
+      form: {
+        name: this.name
       }
     };
   },
@@ -44,6 +48,30 @@ export default {
         },
         data: this.item.completed
       });
+    },
+    editSubItem() {
+      let data = JSON.stringify(this.form);
+
+      axios({
+        method: 'PUT',
+        url: `/api/subitems/${this.item.id}`,
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+
+      this.item.name = this.form.name;
+
+      this.$emit('sub-item-edited', this.item);
+    },
+    deleteSubItem() {
+      axios({
+        method: 'DELETE',
+        url: `/api/subitems/${this.item.id}`,
+      });
+
+      this.$emit('sub-item-deleted', this.item);
     }
   },
   watch: {
@@ -59,7 +87,7 @@ export default {
   directives: {
     focus: {
       inserted (el) {
-        el.focus()
+        el.focus();
       }
     }
   }

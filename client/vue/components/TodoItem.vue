@@ -60,7 +60,9 @@
               :id="item.id"
               :name="item.name"
               :completed="item.completed"
-              @sub-item-toggled="refreshSubItems")
+              @sub-item-edited="refreshSubItems"
+              @sub-item-toggled="refreshSubItems"
+              @sub-item-deleted="removeSubItemFromList")
 
           //- Add sub-item
           b-button(variant="secondary" class="btn-block mt-2" @click="addingSubItem = true" v-if="!addingSubItem") Add sub-item
@@ -176,6 +178,10 @@ export default {
       let index = this.subItems.findIndex(({id}) => id === item.id);
       this.$set(this.subItems, index, item);
     },
+    removeSubItemFromList(item) {
+      let index = this.subItems.findIndex(({id}) => id === item.id);
+      this.subItems.splice(index, 1);
+    }
   },
   created: function() {
     this.getSubItems();
@@ -279,7 +285,7 @@ export default {
   }
 
   .todo-item-handle {
-    margin: 5px 12px 0 0;
+    margin: 3px 12px 0 0;
     opacity: 0.3;
     transition: opacity 0.3s ease;
     align-self: flex-start;
