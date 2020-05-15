@@ -20,6 +20,7 @@ namespace TodoWebAPI.UserStories.EditSubItem
             var subItem = await _subItemRepository.FindByIdAsync(request.SubItemId);
 
             subItem.Name = request.Name;
+            subItem.EditSubItem(subItem);
 
             await _subItemRepository.SaveChangesAsync();
 
