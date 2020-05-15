@@ -104,38 +104,41 @@ export default {
       this.$bvModal.show('modal-add');
     },
     getTodoList(id : number) : void {
-      // Get list
-      axios({
-        method: 'get',
-        url: '/api/lists/' + id
-      }).then((response) => {
-        this.todoList = response.data;
-      }).catch((e) => {
-        console.log(e);
-      });
-
-      // Get list layout
-      axios({
-        method: 'get',
-        url: `/api/lists/${id}/layout`
-      }).then((response) => {
-        this.todoListLayout = response.data;
-
-        // Get todo list items
-        axios({
-          method: 'get',
-          url: '/api/lists/' + id + '/todos'
-        }).then((response) => {
-
-          this.todoListLayout.forEach(position => {
-            let index = response.data.findIndex(item => item.id === position);
-
-            if(index !== -1) {
-              this.todoListItems.push(response.data[index]);
-            }
+        if(id == this.id){
+          // Get list
+          axios({
+            method: 'get',
+            url: '/api/lists/' + id
+          }).then((response) => {
+            this.todoList = response.data;
+          }).catch((e) => {
+            console.log(e);
           });
-        });
-      });
+
+          // Get list layout
+          axios({
+            method: 'get',
+            url: `/api/lists/${id}/layout`
+          }).then((response) => {
+            this.todoListLayout = response.data;
+
+            // Get todo list items
+            axios({
+              method: 'get',
+              url: '/api/lists/' + id + '/todos'
+            }).then((response) => {
+              this.todoListItems = [];
+              
+              this.todoListLayout.forEach(position => {
+                let index = response.data.findIndex(item => item.id === position);
+
+                if(index !== -1) {
+                  this.todoListItems.push(response.data[index]);
+                }
+              });
+            });
+          });
+        }
     },
     toggleTitleEditor() {
 
@@ -297,6 +300,8 @@ export default {
 
     this.$store.state.connection.on("ItemCreated", (listId, item) => this.addTodoListItemToList(listId, item));
     this.$store.state.connection.on("ItemTrashed", (listId, item) => this.removeTodoListItem(listId, item));
+    this.$store.state.connection.on("ListLayoutChanged", (listId) => this.getTodoList(listId));
+
 
   },
   directives: {

@@ -61,8 +61,7 @@
               :name="item.name"
               :completed="item.completed"
               @sub-item-edited="refreshSubItems"
-              @sub-item-toggled="refreshSubItems"
-              @sub-item-deleted="removeSubItemFromList")
+              @sub-item-toggled="refreshSubItems")
 
           //- Add sub-item
           b-button(variant="secondary" class="btn-block mt-2" @click="addingSubItem = true" v-if="!addingSubItem") Add sub-item
@@ -72,9 +71,9 @@
               b-form-input(
                 :class="{'is-invalid': subitemFormLengthExceeded}"
                 id="add-sub-item"
-                v-model="subItemForm.name" @keydown.enter.prevent="addSubItem()" placeholder="Add sub-item" v-focus)
+                v-model="subItemForm.name" @keydown.enter.prevent="createSubItem()" placeholder="Add sub-item" v-focus)
               .invalid-feedback(v-if="subitemFormLengthExceeded") Name must be less than 50 characters.
-              b-button(variant="success" @click="addSubItem()").mt-2 Add
+              b-button(variant="success" @click="createSubItem()").mt-2 Add
               b-button(variant="secondary" @click="addingSubItem = false; subItemForm.name = ''").mt-2.ml-2 Cancel
 
         b-form-group.mb-0.text-right
@@ -117,6 +116,14 @@ export default {
     };
   },
   methods: {
+    addSubItem(subitem){
+      if(this.item.id == subitem.listItemId)
+        this.subItems.unshift(subitem);
+    },
+    refreshItemCompletedState(item) {
+      if(item.id == this.item.id)
+        this.item.completed = item.completed;
+    },
     toggleCompleted() {
       if(this.subItems < 1) {
         axios({
@@ -134,7 +141,6 @@ export default {
       this.$bvModal.hide('modal-edit-' + this.item.id);
       this.form.completed = this.item.completed;
       let data = JSON.stringify(this.form);
-      this.item = JSON.parse(data);
 
       axios({
         method: 'PUT',
@@ -145,6 +151,15 @@ export default {
         }
       });
     },
+    refreshEditedItem(item) {
+      if(item.id === this.item.id) {
+        this.item = item;
+        this.form.name = item.name;
+        this.form.notes = item.notes;
+        this.form.completed = item.completed;
+        this.form.dueDate = item.dueDate;
+      }
+    },
     getSubItems() {
       axios({
         method: 'GET',
@@ -153,13 +168,13 @@ export default {
         this.subItems = response.data;
       });
     },
-    addSubItem() {
+    createSubItem() {
       if(this.subitemFormValid) {
         let data = JSON.stringify({ name: this.subItemForm.name });
 
         this.subItemForm.name = '';
-        let addSubItemInput = document.getElementById("add-sub-item");
-        addSubItemInput.focus();
+        let createSubItemInput = document.getElementById("add-sub-item");
+        createSubItemInput.focus();
 
         axios({
           method: 'POST',
@@ -168,10 +183,7 @@ export default {
           headers: {
             'content-type': 'application/json'
           }
-        }).then(response => {
-          this.subItems.unshift(response.data);
-        });
-
+        });   
       }
     },
     refreshSubItems(item) {
@@ -191,6 +203,10 @@ export default {
       let formInput = document.querySelector(`#${modalId} .form-input-focus`);
       formInput.focus();
     });
+    this.$store.state.connection.on("ItemCompleted", (item) => this.refreshItemCompletedState(item));
+    this.$store.state.connection.on("ItemUpdated", (item) => this.refreshEditedItem(item));
+    this.$store.state.connection.on("SubItemCreated", (subitem) => this.addSubItem(subitem));
+    this.$store.state.connection.on("SubItemTrashed", (subitem) => this.removeSubItemFromList(subitem));
   },
   watch: {
     checkboxToggle: function() {

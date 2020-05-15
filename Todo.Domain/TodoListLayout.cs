@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Todo.Domain.DomainEvents;
 
 namespace Todo.Domain
 {
@@ -10,7 +11,7 @@ namespace Todo.Domain
         public Guid Id { get; set; }
         public Guid ListId { get; set; }
         public List<Guid> Layout { get; set; } = new List<Guid>();
-        public void UpdateLayout(Guid todoListItemId,  int todoListItemPosition)
+        public void UpdateLayout(Guid todoListItemId,  int todoListItemPosition, Guid listId)
         {
             Layout.Remove(todoListItemId);
             Layout.Insert(todoListItemPosition, todoListItemId);
@@ -19,8 +20,13 @@ namespace Todo.Domain
             {
                 throw new ArgumentException("Layout contains duplicate Id.");
             }
+            else
+            {
+                DomainEvents.Add(new ListLayoutUpdated { Position = todoListItemPosition, ItemId = todoListItemId, ListId = listId });
+
+            }
         }
-        
+
         public void RemoveItemFromLayout(Guid todoListItemId)
         {
             Layout.Remove(todoListItemId);

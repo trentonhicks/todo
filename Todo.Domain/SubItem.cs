@@ -47,5 +47,9 @@ namespace Todo.Domain
             if (this.ListItemId == null)
                 throw new InvalidOperationException("Item is in the trash!");
         }
+        public void EditSubItem(SubItem subItem)
+        {
+            DomainEvents.Add(new EditSubItem { SubItem = subItem });
+        }
     }
 }

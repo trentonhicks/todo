@@ -61,9 +61,13 @@ export default {
         }
       });
 
-      this.item.name = this.form.name;
-
-      this.$emit('sub-item-edited', this.item);
+    },
+    refreshSubItem(subItem) {
+      if(subItem.id === this.item.id) {
+        this.item = subItem;
+        this.form.name = subItem.name;
+        this.$emit('sub-item-edited', subItem);
+      }
     },
     deleteSubItem() {
       axios({
@@ -73,6 +77,10 @@ export default {
 
       this.$emit('sub-item-deleted', this.item);
     }
+  },
+  mounted() {
+    this.$store.state.connection.on("SubItemUpdated", (subItem) => this.refreshSubItem(subItem));
+    this.$store.state.connection.on("SubItemCompletedStateChanged", (subItem) => this.refreshSubItem(subItem));
   },
   watch: {
     checkboxToggle: function() {

@@ -81,5 +81,9 @@ namespace Todo.Domain
             if(this.ListId == null)
                 throw new InvalidOperationException("Item is in the trash!");
         }
+        public void EditItem(TodoListItem item)
+        {
+            DomainEvents.Add(new ItemChanged { Item = item });
+        }
     }
 }
