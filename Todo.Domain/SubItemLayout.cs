@@ -25,5 +25,10 @@ namespace Todo.Domain
                 DomainEvents.Add(new ItemLayoutUpdated { Position = position, SubItemId = subItemId, ItemId = itemId });
             }
         }
+
+        public void RemoveSubItemFromLayout(Guid subItemId)
+        {
+            Layout.Remove(subItemId);
+        }
     }
 }

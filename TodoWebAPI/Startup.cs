@@ -38,7 +38,6 @@ using Todo.Infrastructure.Repositories;
 using Todo.Infrastructure.Guids;
 using Dapper;
 using TodoWebAPI.TypeHandlers;
-using TodoWebAPI.DomainEventHandlers;
 using TodoWebAPI.SignalR;
 using Microsoft.AspNetCore.SignalR;
 
