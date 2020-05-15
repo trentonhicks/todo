@@ -77,6 +77,7 @@ export default {
             }).then((response) => {
                 if(response.status == 200) {
                     this.form.listTitle = ''
+                    this.todoLists.push(response.data);
                 }
             });
         },
@@ -111,7 +112,6 @@ export default {
         this.getTodoLists();
     },
     mounted: function() {
-        this.$store.state.connection.on("RefreshList", () => this.getTodoLists());
         this.$store.state.connection.on("InvitationSent", (list) => this.showListFromInvitation(list));
     },
     components: {

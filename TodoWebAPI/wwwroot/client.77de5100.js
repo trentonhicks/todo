@@ -22388,6 +22388,8 @@ var _default = {
       }).then(function (response) {
         if (response.status == 200) {
           _this.form.listTitle = '';
+
+          _this.todoLists.push(response.data);
         }
       });
     },
@@ -22429,9 +22431,6 @@ var _default = {
   mounted: function mounted() {
     var _this = this;
 
-    this.$store.state.connection.on("RefreshList", function () {
-      return _this.getTodoLists();
-    });
     this.$store.state.connection.on("InvitationSent", function (list) {
       return _this.showListFromInvitation(list);
     });
