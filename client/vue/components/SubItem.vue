@@ -80,6 +80,7 @@ export default {
   },
   mounted() {
     this.$store.state.connection.on("SubItemUpdated", (subItem) => this.refreshSubItem(subItem));
+    this.$store.state.connection.on("SubItemCompletedStateChanged", (subItem) => this.refreshSubItem(subItem));
   },
   watch: {
     checkboxToggle: function() {

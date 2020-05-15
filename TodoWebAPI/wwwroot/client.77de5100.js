@@ -34961,6 +34961,9 @@ var _default = {
     this.$store.state.connection.on("SubItemUpdated", function (subItem) {
       return _this.refreshSubItem(subItem);
     });
+    this.$store.state.connection.on("SubItemCompletedStateChanged", function (subItem) {
+      return _this.refreshSubItem(subItem);
+    });
   },
   watch: {
     checkboxToggle: function checkboxToggle() {
