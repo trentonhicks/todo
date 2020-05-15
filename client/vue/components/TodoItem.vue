@@ -120,7 +120,7 @@ export default {
         this.item.completed = item.completed;
     },
     toggleCompleted() {
-      if(this.subItems < 1) {
+      if(Object.keys(this.subItems).length < 1) {
         axios({
           method: 'PUT',
           url: `/api/todos/${this.item.id}/completed`,
@@ -206,7 +206,9 @@ export default {
       }
     },
     refreshSubItems(item) {
-      this.$set(this.subItems, item.id, item);
+      if(this.hasSubItems) {
+        this.$set(this.subItems, item.id, item);
+      }
     },
     refreshSubItemLayout() {
       axios({
@@ -240,14 +242,6 @@ export default {
     checkboxToggle: function() {
       this.toggleCompleted();
     },
-    allSubItemsCompleted: function() {
-      if(this.allSubItemsCompleted) {
-        this.$set(this.item, 'completed', true);
-      }
-      else {
-        this.$set(this.item, 'completed', false);
-      }
-    }
   },
   computed: {
     subitemFormIsEmpty(){
@@ -273,14 +267,6 @@ export default {
       }
       return true;
     },
-    allSubItemsCompleted() {
-      for(var index in this.subItems) {
-        if(!this.subItems[index].completed) {
-          return false;
-        }
-      }
-      return true;
-    }
   },
   filters: {
     formatDate: function(value) : string {

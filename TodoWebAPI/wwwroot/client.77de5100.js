@@ -35200,7 +35200,7 @@ var _default = {
       if (item.id == this.item.id) this.item.completed = item.completed;
     },
     toggleCompleted: function toggleCompleted() {
-      if (this.subItems < 1) {
+      if (Object.keys(this.subItems).length < 1) {
         (0, _axios.default)({
           method: 'PUT',
           url: "/api/todos/" + this.item.id + "/completed",
@@ -35291,7 +35291,9 @@ var _default = {
       }
     },
     refreshSubItems: function refreshSubItems(item) {
-      this.$set(this.subItems, item.id, item);
+      if (this.hasSubItems) {
+        this.$set(this.subItems, item.id, item);
+      }
     },
     refreshSubItemLayout: function refreshSubItemLayout() {
       var _this = this;
@@ -35342,13 +35344,6 @@ var _default = {
   watch: {
     checkboxToggle: function checkboxToggle() {
       this.toggleCompleted();
-    },
-    allSubItemsCompleted: function allSubItemsCompleted() {
-      if (this.allSubItemsCompleted) {
-        this.$set(this.item, 'completed', true);
-      } else {
-        this.$set(this.item, 'completed', false);
-      }
     }
   },
   computed: {
@@ -35373,15 +35368,6 @@ var _default = {
 
       if (dueDate.getTime() >= today.getTime()) {
         return false;
-      }
-
-      return true;
-    },
-    allSubItemsCompleted: function allSubItemsCompleted() {
-      for (var index in this.subItems) {
-        if (!this.subItems[index].completed) {
-          return false;
-        }
       }
 
       return true;
