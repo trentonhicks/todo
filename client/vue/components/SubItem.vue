@@ -1,6 +1,6 @@
 <template lang="pug">
 
-  b-list-group-item.sub-item
+  b-list-group-item.sub-item(:data-id="item.id")
     b-icon-list.sub-item-handle
     .item-checkbox-wrapper
       b-form-checkbox(v-model="item.completed")
@@ -38,8 +38,6 @@ export default {
   },
   methods: {
     toggleCompleted() {
-      this.$emit('sub-item-toggled', this.item);
-
       axios({
         method: 'PUT',
         url: `/api/subitems/${this.item.id}/completed`,
@@ -66,7 +64,6 @@ export default {
       if(subItem.id === this.item.id) {
         this.item = subItem;
         this.form.name = subItem.name;
-        this.$emit('sub-item-edited', subItem);
       }
     },
     deleteSubItem() {
@@ -74,8 +71,6 @@ export default {
         method: 'DELETE',
         url: `/api/subitems/${this.item.id}`,
       });
-
-      this.$emit('sub-item-deleted', this.item);
     }
   },
   mounted() {

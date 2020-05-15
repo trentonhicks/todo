@@ -114,8 +114,17 @@ namespace TodoWebAPI
             }
         }
 
+        public async Task<TodoItemLayoutPresentation> GetTodoItemLayoutAsync(Guid itemId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryAsync<TodoItemLayoutPresentation>("SELECT Layout FROM SubItemLayouts WHERE ItemId = @itemId", new { itemId = itemId });
+                return result.FirstOrDefault();
+            }
+        }
 
-        public async Task<List<SubItemModel>> GetSubItems(Guid listItemId)
+        public async Task<Dictionary<string, SubItemModel>> GetSubItems(Guid listItemId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -123,7 +132,7 @@ namespace TodoWebAPI
 
                 var result = await connection.QueryAsync<SubItemModel>("SELECT * FROM SubItems WHERE ListItemID = @listItemId", new { listItemId = listItemId });
                 
-                return result.ToList();
+                return result.ToDictionary(kvp => kvp.Id.ToString(), kvp => kvp);
             }
         }
 

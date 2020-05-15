@@ -87,8 +87,18 @@ namespace TodoWebAPI.Controllers
             return Ok();
         }
 
+        [HttpGet("api/todos/{todoItemId}/layout")]
+        public async Task<IActionResult> GetLayout(Guid todoItemId)
+        {
+            var dapper = new DapperQuery(_config);
+
+            var layout = await dapper.GetTodoItemLayoutAsync(todoItemId);
+
+            return Ok(layout);
+        }
+
         [HttpPut("api/todos/{todoId}/layout")]
-        public async Task<IActionResult> UpdateLayout(Guid todoId, [FromBody] ItemLayout  itemLayout)
+        public async Task<IActionResult> UpdateLayout(Guid todoId, [FromBody] ItemLayout itemLayout)
         {
             itemLayout.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             itemLayout.ItemId = todoId;

@@ -34918,7 +34918,6 @@ var _default = {
   },
   methods: {
     toggleCompleted: function toggleCompleted() {
-      this.$emit('sub-item-toggled', this.item);
       (0, _axios.default)({
         method: 'PUT',
         url: "/api/subitems/" + this.item.id + "/completed",
@@ -34943,7 +34942,6 @@ var _default = {
       if (subItem.id === this.item.id) {
         this.item = subItem;
         this.form.name = subItem.name;
-        this.$emit('sub-item-edited', subItem);
       }
     },
     deleteSubItem: function deleteSubItem() {
@@ -34951,7 +34949,6 @@ var _default = {
         method: 'DELETE',
         url: "/api/subitems/" + this.item.id
       });
-      this.$emit('sub-item-deleted', this.item);
     }
   },
   mounted: function mounted() {
@@ -34997,7 +34994,7 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "b-list-group-item",
-    { staticClass: "sub-item" },
+    { staticClass: "sub-item", attrs: { "data-id": _vm.item.id } },
     [
       _c("b-icon-list", { staticClass: "sub-item-handle" }),
       _c(
@@ -35194,13 +35191,11 @@ var _default = {
       subItemForm: {
         name: ''
       },
-      subItems: []
+      subItems: [],
+      subItemsLayout: []
     };
   },
   methods: {
-    addSubItem: function addSubItem(subitem) {
-      if (this.item.id == subitem.listItemId) this.subItems.unshift(subitem);
-    },
     refreshItemCompletedState: function refreshItemCompletedState(item) {
       if (item.id == this.item.id) this.item.completed = item.completed;
     },
@@ -35250,6 +35245,31 @@ var _default = {
         url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/subitems"
       }).then(function (response) {
         _this.subItems = response.data;
+        (0, _axios.default)({
+          method: 'GET',
+          url: "api/todos/" + _this.item.id + "/layout"
+        }).then(function (response) {
+          _this.subItemsLayout = response.data.layout;
+        });
+      });
+    },
+    updateSubItemPosition: function updateSubItemPosition(e) {
+      var position = e.newIndex;
+      var itemId = this.item.id;
+      var subItemId = e.item.dataset.id;
+      var data = JSON.stringify({
+        accountId: this.$store.state.user.id,
+        itemId: itemId,
+        subItemId: subItemId,
+        position: position
+      });
+      (0, _axios.default)({
+        method: 'PUT',
+        url: "api/todos/" + this.item.id + "/layout",
+        data: data,
+        headers: {
+          'content-type': 'application/json'
+        }
       });
     },
     createSubItem: function createSubItem() {
@@ -35271,18 +35291,20 @@ var _default = {
       }
     },
     refreshSubItems: function refreshSubItems(item) {
-      var index = this.subItems.findIndex(function (_a) {
-        var id = _a.id;
-        return id === item.id;
+      this.$set(this.subItems, item.id, item);
+    },
+    refreshSubItemLayout: function refreshSubItemLayout() {
+      var _this = this;
+
+      (0, _axios.default)({
+        method: 'GET',
+        url: "api/todos/" + this.item.id + "/layout"
+      }).then(function (response) {
+        _this.subItemsLayout = response.data.layout;
       });
-      this.$set(this.subItems, index, item);
     },
     removeSubItemFromList: function removeSubItemFromList(item) {
-      var index = this.subItems.findIndex(function (_a) {
-        var id = _a.id;
-        return id === item.id;
-      });
-      this.subItems.splice(index, 1);
+      this.$delete(this.subItems, item.id);
     }
   },
   created: function created() {
@@ -35302,10 +35324,19 @@ var _default = {
       return _this.refreshEditedItem(item);
     });
     this.$store.state.connection.on("SubItemCreated", function (subitem) {
-      return _this.addSubItem(subitem);
+      return _this.getSubItems();
     });
     this.$store.state.connection.on("SubItemTrashed", function (subitem) {
       return _this.removeSubItemFromList(subitem);
+    });
+    this.$store.state.connection.on("SubItemUpdated", function (subItem) {
+      return _this.refreshSubItems(subItem);
+    });
+    this.$store.state.connection.on("SubItemCompletedStateChanged", function (subItem) {
+      return _this.refreshSubItems(subItem);
+    });
+    this.$store.state.connection.on("ItemLayoutUpdated", function (subItem) {
+      return _this.refreshSubItemLayout();
     });
   },
   watch: {
@@ -35334,7 +35365,7 @@ var _default = {
       return this.item.completed;
     },
     hasSubItems: function hasSubItems() {
-      return this.subItems.length > 0;
+      return Object.keys(this.subItems).length > 0;
     },
     itemDueToday: function itemDueToday() {
       var today = new Date();
@@ -35347,9 +35378,13 @@ var _default = {
       return true;
     },
     allSubItemsCompleted: function allSubItemsCompleted() {
-      return this.subItems.every(function (item) {
-        return item.completed;
-      }) && this.subItems.length > 0;
+      for (var index in this.subItems) {
+        if (!this.subItems[index].completed) {
+          return false;
+        }
+      }
+
+      return true;
     }
   },
   filters: {
@@ -35568,21 +35603,22 @@ exports.default = _default;
                     "draggable",
                     {
                       attrs: { handle: ".sub-item-handle" },
+                      on: { end: _vm.updateSubItemPosition },
                       model: {
-                        value: _vm.subItems,
+                        value: _vm.subItemsLayout,
                         callback: function($$v) {
-                          _vm.subItems = $$v
+                          _vm.subItemsLayout = $$v
                         },
-                        expression: "subItems"
+                        expression: "subItemsLayout"
                       }
                     },
-                    _vm._l(_vm.subItems, function(item) {
+                    _vm._l(_vm.subItemsLayout, function(key) {
                       return _c("sub-item", {
-                        key: item.id,
+                        key: key,
                         attrs: {
-                          id: item.id,
-                          name: item.name,
-                          completed: item.completed
+                          id: _vm.subItems[key].id,
+                          name: _vm.subItems[key].name,
+                          completed: _vm.subItems[key].completed
                         },
                         on: {
                           "sub-item-edited": _vm.refreshSubItems,
@@ -83267,7 +83303,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49876" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59617" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
