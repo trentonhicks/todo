@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
+using TodoWebAPI.SignalR;
+
 
 namespace TodoWebAPI.DomainEventHandlers.EditItem
 {

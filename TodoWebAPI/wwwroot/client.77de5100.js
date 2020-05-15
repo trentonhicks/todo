@@ -35224,7 +35224,6 @@ var _default = {
       this.$bvModal.hide('modal-edit-' + this.item.id);
       this.form.completed = this.item.completed;
       var data = JSON.stringify(this.form);
-      this.item = JSON.parse(data);
       (0, _axios.default)({
         method: 'PUT',
         url: "/api/todos/" + this.item.id,
@@ -35233,6 +35232,15 @@ var _default = {
           'content-type': 'application/json'
         }
       });
+    },
+    refreshEditedItem: function refreshEditedItem(item) {
+      if (item.id === this.item.id) {
+        this.item = item;
+        this.form.name = item.name;
+        this.form.notes = item.notes;
+        this.form.completed = item.completed;
+        this.form.dueDate = item.dueDate;
+      }
     },
     getSubItems: function getSubItems() {
       var _this = this;
@@ -35289,6 +35297,9 @@ var _default = {
     });
     this.$store.state.connection.on("ItemCompleted", function (item) {
       return _this.refreshItemCompletedState(item);
+    });
+    this.$store.state.connection.on("ItemUpdated", function (item) {
+      return _this.refreshEditedItem(item);
     });
     this.$store.state.connection.on("SubItemCreated", function (subitem) {
       return _this.addSubItem(subitem);
@@ -83256,7 +83267,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55424" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49876" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

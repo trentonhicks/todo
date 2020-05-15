@@ -119,11 +119,11 @@ export default {
     addSubItem(subitem){
       if(this.item.id == subitem.listItemId)
         this.subItems.unshift(subitem);
-    }
+    },
     refreshItemCompletedState(item) {
       if(item.id == this.item.id)
         this.item.completed = item.completed;
-    }
+    },
     toggleCompleted() {
       if(this.subItems < 1) {
         axios({
@@ -141,7 +141,6 @@ export default {
       this.$bvModal.hide('modal-edit-' + this.item.id);
       this.form.completed = this.item.completed;
       let data = JSON.stringify(this.form);
-      this.item = JSON.parse(data);
 
       axios({
         method: 'PUT',
@@ -151,6 +150,15 @@ export default {
           'content-type': 'application/json'
         }
       });
+    },
+    refreshEditedItem(item) {
+      if(item.id === this.item.id) {
+        this.item = item;
+        this.form.name = item.name;
+        this.form.notes = item.notes;
+        this.form.completed = item.completed;
+        this.form.dueDate = item.dueDate;
+      }
     },
     getSubItems() {
       axios({
@@ -196,6 +204,7 @@ export default {
       formInput.focus();
     });
     this.$store.state.connection.on("ItemCompleted", (item) => this.refreshItemCompletedState(item));
+    this.$store.state.connection.on("ItemUpdated", (item) => this.refreshEditedItem(item));
     this.$store.state.connection.on("SubItemCreated", (subitem) => this.addSubItem(subitem));
     this.$store.state.connection.on("SubItemTrashed", (subitem) => this.removeSubItemFromList(subitem));
   },
