@@ -21,8 +21,13 @@ namespace TodoWebAPI.UserStories.EditItem
             var todoListItem = await _todoListItemRepository.FindToDoListItemByIdAsync(request.Id);
 
             todoListItem.Name = request.Name;
+            todoListItem.EditItem(todoListItem);
+
             todoListItem.Notes = request.Notes;
+            todoListItem.EditItem(todoListItem);
+
             todoListItem.DueDate = request.DueDate;
+            todoListItem.EditItem(todoListItem);
 
             await _todoListItemRepository.SaveChangesAsync();
         }
