@@ -24,6 +24,8 @@ namespace TodoWebAPI.UserStories
 
             todoList.ListTitle = request.ListTitle;
 
+            todoList.UpdateListName();
+
             await _repository.SaveChangesAsync();
 
             return todoList;
