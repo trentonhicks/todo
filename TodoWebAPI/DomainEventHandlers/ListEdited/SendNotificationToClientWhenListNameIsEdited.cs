@@ -20,7 +20,7 @@ namespace TodoWebAPI.DomainEventHandlers.ListEdited
         }
         public Task Handle(ListNameUpdated notification, CancellationToken cancellationToken)
         {
-            return _hubContext.Clients.Users(notification.List.Contributors).SendAsync("ListNameUpdated", notification.List);
+            return _hubContext.Clients.Users(notification.List.Contributors).SendAsync("ListNameUpdated", notification.List.Id, notification.List.ListTitle);
         }
     }
 }

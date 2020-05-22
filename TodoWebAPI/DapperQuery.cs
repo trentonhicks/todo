@@ -136,7 +136,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<List<TodoListItem>> GetDueDatesFromListItemsAsync()
+        public async Task<List<TodoListItem>> GetItemsFromListItemsAsync()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -166,6 +166,17 @@ namespace TodoWebAPI
 
                 var result = await connection.QueryAsync<Guid>("SELECT ID FROM Accounts WHERE Email = @email", new { email = email});
                 return result.FirstOrDefault();
+            }
+        }
+
+        public async Task<List<string>> GetContributorsByListIdAsync(Guid listId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<string>("SELECT Contributors FROM TodoLists WHERE Id = @listId", new { listId = listId });
+                return result.ToList();
             }
         }
     }
