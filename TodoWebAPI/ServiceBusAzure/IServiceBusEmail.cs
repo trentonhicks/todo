@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Todo.Domain;
 using Todo.Infrastructure.Email;
 
 namespace TodoWebAPI.ServiceBusRabbitmq
 {
     public interface IServiceBusEmail
     {
-        void SendServiceBusEmail(Email email);
+        void SendServiceBusEmail(Email email, TodoList list);
     }
 }

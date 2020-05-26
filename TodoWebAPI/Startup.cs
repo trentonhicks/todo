@@ -40,6 +40,7 @@ using Dapper;
 using TodoWebAPI.TypeHandlers;
 using TodoWebAPI.SignalR;
 using Microsoft.AspNetCore.SignalR;
+using TodoWebAPI.ServiceBusAzure;
 
 namespace TodoWebAPI
 {
@@ -77,12 +78,14 @@ namespace TodoWebAPI
             services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddHostedService<RecieveServiceBus>();
 
             services.AddCronJob<DueDateJob>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"00 12 * * *";
+                c.CronExpression = @"* * * * *";
             });
+            
 
             services.AddSignalR();
 
