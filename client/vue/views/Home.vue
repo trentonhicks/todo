@@ -1,22 +1,31 @@
-<template lang="pug">
+<template>
 
-b-container
-  h1.mb-3 My Lists
-  all-todo-lists
+  <b-container>
+
+    <h1 class="mb-4">My Lists</h1>
+
+    <TodoLists></TodoLists>
+    
+    <AddTodoListForm></AddTodoListForm>
+
+  </b-container>
       
 </template>
 
-<script lang="ts">
+<script>
 
-import AllTodoLists from '../components/AllTodoLists.vue';
+  import TodoLists from '../components/TodoLists';
+  import AddTodoListForm from '../components/AddTodoListForm';
 
-export default {
-  data() {
-    return {};
-  },
-  components: {
-    AllTodoLists
-  }
-};
+  export default {
+    name: "Home",
+    data() {
+      return {};
+    },
+    components: {
+      TodoLists,
+      AddTodoListForm,
+    }
+  };
 
 </script>

@@ -1,141 +1,60 @@
-<template lang="pug">
+<template>
   
-#content.mt-4
-  b-navbar(toggleable="sm" type="light" variant="light").fixed-top
-    b-navbar-brand Todo
-    b-button(v-if="isAuthenticated" @click="logout").ml-auto.mr-2 Logout
-    b-avatar(v-if="isAuthenticated" :src="$store.state.user.pictureUrl" @click="")
+  <div id="content" class="mt-4">
 
-  router-view
+    <Header></Header>
+    <RouterView></RouterView>
+    
+  </div>
 
 </template>
 
-<script lang="ts">
+<script>
 
-import axios from 'axios';
+  import Header from './components/Header';
 
-export default {
-  name: 'App',
-  data() {
-    return {
-      isAuthenticated: false,
-      connection: '',
-    }
-  },
-  methods: {
-    checkAuthState() {
-      axios({
-        method: 'GET',
-        url: 'api/accounts/login'
-      }).then((response) => {
-
-        axios({
-          method: 'GET',
-          url: 'api/accounts'
-        }).then((user) => {
-          this.$store.commit('setUserData', user.data);
-        });
-
-        this.isAuthenticated = true;
-
-      }).catch(() => {
-        if(this.$router.name !== 'Login') {
-
-          this.$router.push('/login');
-        }
-      });
+  export default {
+    name: 'App',
+    components: {
+      Header
     },
-    logout() {
-      axios({
-        method: 'GET',
-        url: 'api/accounts/logout'
-      }).then(() => {
-        this.$router.push('/login');
-        this.isAuthenticated = false;
-      });
-    }
-  },
-  created: function() {
-    this.checkAuthState();
-  },
-  mounted: function() {
-    this.$store.state.connection.start().catch(err => console.error(err.toString()));
-  },
-};
+    beforeCreate() {
+      this.$store.dispatch('loadTodoLists');
+    },
+    mounted() {
+      this.$store.state.connection.start().catch(err => console.error(err.toString()));
+      this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit('addItem', { listId, item }));
+      this.$store.state.connection.on("ItemCompleted", (item) => this.$store.commit('updateItemCompletedState', { item }));
+    },
+  };
 
 </script>
 
 <style lang="scss">
 
-* {
-  box-sizing: border-box;
-}
-
-#content {
-  padding: 75px 20px;
-  height: 100vh;
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: 'Nunito', sans-serif;
-    font-weight: bold;
+  * {
+    box-sizing: border-box;
   }
-}
 
-h1 {
-  font-size: 40px;
-}
+  #content {
+    padding: 75px 20px;
+    height: 100vh;
 
-.list-title {
-  font-size: 40px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: bold;
-  color: #212529;
-  display: block;
-  border: none;
-  width: 100%;
-
-  .form-control {
-    @extend .list-title;
-    padding: 0;
-    height: auto;
-    padding: 0 10px;
-    background: #f8f9fa !important;
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: bold;
+    }
   }
-}
 
-.btn {
-  font-family: 'Nunito', sans-serif;
-  font-weight: bold;
-}
+  h1 {
+    font-size: 40px;
+  }
 
-.modal-hide-footer .modal-footer {
-  display: none;
-}
-
-.item-0 {
-    .todo-item.list-group-item {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-}
-
-.todo-item-wrapper:not(.item-0) {
-  .todo-item.list-group-item {
-      border-radius: 0;
-      border-top: none;
-    }
-}
-
-.todo-item-wrapper:not(.item-0):last-child .todo-item {
-  border-bottom-left-radius: .25rem;
-  border-bottom-right-radius: .25rem;
-}
-
-.navbar.fixed-top {
-  z-index: 400;
-}
+  .modal-footer {
+    display: none !important;
+  }
 
 </style>

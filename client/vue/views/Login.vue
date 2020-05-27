@@ -5,7 +5,7 @@ b-container
       
 </template>
 
-<script lang="ts">
+<script>
 
 import axios from 'axios';
 
