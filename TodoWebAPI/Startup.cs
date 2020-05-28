@@ -57,15 +57,11 @@ namespace TodoWebAPI
             {
                 services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
             }
-            else if (_env.IsStaging())
+            else
             {
                 services.AddSingleton<IEmailService, SendGridEmailService>();
             }
-            else
-            {
-                Console.WriteLine("Not dev or staging");
-            }
-
+           
             services.AddRazorPages();
 
             services.AddDbContext<TodoDatabaseContext>(
