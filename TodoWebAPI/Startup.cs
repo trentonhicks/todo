@@ -39,18 +39,31 @@ namespace TodoWebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
 
         readonly string MyAllowSpecificOrigins = "Policy";
+        private readonly IWebHostEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if (_env.IsDevelopment())
+            {
+                services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
+            }
+            else
+            {
+                services.AddSingleton<IEmailService, SendGridEmailService>();
+            }
+           
+            services.AddRazorPages();
+
             services.AddDbContext<TodoDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
@@ -58,7 +71,6 @@ namespace TodoWebAPI
             services.AddScoped<ITodoListLayoutRepository, EFTodoListLayoutRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
-            services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
             services.AddScoped<IServiceBusEmail, ServiceBusEmail>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
             services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
@@ -72,7 +84,7 @@ namespace TodoWebAPI
             services.AddCronJob<DueDateJob>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"* * * * *";
+                c.CronExpression = @"00 12 * * *";
             });
             
 
@@ -157,7 +169,11 @@ namespace TodoWebAPI
             else
             {
                 app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseFileServer();
 
