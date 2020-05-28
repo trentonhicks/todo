@@ -12,7 +12,6 @@ namespace TodoWebAPI.DomainEventHandlers
 {
     public class AddPositionWhenSubItemIsCreated : INotificationHandler<SubItemCreated>
     {
-        private readonly SubItemLayoutApplicationService _service;
         private readonly IMediator _mediator;
 
         public AddPositionWhenSubItemIsCreated(IMediator mediator)

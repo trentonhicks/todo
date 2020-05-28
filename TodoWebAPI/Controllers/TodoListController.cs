@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using TodoWebAPI.Models;
 using TodoWebAPI.Presentation;
-using System.Data.SqlClient;
-using Dapper;
-using Todo.WebAPI.ApplicationServices;
-using Todo.Domain.Repositories;
-using Todo.Infrastructure;
-using TodoWebAPI.ApplicationServices;
 using MediatR;
 using TodoWebAPI.UserStories.ListLayout;
 using Microsoft.AspNetCore.Authorization;

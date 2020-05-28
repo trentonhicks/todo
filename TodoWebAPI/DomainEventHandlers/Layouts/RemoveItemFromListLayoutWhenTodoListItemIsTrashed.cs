@@ -5,21 +5,26 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
+using Todo.Domain.Repositories;
 using TodoWebAPI.ApplicationServices;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
     public class RemoveItemFromListLayoutWhenTodoListItemIsTrashed : INotificationHandler<ItemMovedToTrash>
     {
-        private readonly TodoListLayoutApplicationService _service;
+        private readonly ITodoListLayoutRepository _todoListLayoutRepository;
 
-        public RemoveItemFromListLayoutWhenTodoListItemIsTrashed(TodoListLayoutApplicationService service)
+        public RemoveItemFromListLayoutWhenTodoListItemIsTrashed(ITodoListLayoutRepository todoListLayoutRepository)
         {
-            _service = service;
+            _todoListLayoutRepository = todoListLayoutRepository;
         }
-        public Task Handle(ItemMovedToTrash notification, CancellationToken cancellationToken)
+        public async Task Handle(ItemMovedToTrash notification, CancellationToken cancellationToken)
         {
-            return _service.DeleteLayoutAsync(notification.Item.Id, notification.ListId.GetValueOrDefault());
+            var todoListLayout = await _todoListLayoutRepository.FindLayoutByListIdAsync(notification.ListId.GetValueOrDefault());
+
+            todoListLayout.RemoveItemFromLayout(notification.Item.Id);
+            _todoListLayoutRepository.Update(todoListLayout);
+            await _todoListLayoutRepository.SaveChangesAsync();
         }
     }
 }
