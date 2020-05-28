@@ -11,15 +11,12 @@ namespace Todo.WebAPI.ApplicationServices
 {
     public class TodoListItemApplicationService
     {
-        private readonly ITodoListRepository _listRepository;
         private readonly ITodoListItemRepository _listItemRepository;
         private readonly ISubItemRepository _subItemRepository;
 
-        public TodoListItemApplicationService(ITodoListRepository listRepository,
-            ITodoListItemRepository todoListItemRepository,
+        public TodoListItemApplicationService(ITodoListItemRepository todoListItemRepository,
             ISubItemRepository subItemRepository)
         {
-            _listRepository = listRepository;
             _listItemRepository = todoListItemRepository;
             _subItemRepository = subItemRepository;
         }
