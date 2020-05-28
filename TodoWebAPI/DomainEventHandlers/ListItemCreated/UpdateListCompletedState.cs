@@ -5,22 +5,28 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
-using Todo.WebAPI.ApplicationServices;
-using TodoWebAPI.ApplicationServices;
+using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.DomainEventHandlers.ListItemCreated
 {
     public class UpdateListCompletedState : INotificationHandler<TodoListItemCreated>
     {
-        private readonly TodoListApplicationService _todoListApplicationService;
+        private readonly ITodoListItemRepository _itemRepository;
+        private readonly ITodoListRepository _listRepository;
 
-        public UpdateListCompletedState(TodoListApplicationService todoListApplicationService)
+        public UpdateListCompletedState(ITodoListItemRepository itemRepository, ITodoListRepository listRepository)
         {
-            _todoListApplicationService = todoListApplicationService;
+            _itemRepository = itemRepository;
+            _listRepository = listRepository;
         }
-        public Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
+        public async Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
         {
-            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.List.Id);
+            var items = await _itemRepository.FindAllTodoListItemsByListIdAsync(notification.Item.ListId.GetValueOrDefault());
+            var list = await _listRepository.FindTodoListIdByIdAsync(notification.Item.ListId.GetValueOrDefault());
+
+            list.SetCompleted(items);
+
+            await _listRepository.SaveChangesAsync();
         }
     }
 }
