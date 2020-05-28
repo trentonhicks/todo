@@ -24,15 +24,6 @@ namespace Todo.WebAPI.ApplicationServices
             _subItemRepository = subItemRepository;
         }
 
-        public async Task UpdateTodoListItemAsync(Guid todoListItemId, string notes, string todoName, DateTime? dueDate)
-        {
-            var todoListItem = await _listItemRepository.FindToDoListItemByIdAsync(todoListItemId);
-
-            todoListItem.Notes = notes;
-            todoListItem.Name = todoName;
-            todoListItem.DueDate = dueDate;
-        }
-
         public async Task MarkTodoListItemAsCompletedAsync(Guid listItemId)
         {
             var subItems = await _subItemRepository.FindAllSubItemsByListItemIdAsync(listItemId);

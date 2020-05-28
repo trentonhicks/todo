@@ -16,17 +16,6 @@ namespace TodoWebAPI.ApplicationServices
             _subLayout = subLayout;
         }
 
-        public async Task CreateTodoListItemLayoutAsync(Guid itemId)
-        {
-            var layout = new SubItemLayout { ItemId = itemId };
-
-            layout.Id = _subLayout.NextId();
-
-            await _subLayout.AddLayoutAsync(layout);
-
-            await _subLayout.SaveChangesAsync();
-        }
-
         public async Task RemoveSubItemFromLayoutAsync(Guid todoListItemId, Guid subItemId)
         {
             var subItemLayout = await _subLayout.FindLayoutByListItemIdAsync(todoListItemId);

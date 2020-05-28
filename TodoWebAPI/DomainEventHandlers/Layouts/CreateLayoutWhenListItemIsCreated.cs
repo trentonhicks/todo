@@ -4,22 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Todo.Domain;
 using Todo.Domain.DomainEvents;
+using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.ApplicationServices
 {
     public class CreateLayoutWhenListItemIsCreated : INotificationHandler<TodoListItemCreated>
     {
-        private readonly SubItemLayoutApplicationService _service;
+        private readonly ISubItemLayoutRepository _subItemLayout;
 
-        public CreateLayoutWhenListItemIsCreated(SubItemLayoutApplicationService service)
+        public CreateLayoutWhenListItemIsCreated(ISubItemLayoutRepository subItemLayout)
         {
-            _service = service;
+            _subItemLayout = subItemLayout;
         }
-       
-        public Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
+
+        public async Task Handle(TodoListItemCreated notification, CancellationToken cancellationToken)
         {
-            return _service.CreateTodoListItemLayoutAsync(notification.Item.Id);
+            var layout = new SubItemLayout { ItemId = notification.Item.Id };
+
+            layout.Id = _subItemLayout.NextId();
+
+            await _subItemLayout.AddLayoutAsync(layout);
+
+            await _subItemLayout.SaveChangesAsync();
         }
     }
 }
