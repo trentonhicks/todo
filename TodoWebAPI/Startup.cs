@@ -72,7 +72,6 @@ namespace TodoWebAPI
             services.AddScoped<TodoListLayoutApplicationService>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
             services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
-            services.AddScoped<SubItemLayoutApplicationService>();
             services.AddSingleton<DapperQuery>();
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
             services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();

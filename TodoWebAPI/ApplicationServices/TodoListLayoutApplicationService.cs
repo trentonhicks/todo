@@ -24,14 +24,5 @@ namespace TodoWebAPI.ApplicationServices
 
             await _todoListLayoutRepository.SaveChangesAsync();
         }
-       
-        public async Task DeleteLayoutAsync(Guid todoListItemId, Guid listId)
-        {
-            var todoListLayout = await _todoListLayoutRepository.FindLayoutByListIdAsync(listId);
-
-            todoListLayout.RemoveItemFromLayout(todoListItemId);
-            _todoListLayoutRepository.Update(todoListLayout);
-            await _todoListLayoutRepository.SaveChangesAsync();
-        }
     }
 }
