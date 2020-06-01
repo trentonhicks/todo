@@ -2,23 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using Todo.Infrastructure.EFRepositories;
 using Todo.Infrastructure.Email;
 using TodoWebAPI.Data;
-using Todo.WebAPI.ApplicationServices;
-using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.CronJob;
 using TodoWebAPI.ServiceBusRabbitmq;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -28,12 +23,10 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Octokit;
 using Octokit.Internal;
 using TodoWebAPI.Models;
-using TodoWebAPI.Extentions;
 using Todo.Infrastructure.Repositories;
 using Todo.Infrastructure.Guids;
 using Dapper;
@@ -46,18 +39,31 @@ namespace TodoWebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
 
         readonly string MyAllowSpecificOrigins = "Policy";
+        private readonly IWebHostEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if (_env.IsDevelopment())
+            {
+                services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
+            }
+            else
+            {
+                services.AddSingleton<IEmailService, SendGridEmailService>();
+            }
+           
+            services.AddRazorPages();
+
             services.AddDbContext<TodoDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
@@ -65,14 +71,9 @@ namespace TodoWebAPI
             services.AddScoped<ITodoListLayoutRepository, EFTodoListLayoutRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
-            services.AddSingleton<IEmailService, DebuggerWindowOutputEmailService>();
             services.AddScoped<IServiceBusEmail, ServiceBusEmail>();
-            services.AddScoped<TodoListApplicationService>();
-            services.AddScoped<TodoListItemApplicationService>();
-            services.AddScoped<TodoListLayoutApplicationService>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
             services.AddScoped<ISubItemLayoutRepository, EFSubItemLayout>();
-            services.AddScoped<SubItemLayoutApplicationService>();
             services.AddSingleton<DapperQuery>();
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
             services.AddScoped<ISequentialIdGenerator, SequentialIdGenerator>();
@@ -83,7 +84,7 @@ namespace TodoWebAPI
             services.AddCronJob<DueDateJob>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"* * * * *";
+                c.CronExpression = @"00 12 * * *";
             });
             
 
@@ -168,7 +169,11 @@ namespace TodoWebAPI
             else
             {
                 app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseFileServer();
 

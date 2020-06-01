@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Todo.Domain;
-using Todo.Domain.Repositories;
-using System.Threading;
 using System.Data.SqlClient;
 using TodoWebAPI.Presentation;
 using Dapper;
 using Dapper.Transaction;
-using Microsoft.AspNetCore.Mvc;
-using Todo.Infrastructure;
-using Todo.WebAPI.ApplicationServices;
 using TodoWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using TodoWebAPI.TypeHandlers;
 
 namespace TodoWebAPI
 {
