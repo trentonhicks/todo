@@ -57,6 +57,8 @@
             sub-item(
               v-for="key in subItemsLayout"
               :key="key"
+              :listId="listId"
+              :todoId="item.id"
               :id="subItems[key].id"
               :name="subItems[key].name"
               :completed="subItems[key].completed"
@@ -123,7 +125,7 @@ export default {
       if(Object.keys(this.subItems).length < 1) {
         axios({
           method: 'PUT',
-          url: `/api/todos/${this.item.id}/completed`,
+          url: `/api/lists/${this.listId}/todos/${this.item.id}/completed`,
           data: JSON.stringify({ completed: this.item.completed }),
           headers: {
             'content-type': 'application/json'
@@ -138,7 +140,7 @@ export default {
       let data = JSON.stringify(this.form);
       axios({
         method: 'PUT',
-        url: `/api/todos/${this.item.id}`,
+        url: `/api/lists/${this.listId}/todos/${this.item.id}`,
         data,
         headers: {
           'content-type': 'application/json'
@@ -163,7 +165,7 @@ export default {
 
         axios({
           method: 'GET',
-          url: `api/todos/${this.item.id}/layout`
+          url: `api/lists/${this.listId}/todos/${this.item.id}/layout`
         }).then((response) => {
           this.subItemsLayout = response.data.layout;
         })
@@ -182,7 +184,7 @@ export default {
 
       axios({
         method: 'PUT',
-        url: `api/todos/${this.item.id}/layout`,
+        url: `api/lists/${this.listId}/todos/${this.item.id}/layout`,
         data,
         headers: {
           'content-type': 'application/json'
@@ -213,7 +215,7 @@ export default {
     refreshSubItemLayout() {
       axios({
           method: 'GET',
-          url: `api/todos/${this.item.id}/layout`
+          url: `api/lists/${this.listId}/todos/${this.item.id}/layout`
         }).then((response) => {
           this.subItemsLayout = response.data.layout;
       })

@@ -203,7 +203,7 @@ export default {
       .then(choseToDelete => {
           if(choseToDelete) {
               axios({
-                url: `/api/todos/${item.id}`,
+                url: `api/lists/${this.id}/todos/${item.id}`,
                 method: 'DELETE'
               });
           }

@@ -22,7 +22,7 @@ import moment from 'moment';
 
 export default {
   name: 'SubItem',
-  props: ['id', 'name', 'completed'],
+  props: ['listId', 'todoId', 'id', 'name', 'completed'],
   data() {
     return {
       editing: false,
@@ -40,7 +40,7 @@ export default {
     toggleCompleted() {
       axios({
         method: 'PUT',
-        url: `/api/subitems/${this.item.id}/completed`,
+        url: `/api/lists/${this.listId}/todos/${this.todoId}/subitems/${this.item.id}/completed`,
         headers: {
           'content-type': 'application/json'
         },
@@ -52,7 +52,7 @@ export default {
 
       axios({
         method: 'PUT',
-        url: `/api/subitems/${this.item.id}`,
+        url: `/api/lists/${this.listId}/todos/${this.todoId}/subitems/${this.item.id}`,
         data,
         headers: {
           'content-type': 'application/json'
@@ -69,7 +69,7 @@ export default {
     deleteSubItem() {
       axios({
         method: 'DELETE',
-        url: `/api/subitems/${this.item.id}`,
+        url: `/api/lists/${this.listId}/todos/${this.todoId}/subitems/${this.item.id}`,
       });
     }
   },

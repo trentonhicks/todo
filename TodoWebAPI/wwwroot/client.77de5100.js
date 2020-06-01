@@ -34902,7 +34902,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _default = {
   name: 'SubItem',
-  props: ['id', 'name', 'completed'],
+  props: ['listId', 'todoId', 'id', 'name', 'completed'],
   data: function data() {
     return {
       editing: false,
@@ -34920,7 +34920,7 @@ var _default = {
     toggleCompleted: function toggleCompleted() {
       (0, _axios.default)({
         method: 'PUT',
-        url: "/api/subitems/" + this.item.id + "/completed",
+        url: "/api/lists/" + this.listId + "/todos/" + this.todoId + "/subitems/" + this.item.id + "/completed",
         headers: {
           'content-type': 'application/json'
         },
@@ -34931,7 +34931,7 @@ var _default = {
       var data = JSON.stringify(this.form);
       (0, _axios.default)({
         method: 'PUT',
-        url: "/api/subitems/" + this.item.id,
+        url: "/api/lists/" + this.listId + "/todos/" + this.todoId + "/subitems/" + this.item.id,
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -34947,7 +34947,7 @@ var _default = {
     deleteSubItem: function deleteSubItem() {
       (0, _axios.default)({
         method: 'DELETE',
-        url: "/api/subitems/" + this.item.id
+        url: "/api/lists/" + this.listId + "/todos/" + this.todoId + "/subitems/" + this.item.id
       });
     }
   },
@@ -35203,7 +35203,7 @@ var _default = {
       if (Object.keys(this.subItems).length < 1) {
         (0, _axios.default)({
           method: 'PUT',
-          url: "/api/todos/" + this.item.id + "/completed",
+          url: "/api/lists/" + this.listId + "/todos/" + this.item.id + "/completed",
           data: JSON.stringify({
             completed: this.item.completed
           }),
@@ -35221,7 +35221,7 @@ var _default = {
       var data = JSON.stringify(this.form);
       (0, _axios.default)({
         method: 'PUT',
-        url: "/api/todos/" + this.item.id,
+        url: "/api/lists/" + this.listId + "/todos/" + this.item.id,
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -35247,7 +35247,7 @@ var _default = {
         _this.subItems = response.data;
         (0, _axios.default)({
           method: 'GET',
-          url: "api/todos/" + _this.item.id + "/layout"
+          url: "api/lists/" + _this.listId + "/todos/" + _this.item.id + "/layout"
         }).then(function (response) {
           _this.subItemsLayout = response.data.layout;
         });
@@ -35265,7 +35265,7 @@ var _default = {
       });
       (0, _axios.default)({
         method: 'PUT',
-        url: "api/todos/" + this.item.id + "/layout",
+        url: "api/lists/" + this.listId + "/todos/" + this.item.id + "/layout",
         data: data,
         headers: {
           'content-type': 'application/json'
@@ -35300,7 +35300,7 @@ var _default = {
 
       (0, _axios.default)({
         method: 'GET',
-        url: "api/todos/" + this.item.id + "/layout"
+        url: "api/lists/" + this.listId + "/todos/" + this.item.id + "/layout"
       }).then(function (response) {
         _this.subItemsLayout = response.data.layout;
       });
@@ -35602,6 +35602,8 @@ exports.default = _default;
                       return _c("sub-item", {
                         key: key,
                         attrs: {
+                          listId: _vm.listId,
+                          todoId: _vm.item.id,
                           id: _vm.subItems[key].id,
                           name: _vm.subItems[key].name,
                           completed: _vm.subItems[key].completed
@@ -36186,6 +36188,8 @@ var _default = {
       }
     },
     deleteTodoListItem: function deleteTodoListItem(item) {
+      var _this = this;
+
       this.$bvModal.msgBoxConfirm("Are you sure you want to delete " + item.name + "?", {
         size: 'sm',
         okVariant: 'danger',
@@ -36196,7 +36200,7 @@ var _default = {
       }).then(function (choseToDelete) {
         if (choseToDelete) {
           (0, _axios.default)({
-            url: "/api/todos/" + item.id,
+            url: "api/lists/" + _this.id + "/todos/" + item.id,
             method: 'DELETE'
           });
         }
@@ -83289,7 +83293,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59617" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56911" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
