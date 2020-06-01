@@ -19099,6 +19099,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _vue = _interopRequireDefault(require("vue"));
+
 var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -19124,6 +19126,14 @@ var todoLists = {
         return i.id === item.id;
       });
       state.items[item.listId][index].completed = item.completed;
+    },
+    updateItem: function updateItem(state, _ref3) {
+      var item = _ref3.item;
+      var index = state.items[item.listId].findIndex(function (i) {
+        return i.id === item.id;
+      });
+
+      _vue.default.set(state.items[item.listId], index, item);
     }
   },
   actions: {
@@ -19153,16 +19163,35 @@ var todoLists = {
         });
       });
     },
-    toggleItemCompletedState: function toggleItemCompletedState(context, _ref3) {
-      var listId = _ref3.listId,
-          itemId = _ref3.itemId,
-          completed = _ref3.completed;
+    toggleItemCompletedState: function toggleItemCompletedState(context, _ref4) {
+      var listId = _ref4.listId,
+          itemId = _ref4.itemId,
+          completed = _ref4.completed;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'PUT',
           url: "api/lists/".concat(listId, "/todos/").concat(itemId, "/completed"),
           data: JSON.stringify({
             completed: completed
+          }),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).finally(function () {
+          resolve();
+        });
+      });
+    },
+    updateItem: function updateItem(context, _ref5) {
+      var item = _ref5.item;
+      return new Promise(function (resolve, reject) {
+        (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(item.listId, "/todos/").concat(item.id),
+          data: JSON.stringify({
+            name: item.name,
+            notes: item.notes,
+            dueDate: item.dueDate
           }),
           headers: {
             'content-type': 'application/json'
@@ -19179,6 +19208,13 @@ var todoLists = {
         return state.items[listId];
       };
     },
+    getItemName: function getItemName(state) {
+      return function (listId, itemId) {
+        return state.items[listId].find(function (i) {
+          return i.id === itemId;
+        }).name;
+      };
+    },
     getItemCompletedState: function getItemCompletedState(state) {
       return function (listId, itemId) {
         return state.items[listId].find(function (i) {
@@ -19190,7 +19226,7 @@ var todoLists = {
 };
 var _default = todoLists;
 exports.default = _default;
-},{"axios":"node_modules/axios/index.js"}],"modules/store.js":[function(require,module,exports) {
+},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","axios":"node_modules/axios/index.js"}],"modules/store.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27887,6 +27923,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   name: 'EditTodoItemForm',
   props: ['todoListItem'],
@@ -27894,15 +27952,55 @@ var _default = {
     return {
       editingName: false,
       editingNotes: false,
-      editingDueDate: false
+      form: {
+        name: this.todoListItem.name,
+        notes: this.todoListItem.notes,
+        dueDate: this.todoListItem.dueDate
+      }
     };
+  },
+  computed: {
+    dueDate: function dueDate() {
+      return this.form.dueDate;
+    }
+  },
+  watch: {
+    dueDate: function dueDate() {
+      this.updateItem();
+    }
+  },
+  methods: {
+    refresh: function refresh() {
+      this.form.name = this.todoListItem.name;
+      this.form.notes = this.todoListItem.notes;
+      this.form.dueDate = this.todoListItem.dueDate;
+    },
+    cancelChangesToName: function cancelChangesToName() {
+      this.form.name = this.todoListItem.name;
+      this.editingName = false;
+    },
+    cancelChangesToNotes: function cancelChangesToNotes() {
+      this.form.notes = this.todoListItem.notes;
+      this.editingNotes = false;
+    },
+    updateItem: function updateItem() {
+      this.editingName = false;
+      this.editingNotes = false;
+      var item = {
+        id: this.todoListItem.id,
+        listId: this.todoListItem.listId,
+        name: this.form.name,
+        notes: this.form.notes,
+        dueDate: this.form.dueDate
+      };
+      this.$store.dispatch('updateItem', {
+        item: item
+      });
+    }
   },
   filters: {
     formatDate: function formatDate(value) {
-      return (0, _moment.default)(value).format('dddd, MMMM Do YYYY');
-    },
-    monthDay: function monthDay(value) {
-      return (0, _moment.default)(value).format('MMMM Do');
+      return (0, _moment.default)(value).format('MM/D/YYYY');
     }
   }
 };
@@ -27925,7 +28023,8 @@ exports.default = _default;
       attrs: {
         id: "modal-" + _vm.todoListItem.id,
         title: _vm.todoListItem.name
-      }
+      },
+      on: { shown: _vm.refresh }
     },
     [
       _c(
@@ -27934,7 +28033,7 @@ exports.default = _default;
           on: {
             submit: function($event) {
               $event.preventDefault()
-              _vm.editingName = false
+              return _vm.updateItem($event)
             }
           }
         },
@@ -27944,20 +28043,19 @@ exports.default = _default;
             { attrs: { label: "Name" } },
             [
               _c("b-form-input", {
+                ref: "name",
+                attrs: { maxlength: "50", required: "" },
                 on: {
                   focus: function($event) {
                     _vm.editingName = true
-                  },
-                  blur: function($event) {
-                    _vm.editingName = false
                   }
                 },
                 model: {
-                  value: _vm.todoListItem.name,
+                  value: _vm.form.name,
                   callback: function($$v) {
-                    _vm.$set(_vm.todoListItem, "name", $$v)
+                    _vm.$set(_vm.form, "name", $$v)
                   },
-                  expression: "todoListItem.name"
+                  expression: "form.name"
                 }
               })
             ],
@@ -27971,7 +28069,19 @@ exports.default = _default;
                   staticClass: "mb-2",
                   attrs: { type: "submit", variant: "success", size: "sm" }
                 },
-                [_vm._v("Save")]
+                [_vm._v("\n            Save\n        ")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.editingName
+            ? _c(
+                "b-button",
+                {
+                  staticClass: "mb-2",
+                  attrs: { variant: "secondary", size: "sm" },
+                  on: { click: _vm.cancelChangesToName }
+                },
+                [_vm._v("\n            Cancel\n        ")]
               )
             : _vm._e()
         ],
@@ -27984,7 +28094,7 @@ exports.default = _default;
           on: {
             submit: function($event) {
               $event.preventDefault()
-              _vm.editingNotes = false
+              return _vm.updateItem($event)
             }
           }
         },
@@ -27994,21 +28104,18 @@ exports.default = _default;
             { attrs: { label: "Notes" } },
             [
               _c("b-form-textarea", {
-                attrs: { rows: "3" },
+                attrs: { rows: "3", maxlength: "200" },
                 on: {
                   focus: function($event) {
                     _vm.editingNotes = true
-                  },
-                  blur: function($event) {
-                    _vm.editingNotes = false
                   }
                 },
                 model: {
-                  value: _vm.todoListItem.notes,
+                  value: _vm.form.notes,
                   callback: function($$v) {
-                    _vm.$set(_vm.todoListItem, "notes", $$v)
+                    _vm.$set(_vm.form, "notes", $$v)
                   },
-                  expression: "todoListItem.notes"
+                  expression: "form.notes"
                 }
               })
             ],
@@ -28018,8 +28125,23 @@ exports.default = _default;
           _vm.editingNotes
             ? _c(
                 "b-button",
-                { attrs: { type: "submit", variant: "success", size: "sm" } },
-                [_vm._v("Save")]
+                {
+                  staticClass: "mb-2",
+                  attrs: { type: "submit", variant: "success", size: "sm" }
+                },
+                [_vm._v("\n            Save\n        ")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.editingNotes
+            ? _c(
+                "b-button",
+                {
+                  staticClass: "mb-2",
+                  attrs: { variant: "secondary", size: "sm" },
+                  on: { click: _vm.cancelChangesToNotes }
+                },
+                [_vm._v("\n            Cancel\n        ")]
               )
             : _vm._e()
         ],
@@ -28032,7 +28154,6 @@ exports.default = _default;
           on: {
             submit: function($event) {
               $event.preventDefault()
-              _vm.editingDueDate = false
             }
           }
         },
@@ -28042,27 +28163,18 @@ exports.default = _default;
             [
               _c("label", { attrs: { for: "due-date" } }, [
                 _vm._v(
-                  "Due Date: " +
-                    _vm._s(_vm._f("formatDate")(_vm.todoListItem.dueDate))
+                  "Due Date: " + _vm._s(_vm._f("formatDate")(_vm.form.dueDate))
                 )
               ]),
               _vm._v(" "),
               _c("b-form-datepicker", {
                 attrs: { id: "due-date" },
-                on: {
-                  focus: function($event) {
-                    _vm.editingDueDate = true
-                  },
-                  blur: function($event) {
-                    _vm.editingDueDate = false
-                  }
-                },
                 model: {
-                  value: _vm.todoListItem.dueDate,
+                  value: _vm.form.dueDate,
                   callback: function($$v) {
-                    _vm.$set(_vm.todoListItem, "dueDate", $$v)
+                    _vm.$set(_vm.form, "dueDate", $$v)
                   },
-                  expression: "todoListItem.dueDate"
+                  expression: "form.dueDate"
                 }
               })
             ],
@@ -28947,6 +29059,11 @@ var _default = {
     });
     this.$store.state.connection.on("ItemCompleted", function (item) {
       return _this.$store.commit('updateItemCompletedState', {
+        item: item
+      });
+    });
+    this.$store.state.connection.on("ItemUpdated", function (item) {
+      return _this.$store.commit('updateItem', {
         item: item
       });
     });

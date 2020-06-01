@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import axios from 'axios';
 
 const todoLists = {
@@ -15,6 +16,10 @@ const todoLists = {
             let index = state.items[item.listId].findIndex(i => i.id === item.id);
             state.items[item.listId][index].completed = item.completed;
         },
+        updateItem(state, { item }) {
+            let index = state.items[item.listId].findIndex(i => i.id === item.id);
+            Vue.set(state.items[item.listId], index, item);
+        }
     },
     actions: {
         loadItemsByListId(context, payload) {
@@ -64,10 +69,32 @@ const todoLists = {
                 });
             });
         },
+        updateItem(context, { item }) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: 'PUT',
+                    url: `api/lists/${item.listId}/todos/${item.id}`,
+                    data: JSON.stringify({
+                        name: item.name,
+                        notes: item.notes,
+                        dueDate: item.dueDate
+                    }),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                })
+                .finally(() => {
+                    resolve();
+                });
+            });
+        }
     },
     getters: {
         getItemsByListId: (state) => (listId) => {
             return state.items[listId];
+        },
+        getItemName: (state) => (listId, itemId) => {
+            return state.items[listId].find(i => i.id === itemId).name;
         },
         getItemCompletedState: (state) => (listId, itemId) => {
             return state.items[listId].find(i => i.id === itemId).completed;
