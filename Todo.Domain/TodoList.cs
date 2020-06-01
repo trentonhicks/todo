@@ -69,6 +69,10 @@ namespace Todo.Domain
                 return;
             Contributors.Add(email);
         }
+        public void UpdateListName()
+        {
+            DomainEvents.Add(new ListNameUpdated { List = this });
+        }
     }
 }
  

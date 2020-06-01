@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Todo.Domain;
 using TodoWebAPI.ApplicationServices;
 using TodoWebAPI.Extentions;
 using TodoWebAPI.Models;
@@ -23,76 +24,134 @@ namespace TodoWebAPI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IConfiguration _config;
+        private readonly DapperQuery _dapperQuery;
 
-        public SubItemController(IMediator mediator, IConfiguration config)
+        public SubItemController(
+            IMediator mediator,
+            IConfiguration config,
+            DapperQuery dapperQuery)
         {
             _mediator = mediator;
             _config = config;
+            _dapperQuery = dapperQuery;
         }
 
         [HttpGet("api/lists/{listId}/todos/{todoItemId}/subitems")]
-        public async Task<IActionResult> GetSubItems(Guid todoItemId)
+        public async Task<IActionResult> GetSubItems(Guid listId, Guid todoItemId)
         {
-            var dapper = new DapperQuery(_config);
+            var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
 
-            var subItems = await dapper.GetSubItems(todoItemId);
+            var list = await _dapperQuery.GetListAsync(listId);
 
-            return Ok(subItems);
+            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
+
+            if(todoListAuthorizationValidator.IsUserAuthorized())
+            {
+                var subItems = await _dapperQuery.GetSubItems(todoItemId);
+
+                return Ok(subItems);
+            }
+
+            return Forbid();
         }
 
         [HttpPost("api/lists/{listId}/todos/{todoItemId}/subitems")]
         public async Task<IActionResult> CreateSubItem(Guid listId, Guid todoItemId, [FromBody] CreateSubItem createSubItem)
         {
-            createSubItem.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-            createSubItem.ListId = listId;
-            createSubItem.ListItemId = todoItemId;
-            var subItem = await _mediator.Send(createSubItem);
+            var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
 
-            return Ok(subItem);
-        }
+            var list = await _dapperQuery.GetListAsync(listId);
 
-        [HttpPut("api/subitems/{subitemId}/completed")]
-        public async Task<IActionResult> ToggleCompletedState(Guid subItemId, [FromBody] bool completed)
-        {
-            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            var subItemCompleted = new SubItemCompletedState
+            if(todoListAuthorizationValidator.IsUserAuthorized())
             {
-                AccountId = accountId,
-                SubItemId = subItemId,
-                Completed = completed
-            };
-            await _mediator.Send(subItemCompleted);
-            return Ok();
+                createSubItem.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+                createSubItem.ListId = listId;
+                createSubItem.ListItemId = todoItemId;
+                var subItem = await _mediator.Send(createSubItem);
+
+                return Ok(subItem);
+            }
+
+            return Forbid();
         }
 
-        [HttpPut("api/subitems/{subitemId}")]
-        public async Task<IActionResult> UpdateSubItem(Guid subitemId, [FromBody] EditSubItem editSubItem)
+        [HttpPut("api/lists/{listId}/todos/{todoItemId}/subitems/{subitemId}/completed")]
+        public async Task<IActionResult> ToggleCompletedState(Guid listId, Guid subItemId, [FromBody] bool completed)
         {
-            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
 
-            editSubItem.AccountId = accountId;
-            editSubItem.SubItemId = subitemId;
+            var list = await _dapperQuery.GetListAsync(listId);
 
-            await _mediator.Send(editSubItem);
+            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            return Ok();
-        }
-
-        [HttpDelete("api/subitems/{subitemId}")]
-        public async Task<IActionResult> TrashSubItem(Guid subitemId)
-        {
-            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-
-            var trashSubItem = new TrashSubItem
+            if(todoListAuthorizationValidator.IsUserAuthorized())
             {
-                AccountId = accountId,
-                SubItemId = subitemId
-            };
+                var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
-            await _mediator.Send(trashSubItem);
+                var subItemCompleted = new SubItemCompletedState
+                {
+                    AccountId = accountId,
+                    SubItemId = subItemId,
+                    Completed = completed
+                };
+                await _mediator.Send(subItemCompleted);
+                return Ok();    
+            }
 
-            return Ok("Subitem deleted!!!");
+            return Forbid();
+        }
+
+        [HttpPut("api/lists/{listId}/todos/{todoItemId}/subitems/{subitemId}")]
+        public async Task<IActionResult> UpdateSubItem(Guid listId, Guid subitemId, [FromBody] EditSubItem editSubItem)
+        {
+            var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+
+            var list = await _dapperQuery.GetListAsync(listId);
+
+            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
+
+            if(todoListAuthorizationValidator.IsUserAuthorized())
+            {
+                var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+
+                editSubItem.AccountId = accountId;
+                editSubItem.SubItemId = subitemId;
+
+                await _mediator.Send(editSubItem);
+
+                return Ok();
+            }
+
+            return Forbid();
+        }
+
+        [HttpDelete("api/lists/{listId}/todos/{todoItemId}/subitems/{subitemId}")]
+        public async Task<IActionResult> TrashSubItem(Guid listId, Guid subitemId)
+        {
+            var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+
+            var list = await _dapperQuery.GetListAsync(listId);
+
+            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
+
+            if(todoListAuthorizationValidator.IsUserAuthorized())
+            {
+                var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+
+                var trashSubItem = new TrashSubItem
+                {
+                    AccountId = accountId,
+                    SubItemId = subitemId
+                };
+
+                await _mediator.Send(trashSubItem);
+
+                return Ok("Subitem deleted!!!");
+            }
+
+            return Forbid();
         }
     }
 }

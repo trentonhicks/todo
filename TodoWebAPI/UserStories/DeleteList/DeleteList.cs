@@ -11,5 +11,6 @@ namespace TodoWebAPI.Models
     {
         public Guid ListId { get; set; }
         public Guid AccountId { get; set; }
+        public string Email { get; set; }
     }
 }

@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Dapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Octokit;
-using Octokit.Internal;
-using Todo.Domain.Repositories;
 using Todo.Infrastructure;
-using Todo.WebAPI.ApplicationServices;
-using TodoWebAPI.Models;
-using TodoWebAPI.Presentation;
 using TodoWebAPI.UserStories.DeleteAccount;
 
 namespace TodoWebAPI.Controllers

@@ -15,5 +15,6 @@ namespace TodoWebAPI.Models
         [FromBody]
         public string ListTitle { get; set; }
         public Guid ListId { get; set; }
+        public string Email { get; set; }
     }
 }

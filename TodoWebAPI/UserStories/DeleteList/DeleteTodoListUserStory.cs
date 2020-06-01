@@ -23,7 +23,6 @@ namespace TodoWebAPI.UserStories
         protected override async Task Handle(DeleteList request, CancellationToken cancellationToken)
         {
             await _listRepository.RemoveTodoListAsync(request.ListId);
-
             await _listRepository.SaveChangesAsync();
         }
     }

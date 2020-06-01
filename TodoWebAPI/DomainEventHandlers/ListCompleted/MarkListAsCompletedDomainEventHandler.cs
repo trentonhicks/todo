@@ -3,22 +3,28 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
-using Todo.WebAPI.ApplicationServices;
-using TodoWebAPI.ApplicationServices;
+using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.DomainEventHandlers
 {
     public class MarkListAsCompletedDomainEventHandler : INotificationHandler<TodoListItemCompletedStateChanged>
     {
-        private readonly TodoListApplicationService _todoListApplicationService;
+        private readonly ITodoListItemRepository _itemRepository;
+        private readonly ITodoListRepository _listRepository;
 
-        public MarkListAsCompletedDomainEventHandler(TodoListApplicationService todoListService)
+        public MarkListAsCompletedDomainEventHandler(ITodoListItemRepository itemRepository, ITodoListRepository listRepository)
         {
-            _todoListApplicationService = todoListService;
+            _itemRepository = itemRepository;
+            _listRepository = listRepository;
         }
-        public Task Handle(TodoListItemCompletedStateChanged notification, CancellationToken cancellationToken)
+        public async Task Handle(TodoListItemCompletedStateChanged notification, CancellationToken cancellationToken)
         {
-            return _todoListApplicationService.MarkTodoListAsCompletedAsync(notification.Item.ListId.GetValueOrDefault());
+            var items = await _itemRepository.FindAllTodoListItemsByListIdAsync(notification.Item.ListId.GetValueOrDefault());
+            var list = await _listRepository.FindTodoListIdByIdAsync(notification.Item.ListId.GetValueOrDefault());
+
+            list.SetCompleted(items);
+
+            await _listRepository.SaveChangesAsync();
         }
     }
 }

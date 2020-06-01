@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
@@ -15,21 +18,17 @@ namespace TodoWebAPI.DomainEventHandlers
 {
     public class SendEmailWhenListIsCompletedDomainEventHandler : INotificationHandler<TodoListCompletedStateChanged>
     {
-        private readonly IAccountRepository _accountRepository;
-        private readonly ITodoListRepository _todoListRepository;
-        private readonly IEmailService _emailService;
         private readonly IServiceBusEmail _serviceBusEmail;
+        private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
         private readonly DapperQuery _dapper;
 
-        public SendEmailWhenListIsCompletedDomainEventHandler(IAccountRepository accountRepository, ITodoListRepository todoListRepository, IEmailService emailService, IServiceBusEmail serviceBusEmail, IConfiguration config, DapperQuery dapper)
+        public SendEmailWhenListIsCompletedDomainEventHandler(IEmailService emailService, IConfiguration config, DapperQuery dapper, IServiceBusEmail serviceBusEmail)
         {
-            _accountRepository = accountRepository;
-            _todoListRepository = todoListRepository;
             _emailService = emailService;
-            _serviceBusEmail = serviceBusEmail;
             _config = config;
             _dapper = dapper;
+            _serviceBusEmail = serviceBusEmail;
         }
         public async Task Handle(TodoListCompletedStateChanged notification, CancellationToken cancellationToken)
         {
@@ -48,8 +47,8 @@ namespace TodoWebAPI.DomainEventHandlers
                         Subject = $"You finished a list!",
                         Body = $"List {list.ListTitle} is finished! Nice work!"
                     };
+                    _serviceBusEmail.SendServiceBusEmail(email, list);
                 }
-                //_serviceBusEmail.SendServiceBusEmail(email);
             }
         }
     }
