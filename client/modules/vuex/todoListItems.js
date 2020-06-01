@@ -12,12 +12,8 @@ const todoLists = {
             state.items[listId].unshift(item);
         },
         updateItemCompletedState(state, { item }) {
-            for(var i = 0; i < state.items[item.listId].length; i++) {
-                if(state.items[item.listId][i].id === item.id) {
-                    state.items[item.listId][i].completed = item.completed;
-                    break;
-                }
-            }
+            let index = state.items[item.listId].findIndex(i => i.id === item.id);
+            state.items[item.listId][index].completed = item.completed;
         },
     },
     actions: {
@@ -53,11 +49,11 @@ const todoLists = {
                 });
             });
         },
-        toggleItemCompletedState(context, { id, completed }) {
+        toggleItemCompletedState(context, { listId, itemId, completed }) {
             return new Promise((resolve, reject) => {
                 axios({
                     method: 'PUT',
-                    url: `api/todos/${id}/completed`,
+                    url: `api/lists/${listId}/todos/${itemId}/completed`,
                     data: JSON.stringify({ completed }),
                     headers: {
                         'content-type': 'application/json'
@@ -73,6 +69,9 @@ const todoLists = {
         getItemsByListId: (state) => (listId) => {
             return state.items[listId];
         },
+        getItemCompletedState: (state) => (listId, itemId) => {
+            return state.items[listId].find(i => i.id === itemId).completed;
+        }
     }
 }
 

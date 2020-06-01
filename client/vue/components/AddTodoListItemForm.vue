@@ -8,12 +8,12 @@
                 
                 <!-- Name -->
                 <b-form-group label="Name">
-                    <b-form-input ref="title" v-model="form.name"></b-form-input>
+                    <b-form-input ref="title" v-model="form.name" maxlength="50" required></b-form-input>
                 </b-form-group>
 
                 <!-- Notes -->
                 <b-form-group label="Notes">
-                    <b-form-textarea rows="3" v-model="form.notes"></b-form-textarea>
+                    <b-form-textarea rows="3" v-model="form.notes" maxlength="200"></b-form-textarea>
                 </b-form-group>
 
                 <!-- Due Date -->

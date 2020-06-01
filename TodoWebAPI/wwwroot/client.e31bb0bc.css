@@ -12,7 +12,7 @@
   border-radius: 100px;
 }
 .todo-list-preview[data-v-c2d8a9] {
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 .todo-list-preview .todo-list-preview-contributors[data-v-c2d8a9] {
   margin-top: 12px;
@@ -46,8 +46,34 @@
 }
 .todo-item[data-v-4e7dd7] {
   display: flex !important;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.todo-item .todo-item-details[data-v-4e7dd7] {
+  flex: 1 1 auto;
+  margin-left: 7px;
+  font-family: "Nunito", sans-serif;
+}
+.todo-item .todo-item-details .todo-item-name[data-v-4e7dd7] {
+  display: block;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1.3;
+  margin-bottom: 7px;
+}
+.todo-item .todo-item-details .todo-item-due-date[data-v-4e7dd7],
+.todo-item .todo-item-details .todo-item-notes[data-v-4e7dd7] {
+  font-size: 14px;
+}
+.todo-item .todo-item-options[data-v-4e7dd7] {
+  align-self: center;
+  margin-top: 14px;
+  margin-left: 31px;
+}
+@media screen and (min-width: 521px) {
+.todo-item .todo-item-options[data-v-4e7dd7] {
+    margin: 0;
+}
 }
 * {
   box-sizing: border-box;

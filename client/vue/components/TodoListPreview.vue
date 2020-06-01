@@ -46,7 +46,7 @@
 <style lang="scss" scoped>
 
     .todo-list-preview {
-        margin-bottom: 30px;
+        margin-bottom: 24px;
 
         .todo-list-preview-contributors {
             margin-top: 12px;

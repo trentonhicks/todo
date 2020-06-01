@@ -19120,13 +19120,10 @@ var todoLists = {
     },
     updateItemCompletedState: function updateItemCompletedState(state, _ref2) {
       var item = _ref2.item;
-
-      for (var i = 0; i < state.items[item.listId].length; i++) {
-        if (state.items[item.listId][i].id === item.id) {
-          state.items[item.listId][i].completed = item.completed;
-          break;
-        }
-      }
+      var index = state.items[item.listId].findIndex(function (i) {
+        return i.id === item.id;
+      });
+      state.items[item.listId][index].completed = item.completed;
     }
   },
   actions: {
@@ -19157,12 +19154,13 @@ var todoLists = {
       });
     },
     toggleItemCompletedState: function toggleItemCompletedState(context, _ref3) {
-      var id = _ref3.id,
+      var listId = _ref3.listId,
+          itemId = _ref3.itemId,
           completed = _ref3.completed;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'PUT',
-          url: "api/todos/".concat(id, "/completed"),
+          url: "api/lists/".concat(listId, "/todos/").concat(itemId, "/completed"),
           data: JSON.stringify({
             completed: completed
           }),
@@ -19179,6 +19177,13 @@ var todoLists = {
     getItemsByListId: function getItemsByListId(state) {
       return function (listId) {
         return state.items[listId];
+      };
+    },
+    getItemCompletedState: function getItemCompletedState(state) {
+      return function (listId, itemId) {
+        return state.items[listId].find(function (i) {
+          return i.id === itemId;
+        }).completed;
       };
     }
   }
@@ -23114,6 +23119,7 @@ exports.default = _default;
                 [
                   _c("b-form-input", {
                     ref: "title",
+                    attrs: { maxlength: "50", required: "" },
                     model: {
                       value: _vm.form.name,
                       callback: function($$v) {
@@ -23131,7 +23137,7 @@ exports.default = _default;
                 { attrs: { label: "Notes" } },
                 [
                   _c("b-form-textarea", {
-                    attrs: { rows: "3" },
+                    attrs: { rows: "3", maxlength: "200" },
                     model: {
                       value: _vm.form.notes,
                       callback: function($$v) {
@@ -28110,10 +28116,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _moment = _interopRequireDefault(require("moment"));
+
 var _EditTodoItemForm = _interopRequireDefault(require("./EditTodoItemForm"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -28139,12 +28154,26 @@ var _default = {
   components: {
     EditTodoItemForm: _EditTodoItemForm.default
   },
-  methods: {
-    toggleItemCompletedState: function toggleItemCompletedState() {
-      this.$store.dispatch('toggleItemCompletedState', {
-        id: this.todoListItem.id,
-        completed: this.todoListItem.completed
-      });
+  computed: {
+    itemCompletedState: {
+      get: function get() {
+        return this.$store.getters.getItemCompletedState(this.todoListItem.listId, this.todoListItem.id);
+      },
+      set: function set(value) {
+        this.$store.dispatch('toggleItemCompletedState', {
+          listId: this.todoListItem.listId,
+          itemId: this.todoListItem.id,
+          completed: value
+        });
+      }
+    }
+  },
+  filters: {
+    formatDate: function formatDate(value) {
+      return (0, _moment.default)(value).format('MM/D/YYYY');
+    },
+    truncate: function truncate(text, length, suffix) {
+      return text.substring(0, length) + suffix;
     }
   }
 };
@@ -28165,25 +28194,57 @@ exports.default = _default;
     "b-list-group-item",
     { staticClass: "todo-item bg-light" },
     [
-      _c(
-        "b-form-checkbox",
-        {
-          staticClass: "todo-item-checkbox",
-          on: { change: _vm.toggleItemCompletedState },
-          model: {
-            value: _vm.todoListItem.completed,
-            callback: function($$v) {
-              _vm.$set(_vm.todoListItem, "completed", $$v)
-            },
-            expression: "todoListItem.completed"
-          }
-        },
-        [_vm._v("\n        " + _vm._s(_vm.todoListItem.name) + "\n    ")]
-      ),
+      _c("b-form-checkbox", {
+        staticClass: "todo-item-checkbox",
+        model: {
+          value: _vm.itemCompletedState,
+          callback: function($$v) {
+            _vm.itemCompletedState = $$v
+          },
+          expression: "itemCompletedState"
+        }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "todo-item-details" }, [
+        _c("div", { staticClass: "todo-item-name" }, [
+          _vm._v(_vm._s(_vm.todoListItem.name))
+        ]),
+        _vm._v(" "),
+        _vm.todoListItem.dueDate
+          ? _c(
+              "div",
+              { staticClass: "todo-item-due-date" },
+              [
+                _c("b-icon-calendar"),
+                _vm._v(
+                  " " + _vm._s(_vm._f("formatDate")(_vm.todoListItem.dueDate))
+                )
+              ],
+              1
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.todoListItem.notes
+          ? _c(
+              "div",
+              { staticClass: "todo-item-notes" },
+              [
+                _c("b-icon-text-left"),
+                _vm._v(
+                  " " +
+                    _vm._s(
+                      _vm._f("truncate")(_vm.todoListItem.notes, 30, "...")
+                    )
+                )
+              ],
+              1
+            )
+          : _vm._e()
+      ]),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "todo-list-item-preview-options" },
+        { staticClass: "todo-item-options" },
         [
           _c(
             "b-button-group",
@@ -28249,7 +28310,7 @@ render._withStripped = true
       
       }
     })();
-},{"./EditTodoItemForm":"vue/components/EditTodoItemForm.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoListItems.vue":[function(require,module,exports) {
+},{"moment":"node_modules/moment/moment.js","./EditTodoItemForm":"vue/components/EditTodoItemForm.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoListItems.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -75233,7 +75294,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52448" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63184" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
