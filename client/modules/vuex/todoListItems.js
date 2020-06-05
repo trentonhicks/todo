@@ -19,6 +19,9 @@ const todoLists = {
         updateItem(state, { item }) {
             let index = state.items[item.listId].findIndex(i => i.id === item.id);
             Vue.set(state.items[item.listId], index, item);
+        },
+        removeItem(state, { listId, item }) {
+            state.items[listId].pop(item);
         }
     },
     actions: {
@@ -82,6 +85,17 @@ const todoLists = {
                     headers: {
                         'content-type': 'application/json'
                     }
+                })
+                .finally(() => {
+                    resolve();
+                });
+            });
+        },
+        deleteItem(context, { item }) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: 'DELETE',
+                    url: `api/lists/${item.listId}/todos/${item.id}`
                 })
                 .finally(() => {
                     resolve();

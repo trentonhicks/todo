@@ -9,7 +9,8 @@
 
         <AddTodoListItemForm
             class="mt-3"
-            :todoListId="todoListId"></AddTodoListItemForm>
+            :todoListId="todoListId">
+        </AddTodoListItemForm>
 
     </div>
     
@@ -37,6 +38,9 @@
             list() {
                 return this.$store.getters.getTodoListById(this.todoListId);
             },
+            listCompleted() {
+                return this.items.every(item => item.completed === true) && this.items.length > 0;
+            }
         },
         components: {
             AddTodoListItemForm,

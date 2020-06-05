@@ -1,13 +1,13 @@
 <template>
     
-    <b-list-group-item class="todo-item bg-light">
+    <b-list-group-item class="todo-item bg-light" :class="{ 'align-items-center': !todoListItem.dueDate && !todoListItem.notes }">
         <b-form-checkbox
             class="todo-item-checkbox"
             v-model="itemCompletedState">
         </b-form-checkbox>
 
         <div class="todo-item-details">
-            <div class="todo-item-name">{{ todoListItem.name }}</div>
+            <div class="todo-item-name" :class="{ 'mb-0': !todoListItem.dueDate && !todoListItem.notes }">{{ todoListItem.name }}</div>
             <div class="todo-item-due-date" v-if="todoListItem.dueDate"><b-icon-calendar></b-icon-calendar> {{ todoListItem.dueDate | formatDate }}</div>
             <div class="todo-item-notes" v-if="todoListItem.notes"><b-icon-text-left></b-icon-text-left> {{ todoListItem.notes | truncate(30, '...') }}</div>
         </div>
@@ -15,7 +15,7 @@
         <div class="todo-item-options">
             <b-button-group>
                 <b-button variant="info" @click="$bvModal.show(`modal-${todoListItem.id}`)">View</b-button>
-                <b-button variant="danger">Delete</b-button>
+                <b-button variant="danger" @click="$store.dispatch('deleteItem', { item: todoListItem })">Delete</b-button>
             </b-button-group>
             <EditTodoItemForm :todoListItem="todoListItem"></EditTodoItemForm>
         </div>

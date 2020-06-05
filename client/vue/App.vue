@@ -26,6 +26,7 @@
       this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit('addItem', { listId, item }));
       this.$store.state.connection.on("ItemCompleted", (item) => this.$store.commit('updateItemCompletedState', { item }));
       this.$store.state.connection.on("ItemUpdated", (item) => this.$store.commit('updateItem', { item }));
+      this.$store.state.connection.on("ItemTrashed", (listId, item) => this.$store.commit('removeItem', { listId, item }));
     },
   };
 

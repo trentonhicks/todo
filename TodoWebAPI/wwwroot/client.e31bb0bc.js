@@ -19134,6 +19134,11 @@ var todoLists = {
       });
 
       _vue.default.set(state.items[item.listId], index, item);
+    },
+    removeItem: function removeItem(state, _ref4) {
+      var listId = _ref4.listId,
+          item = _ref4.item;
+      state.items[listId].pop(item);
     }
   },
   actions: {
@@ -19163,10 +19168,10 @@ var todoLists = {
         });
       });
     },
-    toggleItemCompletedState: function toggleItemCompletedState(context, _ref4) {
-      var listId = _ref4.listId,
-          itemId = _ref4.itemId,
-          completed = _ref4.completed;
+    toggleItemCompletedState: function toggleItemCompletedState(context, _ref5) {
+      var listId = _ref5.listId,
+          itemId = _ref5.itemId,
+          completed = _ref5.completed;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'PUT',
@@ -19182,8 +19187,8 @@ var todoLists = {
         });
       });
     },
-    updateItem: function updateItem(context, _ref5) {
-      var item = _ref5.item;
+    updateItem: function updateItem(context, _ref6) {
+      var item = _ref6.item;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'PUT',
@@ -19196,6 +19201,17 @@ var todoLists = {
           headers: {
             'content-type': 'application/json'
           }
+        }).finally(function () {
+          resolve();
+        });
+      });
+    },
+    deleteItem: function deleteItem(context, _ref7) {
+      var item = _ref7.item;
+      return new Promise(function (resolve, reject) {
+        (0, _axios.default)({
+          method: 'DELETE',
+          url: "api/lists/".concat(item.listId, "/todos/").concat(item.id)
         }).finally(function () {
           resolve();
         });
@@ -28304,7 +28320,13 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "b-list-group-item",
-    { staticClass: "todo-item bg-light" },
+    {
+      staticClass: "todo-item bg-light",
+      class: {
+        "align-items-center":
+          !_vm.todoListItem.dueDate && !_vm.todoListItem.notes
+      }
+    },
     [
       _c("b-form-checkbox", {
         staticClass: "todo-item-checkbox",
@@ -28318,9 +28340,16 @@ exports.default = _default;
       }),
       _vm._v(" "),
       _c("div", { staticClass: "todo-item-details" }, [
-        _c("div", { staticClass: "todo-item-name" }, [
-          _vm._v(_vm._s(_vm.todoListItem.name))
-        ]),
+        _c(
+          "div",
+          {
+            staticClass: "todo-item-name",
+            class: {
+              "mb-0": !_vm.todoListItem.dueDate && !_vm.todoListItem.notes
+            }
+          },
+          [_vm._v(_vm._s(_vm.todoListItem.name))]
+        ),
         _vm._v(" "),
         _vm.todoListItem.dueDate
           ? _c(
@@ -28374,9 +28403,20 @@ exports.default = _default;
                 [_vm._v("View")]
               ),
               _vm._v(" "),
-              _c("b-button", { attrs: { variant: "danger" } }, [
-                _vm._v("Delete")
-              ])
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "danger" },
+                  on: {
+                    click: function($event) {
+                      return _vm.$store.dispatch("deleteItem", {
+                        item: _vm.todoListItem
+                      })
+                    }
+                  }
+                },
+                [_vm._v("Delete")]
+              )
             ],
             1
           ),
@@ -28553,6 +28593,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   name: "TodoList",
   props: ['todoListId'],
@@ -28573,6 +28614,11 @@ var _default = {
   computed: {
     list: function list() {
       return this.$store.getters.getTodoListById(this.todoListId);
+    },
+    listCompleted: function listCompleted() {
+      return this.items.every(function (item) {
+        return item.completed === true;
+      }) && this.items.length > 0;
     }
   },
   components: {
@@ -29064,6 +29110,12 @@ var _default = {
     });
     this.$store.state.connection.on("ItemUpdated", function (item) {
       return _this.$store.commit('updateItem', {
+        item: item
+      });
+    });
+    this.$store.state.connection.on("ItemTrashed", function (listId, item) {
+      return _this.$store.commit('removeItem', {
+        listId: listId,
         item: item
       });
     });
@@ -75411,7 +75463,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63184" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49861" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
