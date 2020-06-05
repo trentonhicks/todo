@@ -11,6 +11,13 @@ const todoLists = {
             state.todoLists = data.todoLists;
             state.contributors = data.contributors;
         },
+        setTodoListCompletedState(state, { listId, listCompletedState }) {
+            let index = state.todoLists.findIndex(x => x.id === listId);
+            let updatedList = state.todoLists[index];
+            updatedList.completed = listCompletedState;
+
+            Vue.set(state.todoLists, index, updatedList);
+        }
     },
     actions: {
         loadTodoLists(context) {

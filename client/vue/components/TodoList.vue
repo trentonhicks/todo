@@ -38,7 +38,7 @@
             list() {
                 return this.$store.getters.getTodoListById(this.todoListId);
             },
-            listCompleted() {
+            allItemsCompleted() {
                 return this.items.every(item => item.completed === true) && this.items.length > 0;
             }
         },

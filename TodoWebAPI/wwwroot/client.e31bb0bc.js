@@ -19001,6 +19001,17 @@ var todoLists = {
     updateTodoLists: function updateTodoLists(state, data) {
       state.todoLists = data.todoLists;
       state.contributors = data.contributors;
+    },
+    setTodoListCompletedState: function setTodoListCompletedState(state, _ref) {
+      var listId = _ref.listId,
+          listCompletedState = _ref.listCompletedState;
+      var index = state.todoLists.findIndex(function (x) {
+        return x.id === listId;
+      });
+      var updatedList = state.todoLists[index];
+      updatedList.completed = listCompletedState;
+
+      _vue.default.set(state.todoLists, index, updatedList);
     }
   },
   actions: {
@@ -28620,7 +28631,7 @@ var _default = {
     list: function list() {
       return this.$store.getters.getTodoListById(this.todoListId);
     },
-    listCompleted: function listCompleted() {
+    allItemsCompleted: function allItemsCompleted() {
       return this.items.every(function (item) {
         return item.completed === true;
       }) && this.items.length > 0;
@@ -29101,6 +29112,12 @@ var _default = {
 
     this.$store.state.connection.start().catch(function (err) {
       return console.error(err.toString());
+    });
+    this.$store.state.connection.on("ListCompletedStateChanged", function (listId, listCompletedState) {
+      return _this.$store.commit('setTodoListCompletedState', {
+        listId: listId,
+        listCompletedState: listCompletedState
+      });
     });
     this.$store.state.connection.on("ItemCreated", function (listId, item) {
       return _this.$store.commit('addItem', {
