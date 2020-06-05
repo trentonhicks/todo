@@ -19112,32 +19112,34 @@ var todoLists = {
     };
   },
   mutations: {
-    updateItems: function updateItems(state, payload) {
-      state.items[payload[0].listId] = payload;
-    },
-    addItem: function addItem(state, _ref) {
+    updateItems: function updateItems(state, _ref) {
       var listId = _ref.listId,
-          item = _ref.item;
+          items = _ref.items;
+      state.items[listId] = items;
+    },
+    addItem: function addItem(state, _ref2) {
+      var listId = _ref2.listId,
+          item = _ref2.item;
       state.items[listId].unshift(item);
     },
-    updateItemCompletedState: function updateItemCompletedState(state, _ref2) {
-      var item = _ref2.item;
+    updateItemCompletedState: function updateItemCompletedState(state, _ref3) {
+      var item = _ref3.item;
       var index = state.items[item.listId].findIndex(function (i) {
         return i.id === item.id;
       });
       state.items[item.listId][index].completed = item.completed;
     },
-    updateItem: function updateItem(state, _ref3) {
-      var item = _ref3.item;
+    updateItem: function updateItem(state, _ref4) {
+      var item = _ref4.item;
       var index = state.items[item.listId].findIndex(function (i) {
         return i.id === item.id;
       });
 
       _vue.default.set(state.items[item.listId], index, item);
     },
-    removeItem: function removeItem(state, _ref4) {
-      var listId = _ref4.listId,
-          item = _ref4.item;
+    removeItem: function removeItem(state, _ref5) {
+      var listId = _ref5.listId,
+          item = _ref5.item;
       state.items[listId].pop(item);
     }
   },
@@ -19148,7 +19150,10 @@ var todoLists = {
           method: 'GET',
           url: "api/lists/".concat(payload.todoListId, "/todos")
         }).then(function (response) {
-          context.commit('updateItems', response.data);
+          context.commit('updateItems', {
+            listId: payload.todoListId,
+            items: response.data
+          });
         }).finally(function () {
           resolve();
         });
@@ -19168,10 +19173,10 @@ var todoLists = {
         });
       });
     },
-    toggleItemCompletedState: function toggleItemCompletedState(context, _ref5) {
-      var listId = _ref5.listId,
-          itemId = _ref5.itemId,
-          completed = _ref5.completed;
+    toggleItemCompletedState: function toggleItemCompletedState(context, _ref6) {
+      var listId = _ref6.listId,
+          itemId = _ref6.itemId,
+          completed = _ref6.completed;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'PUT',
@@ -19187,8 +19192,8 @@ var todoLists = {
         });
       });
     },
-    updateItem: function updateItem(context, _ref6) {
-      var item = _ref6.item;
+    updateItem: function updateItem(context, _ref7) {
+      var item = _ref7.item;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'PUT',
@@ -19206,8 +19211,8 @@ var todoLists = {
         });
       });
     },
-    deleteItem: function deleteItem(context, _ref7) {
-      var item = _ref7.item;
+    deleteItem: function deleteItem(context, _ref8) {
+      var item = _ref8.item;
       return new Promise(function (resolve, reject) {
         (0, _axios.default)({
           method: 'DELETE',
@@ -28516,7 +28521,7 @@ exports.default = _default;
     "b-list-group",
     { staticClass: "todo-list-items" },
     [
-      !_vm.todoListItems
+      _vm.todoListItems.length < 1
         ? _c("b-list-group-item", [
             _vm._v("\n        Add an item to get started.\n    ")
           ])

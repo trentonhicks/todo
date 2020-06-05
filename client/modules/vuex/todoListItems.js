@@ -6,8 +6,8 @@ const todoLists = {
         items: {}
     }),
     mutations: {
-        updateItems(state, payload) {
-            state.items[payload[0].listId] = payload;
+        updateItems(state, { listId, items }) {
+            state.items[listId] = items;
         },
         addItem(state, { listId, item }) {
             state.items[listId].unshift(item);
@@ -32,7 +32,7 @@ const todoLists = {
                     url: `api/lists/${payload.todoListId}/todos`
                 })
                 .then((response) => {
-                    context.commit('updateItems', response.data);
+                    context.commit('updateItems', { listId: payload.todoListId, items: response.data });
                 })
                 .finally(() => {
                     resolve();

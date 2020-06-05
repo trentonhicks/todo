@@ -2,7 +2,7 @@
     
     <b-list-group class="todo-list-items">
         <b-list-group-item
-            v-if="!todoListItems">
+            v-if="todoListItems.length < 1">
             Add an item to get started.
         </b-list-group-item>
 
