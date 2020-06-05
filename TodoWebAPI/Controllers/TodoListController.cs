@@ -153,6 +153,7 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> SendInvitaion(string listId, [FromBody] SendInvitation send)
         {
             send.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            send.ListId = listId;
             await _mediator.Send(send);
 
             return Ok();

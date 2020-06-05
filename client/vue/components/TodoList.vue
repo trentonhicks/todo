@@ -4,13 +4,35 @@
 
         <h1 class="todo-list-title" v-if="list.listTitle">{{ list.listTitle }}</h1>
 
-        <TodoListItems
-            :todoListItems="items"></TodoListItems>
+        <b-row>
 
-        <AddTodoListItemForm
-            class="mt-3"
-            :todoListId="todoListId">
-        </AddTodoListItemForm>
+            <b-col md="8">
+
+                <TodoListItems
+                    :todoListItems="items"></TodoListItems>
+
+                <AddTodoListItemForm
+                    class="mt-3"
+                    :todoListId="todoListId">
+                </AddTodoListItemForm>
+
+            </b-col>
+
+            <b-col md="4">
+
+                <Contributors
+                    class="mb-3"
+                    :todoListContributors="list.contributors"
+                    :accountContributors="contributors">
+                </Contributors>
+
+                <InviteContributorsForm
+                    :listId="this.todoListId">
+                </InviteContributorsForm>
+
+            </b-col>
+
+        </b-row>
 
     </div>
     
@@ -20,6 +42,8 @@
 
     import AddTodoListItemForm from './AddTodoListItemForm';
     import TodoListItems from './TodoListItems';
+    import Contributors from './Contributors';
+    import InviteContributorsForm from './InviteContributorsForm';
 
     export default {
         name: "TodoList",
@@ -38,13 +62,18 @@
             list() {
                 return this.$store.getters.getTodoListById(this.todoListId);
             },
+            contributors() {
+                return this.$store.getters.contributors;
+            },
             allItemsCompleted() {
                 return this.items.every(item => item.completed === true) && this.items.length > 0;
             }
         },
         components: {
             AddTodoListItemForm,
-            TodoListItems
+            TodoListItems,
+            Contributors,
+            InviteContributorsForm
         },
         methods: {
             getItems() {

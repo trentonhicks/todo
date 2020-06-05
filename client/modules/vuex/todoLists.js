@@ -17,7 +17,7 @@ const todoLists = {
             updatedList.completed = listCompletedState;
 
             Vue.set(state.todoLists, index, updatedList);
-        }
+        },
     },
     actions: {
         loadTodoLists(context) {
@@ -55,6 +55,21 @@ const todoLists = {
                 })
                 .then(() => {
                     context.dispatch('loadTodoLists');
+                })
+                .finally(() => {
+                    resolve();
+                });
+            });
+        },
+        inviteContributorToList(context, { listId, email }) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: 'POST',
+                    url: `api/lists/${listId}/email`,
+                    data: JSON.stringify({ email }),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
                 })
                 .finally(() => {
                     resolve();

@@ -20,7 +20,7 @@ namespace TodoWebAPI.DomainEventHandlers.Invitation
         }
         public Task Handle(InvitationSent notification, CancellationToken cancellationToken)
         {
-            return _hubContext.Clients.User(notification.Email).SendAsync("InvitationSent", notification.List);
+            return _hubContext.Clients.Users(notification.List.Contributors).SendAsync("InvitationSent", notification.List);
         }
     }
 }

@@ -4,7 +4,8 @@
         <li v-for="contributor in todoListContributors" :key="contributor" class="contributor">
             <img
             :src="accountContributors[contributor].pictureUrl"
-            :alt="accountContributors[contributor].fullName">
+            :alt="accountContributors[contributor].fullName"
+            v-b-tooltip.hover :title="accountContributors[contributor].fullName">
         </li>
     </ul>
     
@@ -19,6 +20,11 @@
 
 <style lang="scss" scoped>
 
+    .b-tooltip {
+        font-weight: bold;
+        font-family: 'Nunito', sans-serif;
+    }
+
     .contributors {
         display: flex;
         list-style: none;
@@ -28,8 +34,12 @@
         .contributor {
             position: relative;
 
+            &:not(:first-child) {
+                margin-left: -10px;
+            }
+
             img {
-                max-width: 30px;
+                max-width: 36px;
                 border-radius: 100px;
             }
         }
