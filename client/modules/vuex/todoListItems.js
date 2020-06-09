@@ -6,7 +6,7 @@ const todoLists = {
         items: {}
     }),
     mutations: {
-        updateItems(state, { listId, items }) {
+        setItems(state, { listId, items }) {
             state.items[listId] = items;
         },
         addItem(state, { listId, item }) {
@@ -21,8 +21,8 @@ const todoLists = {
             Vue.set(state.items[item.listId], index, item);
         },
         removeItem(state, { listId, item }) {
-            state.items[listId].$remove(item);
-        }
+            Vue.set(state.items, null);
+        },
     },
     actions: {
         loadItemsByListId(context, payload) {
@@ -32,7 +32,7 @@ const todoLists = {
                     url: `api/lists/${payload.todoListId}/todos`
                 })
                 .then((response) => {
-                    context.commit('updateItems', { listId: payload.todoListId, items: response.data });
+                    context.commit('setItems', { listId: payload.todoListId, items: response.data });
                 })
                 .finally(() => {
                     resolve();

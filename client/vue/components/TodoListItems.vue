@@ -38,6 +38,7 @@
         },
         mounted() {
             this.$store.state.connection.on("ListLayoutChanged", (listId) => this.refreshLayout(listId));
+            this.$store.state.connection.on("ItemTrashed", (listId, item) => this.refreshLayout(listId));
         },
         methods: {
             getLayout() {

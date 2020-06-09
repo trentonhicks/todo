@@ -19141,7 +19141,7 @@ var todoLists = {
     };
   },
   mutations: {
-    updateItems: function updateItems(state, _ref) {
+    setItems: function setItems(state, _ref) {
       var listId = _ref.listId,
           items = _ref.items;
       state.items[listId] = items;
@@ -19169,7 +19169,8 @@ var todoLists = {
     removeItem: function removeItem(state, _ref5) {
       var listId = _ref5.listId,
           item = _ref5.item;
-      state.items[listId].$remove(item);
+
+      _vue.default.set(state.items, null);
     }
   },
   actions: {
@@ -19179,7 +19180,7 @@ var todoLists = {
           method: 'GET',
           url: "api/lists/".concat(payload.todoListId, "/todos")
         }).then(function (response) {
-          context.commit('updateItems', {
+          context.commit('setItems', {
             listId: payload.todoListId,
             items: response.data
           });
@@ -37346,6 +37347,9 @@ var _default = {
     this.$store.state.connection.on("ListLayoutChanged", function (listId) {
       return _this.refreshLayout(listId);
     });
+    this.$store.state.connection.on("ItemTrashed", function (listId, item) {
+      return _this.refreshLayout(listId);
+    });
   },
   methods: {
     getLayout: function getLayout() {
@@ -38264,12 +38268,6 @@ var _default = {
     });
     this.$store.state.connection.on("ItemUpdated", function (item) {
       return _this.$store.commit('updateItem', {
-        item: item
-      });
-    });
-    this.$store.state.connection.on("ItemTrashed", function (listId, item) {
-      return _this.$store.commit('removeItem', {
-        listId: listId,
         item: item
       });
     });
@@ -87653,7 +87651,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61122" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54715" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
