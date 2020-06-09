@@ -1,6 +1,10 @@
 <template>
     
-    <b-list-group-item class="todo-item bg-light" :class="{ 'align-items-center': !todoListItem.dueDate && !todoListItem.notes }">
+    <b-list-group-item :data-id="todoListItem.id" class="todo-item bg-light" :class="{ 'align-items-center': !todoListItem.dueDate && !todoListItem.notes }">
+        <div class="item-handle mr-2">
+            <b-icon-list></b-icon-list>
+        </div>
+
         <b-form-checkbox
             class="todo-item-checkbox"
             v-model="itemCompletedState">
@@ -68,9 +72,12 @@
         align-items: flex-start;
         flex-wrap: wrap;
 
+        .item-handle:hover {
+            cursor: move;
+        }
+
         .todo-item-details {
             flex: 1 1 auto;
-            margin-left: 7px;
             font-family: 'Nunito', sans-serif;
 
             .todo-item-name {

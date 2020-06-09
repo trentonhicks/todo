@@ -21,7 +21,7 @@ const todoLists = {
             Vue.set(state.items[item.listId], index, item);
         },
         removeItem(state, { listId, item }) {
-            state.items[listId].pop(item);
+            state.items[listId].$remove(item);
         }
     },
     actions: {

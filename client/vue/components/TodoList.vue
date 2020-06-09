@@ -9,6 +9,7 @@
             <b-col md="8">
 
                 <TodoListItems
+                    :listId="todoListId"
                     :todoListItems="items"></TodoListItems>
 
                 <AddTodoListItemForm

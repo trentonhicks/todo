@@ -6,26 +6,71 @@
             Add an item to get started.
         </b-list-group-item>
 
-        <TodoListItem
-            v-for="item in todoListItems"
-            :key="item.id"
-            :todoListItem="item"
-            class="todo-list-item">
-        </TodoListItem>
+        <Draggable v-model="layout" @end="updateLayout" handle=".item-handle">
+            <TodoListItem
+                v-for="position in layout"
+                :key="position"
+                :todoListItem="todoListItems.find(x => x.id === position)"
+                class="todo-list-item">
+            </TodoListItem>
+        </Draggable>
+        
     </b-list-group>
 
 </template>
 
 <script>
 
+    import axios from 'axios';
+    import Draggable from 'vuedraggable';
     import TodoListItem from './TodoListItem';
 
     export default {
         name: 'TodoListItems',
-        props: ['todoListItems'],
+        props: ['listId', 'todoListItems'],
+        data() {
+            return {
+                layout: []
+            }
+        },
+        created() {
+            this.getLayout();
+        },
+        mounted() {
+            this.$store.state.connection.on("ListLayoutChanged", (listId) => this.refreshLayout(listId));
+        },
+        methods: {
+            getLayout() {
+                axios({
+                    method: 'GET',
+                    url: `api/lists/${this.listId}/layout`
+                }).then((response) => {
+                    this.layout = response.data;
+                });
+            },
+            updateLayout(e) {
+                let position = e.newIndex;
+                let itemId = e.item.getAttribute('data-id');
+                
+                axios({
+                    method: 'PUT',
+                    url: `api/lists/${this.listId}/layout`,
+                    data: JSON.stringify({ itemId, position }),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                });
+            },
+            refreshLayout(listId) {
+                if(this.listId === listId) {
+                    this.getLayout();
+                }
+            }
+        },
         components: {
+            Draggable,
             TodoListItem
-        }
+        },
     }
 
 </script>

@@ -56,9 +56,11 @@
   align-items: flex-start;
   flex-wrap: wrap;
 }
+.todo-item .item-handle[data-v-4e7dd7]:hover {
+  cursor: move;
+}
 .todo-item .todo-item-details[data-v-4e7dd7] {
   flex: 1 1 auto;
-  margin-left: 7px;
   font-family: "Nunito", sans-serif;
 }
 .todo-item .todo-item-details .todo-item-name[data-v-4e7dd7] {
