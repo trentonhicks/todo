@@ -34,6 +34,7 @@ using TodoWebAPI.TypeHandlers;
 using TodoWebAPI.SignalR;
 using Microsoft.AspNetCore.SignalR;
 using TodoWebAPI.ServiceBusAzure;
+using TodoWebAPI.BraintreeService;
 
 namespace TodoWebAPI
 {
@@ -80,6 +81,7 @@ namespace TodoWebAPI
             services.AddControllers();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddHostedService<RecieveServiceBus>();
+            services.AddScoped<IBraintreeConfiguration, BraintreeConfiguration>();
 
             services.AddCronJob<DueDateJob>(c =>
             {
