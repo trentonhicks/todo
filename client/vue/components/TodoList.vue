@@ -2,11 +2,11 @@
 
     <div class="todo-list">
 
-        <h1 class="todo-list-title" v-if="list.listTitle">{{ list.listTitle }}</h1>
+        <h1 class="todo-list-title mb-4" v-if="list.listTitle">{{ list.listTitle }}</h1>
 
         <b-row>
 
-            <b-col md="8">
+            <b-col md="8" class="mb-3">
 
                 <TodoListItems
                     :listId="todoListId"

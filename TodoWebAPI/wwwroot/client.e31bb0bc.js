@@ -36696,7 +36696,71 @@ var global = arguments[3];
 
 })));
 
-},{}],"vue/components/EditTodoItemForm.vue":[function(require,module,exports) {
+},{}],"vue/components/SubItem.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+var _default = {
+  props: ['subItemName']
+};
+exports.default = _default;
+        var $89908c = exports.default || module.exports;
+      
+      if (typeof $89908c === 'function') {
+        $89908c = $89908c.options;
+      }
+    
+        /* template */
+        Object.assign($89908c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "sub-item" }, [
+    _vm._v("name: " + _vm._s(_vm.subItemName))
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$89908c', $89908c);
+          } else {
+            api.reload('$89908c', $89908c);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/SubItems.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36704,10 +36768,85 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _SubItem = _interopRequireDefault(require("./SubItem"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var _default = {
+  components: {
+    SubItem: _SubItem.default
+  }
+};
+exports.default = _default;
+        var $dc0d5c = exports.default || module.exports;
+      
+      if (typeof $dc0d5c === 'function') {
+        $dc0d5c = $dc0d5c.options;
+      }
+    
+        /* template */
+        Object.assign($dc0d5c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("SubItem")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$dc0d5c', $dc0d5c);
+          } else {
+            api.reload('$dc0d5c', $dc0d5c);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"./SubItem":"vue/components/SubItem.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/EditTodoItemForm.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _SubItems = _interopRequireDefault(require("./SubItems"));
+
 var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -36798,6 +36937,9 @@ var _default = {
         dueDate: this.todoListItem.dueDate
       }
     };
+  },
+  components: {
+    SubItems: _SubItems.default
   },
   computed: {
     dueDate: function dueDate() {
@@ -37022,7 +37164,11 @@ exports.default = _default;
           )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("b-form-group", { attrs: { label: "Sub-items" } }),
+      _vm._v(" "),
+      _c("SubItems")
     ],
     1
   )
@@ -37060,7 +37206,7 @@ render._withStripped = true
       
       }
     })();
-},{"moment":"node_modules/moment/moment.js","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoListItem.vue":[function(require,module,exports) {
+},{"./SubItems":"vue/components/SubItems.vue","moment":"node_modules/moment/moment.js","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoListItem.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37764,7 +37910,7 @@ exports.default = _default;
     { staticClass: "todo-list" },
     [
       _vm.list.listTitle
-        ? _c("h1", { staticClass: "todo-list-title" }, [
+        ? _c("h1", { staticClass: "todo-list-title mb-4" }, [
             _vm._v(_vm._s(_vm.list.listTitle))
           ])
         : _vm._e(),
@@ -37774,7 +37920,7 @@ exports.default = _default;
         [
           _c(
             "b-col",
-            { attrs: { md: "8" } },
+            { staticClass: "mb-3", attrs: { md: "8" } },
             [
               _c("TodoListItems", {
                 attrs: { listId: _vm.todoListId, todoListItems: _vm.items }
@@ -87651,7 +87797,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54715" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53792" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

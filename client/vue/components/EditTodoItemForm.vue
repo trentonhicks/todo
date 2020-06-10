@@ -71,12 +71,17 @@
             </b-form-group>
         </b-form>
 
+        <!-- Sub Items -->
+        <b-form-group label="Sub-items"></b-form-group>
+        <SubItems></SubItems>
+
     </b-modal>
 
 </template>
 
 <script>
 
+    import SubItems from "./SubItems"
     import moment from 'moment';
 
     export default {
@@ -92,6 +97,9 @@
                     dueDate: this.todoListItem.dueDate
                 }
             }
+        },
+        components: {
+            SubItems
         },
         computed: {
             dueDate() {
