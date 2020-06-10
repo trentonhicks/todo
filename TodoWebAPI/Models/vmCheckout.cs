@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TodoWebAPI.Models
 {
-    public class vmCheckout
+    public class VmCheckout
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -42,40 +42,36 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost, Route("Checkout")]
-        public object Checkout(vmCheckout model)
+        public async Task<bool> Checkout(VmCheckout model)
         {
-            string paymentStatus = string.Empty;
             var gateway = _braintreeConfiguration.GetGateway();
 
-            var request = new TransactionRequest
+            var customerRequest = new CustomerRequest
             {
-                Amount = model.Price,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PaymentMethodNonce = model.PaymentMethodNonce
+            };
+            
+            Result<Customer> customerResult = await gateway.Customer.CreateAsync(customerRequest);
+
+            bool success = customerResult.IsSuccess();
+
+            Customer customer = customerResult.Target;
+            string customerId = customer.Id;
+
+            string cardToken = customer.PaymentMethods[0].Token;
+
+            var request = new SubscriptionRequest
+            {
+                PaymentMethodToken = cardToken,
                 PaymentMethodNonce = model.PaymentMethodNonce,
-                Options = new TransactionOptionsRequest
-                {
-                    SubmitForSettlement = true
-                }
+                PlanId = "2",
             };
 
-            Result<Transaction> result = gateway.Transaction.Sale(request);
-            if (result.IsSuccess())
-            {
-                paymentStatus = "Succeded";
+            var result = await gateway.Subscription.CreateAsync(request);
 
-                //Do Database Operations Here  
-            }
-            else
-            {
-                string errorMessages = "";
-                foreach (ValidationError error in result.Errors.DeepAll())
-                {
-                    errorMessages += "Error: " + (int)error.Code + " - " + error.Message + "\n";
-                }
-
-                paymentStatus = errorMessages;
-            }
-
-            return paymentStatus;
+            return result.IsSuccess();
         }
     }
 }
