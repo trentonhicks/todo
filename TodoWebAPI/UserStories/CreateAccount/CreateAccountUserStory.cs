@@ -35,7 +35,8 @@ namespace TodoWebAPI.UserStories.CreateAccount
                 Id = _accountRepository.NextId(),
                 FullName = request.FullName,
                 Email = request.Email,
-                PictureUrl = request.PictureUrl
+                PictureUrl = request.PictureUrl,
+                PlanId = PlanTiers.Free
             };
 
             account.Contributors.Add(account.Email);

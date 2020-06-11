@@ -16,6 +16,7 @@ namespace Todo.Infrastructure
         public string PictureUrl { get; set; }
         public string Email { get; set; }
         public List<string> Contributors { get; private set; }
+        public int PlanId { get; set; }
 
         public void AddContributor(string email)
         {
