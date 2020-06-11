@@ -39,8 +39,6 @@ namespace TodoWebAPI.UserStories.CreateAccount
                 PlanId = PlanTiers.Free
             };
 
-            account.Contributors.Add(account.Email);
-
             _accountRepository.AddAccount(account);
 
             await _accountRepository.SaveChangesAsync();
