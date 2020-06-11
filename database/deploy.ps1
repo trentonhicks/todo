@@ -1,11 +1,11 @@
-Invoke-Sqlcmd -InputFile DropDataBase.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile ToDo.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile Plans.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile PlanData.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile Account.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile TodoLists.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile TodoListItems.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile TodoListLayouts.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile SubItems.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile SubItemLayouts.sql -U "sa" -P "Passw0rd!"
-Invoke-Sqlcmd -InputFile AccountLists.sql -U "sa" -P "Passw0rd!"
+Invoke-Sqlcmd -InputFile DropDataBase.sql
+Invoke-Sqlcmd -InputFile ToDo.sql
+Invoke-Sqlcmd -InputFile Plans.sql
+Invoke-Sqlcmd -InputFile PlanData.sql
+Invoke-Sqlcmd -InputFile Account.sql
+Invoke-Sqlcmd -InputFile TodoLists.sql
+Invoke-Sqlcmd -InputFile TodoListItems.sql
+Invoke-Sqlcmd -InputFile TodoListLayouts.sql
+Invoke-Sqlcmd -InputFile SubItems.sql
+Invoke-Sqlcmd -InputFile SubItemLayouts.sql
+Invoke-Sqlcmd -InputFile AccountLists.sql
