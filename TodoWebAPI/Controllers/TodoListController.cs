@@ -19,7 +19,8 @@ namespace TodoWebAPI.Controllers
         private readonly IMediator _mediator;
         private readonly DapperQuery _dapperQuery;
 
-        public TodoListController(IMediator mediator,
+        public TodoListController(
+            IMediator mediator,
             DapperQuery dapperQuery)
         {
             _mediator = mediator;

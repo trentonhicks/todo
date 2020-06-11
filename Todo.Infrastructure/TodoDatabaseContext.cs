@@ -36,6 +36,7 @@ namespace Todo.Infrastructure
         public virtual DbSet<SubItem> SubItems { get; set; }
         public virtual DbSet<SubItemLayout> SubItemLayouts { get; set; }
         public virtual DbSet<AccountLists> AccountLists { get; set; }
+        public virtual DbSet<Plan> Plans { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -70,11 +71,16 @@ namespace Todo.Infrastructure
                     .Property(e => e.FullName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
                 entity
                     .Property(e => e.Contributors).HasColumnName("Contributors")
                     .HasConversion(
                         v => JsonConvert.SerializeObject(v),
                         v => JsonConvert.DeserializeObject<List<string>>(v));
+
+                entity
+                    .Property(e => e.PlanId)
+                    .HasColumnName("PlanID");
             });
 
             modelBuilder.Entity<TodoList>(entity =>
@@ -182,8 +188,32 @@ namespace Todo.Infrastructure
             {
                 entity
                     .HasKey(o => new { o.AccountId, o.ListId });
+
                 entity
                     .Property(e => e.Role).HasColumnName("Role");
+            });
+
+            modelBuilder.Entity<Plan>(entity =>
+            {
+                entity
+                    .Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity
+                    .Property(e => e.Name)
+                    .HasColumnName("Name");
+
+                entity
+                    .Property(e => e.MaxContributors)
+                    .HasColumnName("MaxContributors");
+
+                entity
+                    .Property(e => e.MaxLists)
+                    .HasColumnName("MaxLists");
+
+                entity
+                    .Property(e => e.CanNotifyViaEmail)
+                    .HasColumnName("CanNotifyViaEmail");
             });
         }
     }
