@@ -40,23 +40,14 @@ namespace TodoWebAPI
             {
                 await connection.OpenAsync();
 
-                using(var transaction = await connection.BeginTransactionAsync())
-                {
-                    var contributorEmails = await transaction.QueryFirstOrDefaultAsync<List<string>>(@"
-                        SELECT Contributors From Accounts WHERE ID = @accountId",
-                        new { accountId });
+                var contributorsResult = await connection.QueryAsync<AccountContributorsPresentation>(@"
+                    select distinct a.FullName, a.PictureUrl, a.Email
+                    from AccountLists al
+                    INNER JOIN (select ListID from AccountLists where AccountID = @accountId)
+                    al2 ON al.ListID = al2.ListID
+                    inner join Accounts a on a.ID = al.AccountID", new { accountId = accountId });
 
-                    if(contributorEmails == null)
-                        return null;
-
-                    var contributorsQueryResult = await transaction.QueryAsync<AccountContributorsPresentation>(@"
-                        SELECT FullName, PictureUrl, Email From Accounts WHERE Email IN @contributorEmails",
-                        new { contributorEmails = contributorEmails.ToArray() });
-
-                    contributors = contributorsQueryResult.ToDictionary(kvp => kvp.Email, kvp => kvp);
-
-                    transaction.Commit();
-                }
+                contributors = contributorsResult.ToDictionary(kvp => kvp.Email, kvp => kvp);
 
                 return contributors;
             }
