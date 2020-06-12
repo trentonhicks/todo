@@ -73,12 +73,6 @@ namespace Todo.Infrastructure
                     .IsUnicode(false);
 
                 entity
-                    .Property(e => e.Contributors).HasColumnName("Contributors")
-                    .HasConversion(
-                        v => JsonConvert.SerializeObject(v),
-                        v => JsonConvert.DeserializeObject<List<string>>(v));
-
-                entity
                     .Property(e => e.PlanId)
                     .HasColumnName("PlanID");
             });

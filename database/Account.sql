@@ -7,7 +7,6 @@ Create Table [Accounts](
     [FullName] VARCHAR(50),
     [PictureUrl] VARCHAR(255),
 	[Email] VARCHAR(50) NOT NULL,
-    [Contributors] VARCHAR(max) NOT NULL,
     [PlanID] INT NOT NULL,
     FOREIGN KEY ([PlanID]) REFERENCES Plans([ID])
 )
