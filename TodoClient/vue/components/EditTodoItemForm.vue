@@ -63,7 +63,7 @@
         <!-- Due Date -->
         <b-form @submit.prevent="">
             <b-form-group>
-                <label for="due-date">Due Date: {{ form.dueDate | formatDate }}</label>
+                <label for="due-date">Due Date: <span v-if="form.dueDate">{{ form.dueDate | formatDate }}</span></label>
                 <b-form-datepicker
                     id="due-date"
                     v-model="form.dueDate">
@@ -72,8 +72,9 @@
         </b-form>
 
         <!-- Sub Items -->
-        <b-form-group label="Sub-items"></b-form-group>
+        <b-form-group label="Sub-items" class="mb-2"></b-form-group>
         <SubItems></SubItems>
+        <AddSubItemForm :todoListItem="todoListItem"></AddSubItemForm>
 
     </b-modal>
 
@@ -81,8 +82,9 @@
 
 <script>
 
-    import SubItems from "./SubItems"
     import moment from 'moment';
+    import SubItems from './SubItems';
+    import AddSubItemForm from './AddSubItemForm';
 
     export default {
         name: 'EditTodoItemForm',
@@ -99,7 +101,8 @@
             }
         },
         components: {
-            SubItems
+            SubItems,
+            AddSubItemForm
         },
         computed: {
             dueDate() {

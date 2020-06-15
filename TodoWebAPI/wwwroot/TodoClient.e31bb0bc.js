@@ -18976,7 +18976,39 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"modules/vuex/todoLists.js":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"modules/vuex/user.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const user = {
+  state: () => ({
+    user: {}
+  }),
+  mutations: {
+    setUserData(state, data) {
+      state.user = data;
+    }
+
+  },
+  actions: {},
+  getters: {
+    user(state) {
+      return state.user;
+    }
+
+  }
+};
+var _default = user;
+exports.default = _default;
+},{"axios":"node_modules/axios/index.js"}],"modules/vuex/todoLists.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18990,41 +19022,41 @@ var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var todoLists = {
-  state: function state() {
-    return {
-      todoLists: [],
-      contributors: []
-    };
-  },
+const todoLists = {
+  state: () => ({
+    todoLists: [],
+    contributors: []
+  }),
   mutations: {
-    updateTodoLists: function updateTodoLists(state, data) {
+    updateTodoLists(state, data) {
       state.todoLists = data.todoLists;
       state.contributors = data.contributors;
     },
-    setTodoListCompletedState: function setTodoListCompletedState(state, _ref) {
-      var listId = _ref.listId,
-          listCompletedState = _ref.listCompletedState;
-      var index = state.todoLists.findIndex(function (x) {
-        return x.id === listId;
-      });
-      var updatedList = state.todoLists[index];
+
+    setTodoListCompletedState(state, {
+      listId,
+      listCompletedState
+    }) {
+      let index = state.todoLists.findIndex(x => x.id === listId);
+      let updatedList = state.todoLists[index];
       updatedList.completed = listCompletedState;
 
       _vue.default.set(state.todoLists, index, updatedList);
     }
+
   },
   actions: {
-    loadTodoLists: function loadTodoLists(context) {
+    loadTodoLists(context) {
       (0, _axios.default)({
         method: 'GET',
         url: 'api/lists'
-      }).then(function (response) {
+      }).then(response => {
         context.commit('updateTodoLists', response.data);
       });
     },
-    addTodoList: function addTodoList(context, payload) {
-      return new Promise(function (resolve, reject) {
+
+    addTodoList(context, payload) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'POST',
           url: 'api/lists',
@@ -19032,95 +19064,65 @@ var todoLists = {
           headers: {
             'content-type': 'application/json'
           }
-        }).then(function () {
+        }).then(() => {
           context.dispatch('loadTodoLists');
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     },
-    deleteTodoList: function deleteTodoList(context, payload) {
-      return new Promise(function (resolve, reject) {
+
+    deleteTodoList(context, payload) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'DELETE',
           url: "api/lists/".concat(payload.listId)
-        }).then(function () {
+        }).then(() => {
           context.dispatch('loadTodoLists');
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     },
-    inviteContributorToList: function inviteContributorToList(context, _ref2) {
-      var listId = _ref2.listId,
-          email = _ref2.email;
-      return new Promise(function (resolve, reject) {
+
+    inviteContributorToList(context, {
+      listId,
+      email
+    }) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'POST',
           url: "api/lists/".concat(listId, "/email"),
           data: JSON.stringify({
-            email: email
+            email
           }),
           headers: {
             'content-type': 'application/json'
           }
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     }
+
   },
   getters: {
-    todoLists: function todoLists(state) {
+    todoLists(state) {
       return state.todoLists;
     },
-    contributors: function contributors(state) {
+
+    contributors(state) {
       return state.contributors;
     },
-    getTodoListById: function getTodoListById(state) {
-      return function (todoListId) {
-        return state.todoLists.find(function (list) {
-          return list.id === todoListId;
-        });
-      };
+
+    getTodoListById: state => todoListId => {
+      return state.todoLists.find(list => list.id === todoListId);
     }
   }
 };
 var _default = todoLists;
 exports.default = _default;
-},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","axios":"node_modules/axios/index.js"}],"modules/vuex/user.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _axios = _interopRequireDefault(require("axios"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var user = {
-  state: function state() {
-    return {
-      user: {}
-    };
-  },
-  mutations: {
-    setUserData: function setUserData(state, data) {
-      state.user = data;
-    }
-  },
-  actions: {},
-  getters: {
-    user: function user(state) {
-      return state.user;
-    }
-  }
-};
-var _default = user;
-exports.default = _default;
-},{"axios":"node_modules/axios/index.js"}],"modules/vuex/todoListItems.js":[function(require,module,exports) {
+},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","axios":"node_modules/axios/index.js"}],"modules/vuex/todoListItems.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19134,63 +19136,67 @@ var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var todoLists = {
-  state: function state() {
-    return {
-      items: {}
-    };
-  },
+const todoLists = {
+  state: () => ({
+    items: {}
+  }),
   mutations: {
-    setItems: function setItems(state, _ref) {
-      var listId = _ref.listId,
-          items = _ref.items;
+    setItems(state, {
+      listId,
+      items
+    }) {
       state.items[listId] = items;
     },
-    addItem: function addItem(state, _ref2) {
-      var listId = _ref2.listId,
-          item = _ref2.item;
+
+    addItem(state, {
+      listId,
+      item
+    }) {
       state.items[listId].unshift(item);
     },
-    updateItemCompletedState: function updateItemCompletedState(state, _ref3) {
-      var item = _ref3.item;
-      var index = state.items[item.listId].findIndex(function (i) {
-        return i.id === item.id;
-      });
+
+    updateItemCompletedState(state, {
+      item
+    }) {
+      let index = state.items[item.listId].findIndex(i => i.id === item.id);
       state.items[item.listId][index].completed = item.completed;
     },
-    updateItem: function updateItem(state, _ref4) {
-      var item = _ref4.item;
-      var index = state.items[item.listId].findIndex(function (i) {
-        return i.id === item.id;
-      });
+
+    updateItem(state, {
+      item
+    }) {
+      let index = state.items[item.listId].findIndex(i => i.id === item.id);
 
       _vue.default.set(state.items[item.listId], index, item);
     },
-    removeItem: function removeItem(state, _ref5) {
-      var listId = _ref5.listId,
-          item = _ref5.item;
 
+    removeItem(state, {
+      listId,
+      item
+    }) {
       _vue.default.set(state.items, null);
     }
+
   },
   actions: {
-    loadItemsByListId: function loadItemsByListId(context, payload) {
-      return new Promise(function (resolve, reject) {
+    loadItemsByListId(context, payload) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'GET',
           url: "api/lists/".concat(payload.todoListId, "/todos")
-        }).then(function (response) {
+        }).then(response => {
           context.commit('setItems', {
             listId: payload.todoListId,
             items: response.data
           });
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     },
-    addItem: function addItem(context, payload) {
-      return new Promise(function (resolve, reject) {
+
+    addItem(context, payload) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'POST',
           url: "api/lists/".concat(payload.listId, "/todos"),
@@ -19198,33 +19204,37 @@ var todoLists = {
           headers: {
             'content-type': 'application/json'
           }
-        }).then(function (response) {}).finally(function () {
+        }).then(response => {}).finally(() => {
           resolve();
         });
       });
     },
-    toggleItemCompletedState: function toggleItemCompletedState(context, _ref6) {
-      var listId = _ref6.listId,
-          itemId = _ref6.itemId,
-          completed = _ref6.completed;
-      return new Promise(function (resolve, reject) {
+
+    toggleItemCompletedState(context, {
+      listId,
+      itemId,
+      completed
+    }) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'PUT',
           url: "api/lists/".concat(listId, "/todos/").concat(itemId, "/completed"),
           data: JSON.stringify({
-            completed: completed
+            completed
           }),
           headers: {
             'content-type': 'application/json'
           }
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     },
-    updateItem: function updateItem(context, _ref7) {
-      var item = _ref7.item;
-      return new Promise(function (resolve, reject) {
+
+    updateItem(context, {
+      item
+    }) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'PUT',
           url: "api/lists/".concat(item.listId, "/todos/").concat(item.id),
@@ -19236,46 +19246,108 @@ var todoLists = {
           headers: {
             'content-type': 'application/json'
           }
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     },
-    deleteItem: function deleteItem(context, _ref8) {
-      var item = _ref8.item;
-      return new Promise(function (resolve, reject) {
+
+    deleteItem(context, {
+      item
+    }) {
+      return new Promise((resolve, reject) => {
         (0, _axios.default)({
           method: 'DELETE',
           url: "api/lists/".concat(item.listId, "/todos/").concat(item.id)
-        }).finally(function () {
+        }).finally(() => {
           resolve();
         });
       });
     }
+
   },
   getters: {
-    getItemsByListId: function getItemsByListId(state) {
-      return function (listId) {
-        return state.items[listId];
-      };
+    getItemsByListId: state => listId => {
+      return state.items[listId];
     },
-    getItemName: function getItemName(state) {
-      return function (listId, itemId) {
-        return state.items[listId].find(function (i) {
-          return i.id === itemId;
-        }).name;
-      };
+    getItemName: state => (listId, itemId) => {
+      return state.items[listId].find(i => i.id === itemId).name;
     },
-    getItemCompletedState: function getItemCompletedState(state) {
-      return function (listId, itemId) {
-        return state.items[listId].find(function (i) {
-          return i.id === itemId;
-        }).completed;
-      };
+    getItemCompletedState: state => (listId, itemId) => {
+      return state.items[listId].find(i => i.id === itemId).completed;
     }
   }
 };
 var _default = todoLists;
+exports.default = _default;
+},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","axios":"node_modules/axios/index.js"}],"modules/vuex/subItems.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const subItems = {
+  state: () => ({
+    subItems: {}
+  }),
+  mutations: {
+    setSubItems() {},
+
+    addSubItem() {},
+
+    updateSubItem() {},
+
+    removeSubItem() {}
+
+  },
+  actions: {
+    loadSubItems() {},
+
+    async addSubItem(context, {
+      listId,
+      todoItemId,
+      name
+    }) {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems"),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: JSON.stringify({
+            name
+          })
+        });
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    updateSubItem() {},
+
+    trashSubItem() {}
+
+  },
+  getters: {
+    getSubItemsByItemId: state => itemId => {
+      return state.subItems[itemId];
+    },
+    getSubItemCompletedState: state => (itemId, subItemId) => {
+      return state.subItems[itemId].find(i => i.id === subItemId).completed;
+    }
+  }
+};
+var _default = subItems;
 exports.default = _default;
 },{"vue":"node_modules/vue/dist/vue.runtime.esm.js","axios":"node_modules/axios/index.js"}],"modules/store.js":[function(require,module,exports) {
 "use strict";
@@ -19291,11 +19363,13 @@ var _vuex = _interopRequireDefault(require("vuex"));
 
 var signalR = _interopRequireWildcard(require("@microsoft/signalr"));
 
-var _todoLists = _interopRequireDefault(require("./vuex/todoLists"));
-
 var _user = _interopRequireDefault(require("./vuex/user"));
 
+var _todoLists = _interopRequireDefault(require("./vuex/todoLists"));
+
 var _todoListItems = _interopRequireDefault(require("./vuex/todoListItems"));
+
+var _subItems = _interopRequireDefault(require("./vuex/subItems"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -19305,11 +19379,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _vue.default.use(_vuex.default);
 
-var store = new _vuex.default.Store({
+const store = new _vuex.default.Store({
   modules: {
     user: _user.default,
     todoLists: _todoLists.default,
-    todoListItems: _todoListItems.default
+    todoListItems: _todoListItems.default,
+    subItems: _subItems.default
   },
   state: {
     connection: new signalR.HubConnectionBuilder().withUrl("/notifications").build()
@@ -19317,7 +19392,7 @@ var store = new _vuex.default.Store({
 });
 var _default = store;
 exports.default = _default;
-},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","vuex":"node_modules/vuex/dist/vuex.esm.js","@microsoft/signalr":"node_modules/@microsoft/signalr/dist/esm/index.js","./vuex/todoLists":"modules/vuex/todoLists.js","./vuex/user":"modules/vuex/user.js","./vuex/todoListItems":"modules/vuex/todoListItems.js"}],"node_modules/vue-router/dist/vue-router.esm.js":[function(require,module,exports) {
+},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","vuex":"node_modules/vuex/dist/vuex.esm.js","@microsoft/signalr":"node_modules/@microsoft/signalr/dist/esm/index.js","./vuex/user":"modules/vuex/user.js","./vuex/todoLists":"modules/vuex/todoLists.js","./vuex/todoListItems":"modules/vuex/todoListItems.js","./vuex/subItems":"modules/vuex/subItems.js"}],"node_modules/vue-router/dist/vue-router.esm.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22686,11 +22761,12 @@ var _default = {
     Contributors: _Contributors.default
   },
   methods: {
-    deleteTodoList: function deleteTodoList() {
+    deleteTodoList() {
       this.$store.dispatch('deleteTodoList', {
         listId: this.todoList.id
       });
     }
+
   }
 };
 exports.default = _default;
@@ -22847,16 +22923,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 var _default = {
-  data: function data() {
+  data() {
     return {};
   },
+
   computed: {
-    todoLists: function todoLists() {
+    todoLists() {
       return this.$store.getters.todoLists;
     },
-    contributors: function contributors() {
+
+    contributors() {
       return this.$store.getters.contributors;
     }
+
   },
   components: {
     TodoListPreview: _TodoListPreview.default
@@ -22948,33 +23027,36 @@ exports.default = void 0;
 //
 var _default = {
   name: 'AddTodoListForm',
-  data: function data() {
+
+  data() {
     return {
       form: {
         listTitle: ''
       }
     };
   },
+
   computed: {
-    user: function user() {
+    user() {
       return this.$store.getters.user;
     }
+
   },
   methods: {
-    focusOnForm: function focusOnForm() {
+    focusOnForm() {
       this.$refs.listTitle.focus();
     },
-    addTodoList: function addTodoList() {
-      var _this = this;
 
+    addTodoList() {
       this.$store.dispatch('addTodoList', {
         listTitle: this.form.listTitle,
         email: this.user.email
-      }).then(function () {
-        _this.form.listTitle = '';
+      }).then(() => {
+        this.form.listTitle = '';
       });
       this.$bvModal.hide('modal-add-todo-list');
     }
+
   }
 };
 exports.default = _default;
@@ -23119,9 +23201,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   name: "Home",
-  data: function data() {
+
+  data() {
     return {};
   },
+
   components: {
     TodoLists: _TodoLists.default,
     AddTodoListForm: _AddTodoListForm.default
@@ -23221,7 +23305,8 @@ exports.default = void 0;
 var _default = {
   name: 'AddTodoListItemForm',
   props: ['todoListId'],
-  data: function data() {
+
+  data() {
     return {
       form: {
         listId: this.todoListId,
@@ -23231,21 +23316,21 @@ var _default = {
       }
     };
   },
+
   methods: {
-    focusOnForm: function focusOnForm() {
+    focusOnForm() {
       this.$refs.title.focus();
     },
-    addItem: function addItem() {
-      var _this = this;
 
-      this.$store.dispatch('addItem', this.form).then(function () {
-        _this.form.name = null;
-        _this.form.notes = null;
-        _this.form.dueDate = null;
-
-        _this.$bvModal.hide('modal-add-todo-list-item');
+    addItem() {
+      this.$store.dispatch('addItem', this.form).then(() => {
+        this.form.name = null;
+        this.form.notes = null;
+        this.form.dueDate = null;
+        this.$bvModal.hide('modal-add-todo-list-item');
       });
     }
+
   }
 };
 exports.default = _default;
@@ -36708,7 +36793,7 @@ exports.default = void 0;
 //
 //
 var _default = {
-  props: ['subItemName']
+  props: ['name']
 };
 exports.default = _default;
         var $7b87e9 = exports.default || module.exports;
@@ -36770,15 +36855,33 @@ exports.default = void 0;
 
 var _SubItem = _interopRequireDefault(require("./SubItem"));
 
+var _vuedraggable = _interopRequireDefault(require("vuedraggable"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
+  props: ['itemId'],
   components: {
+    Draggable: _vuedraggable.default,
     SubItem: _SubItem.default
+  },
+  computed: {
+    items() {
+      return this.$store.subItems.getSubItemsByItemId(this.itemId);
+    }
+
   }
 };
 exports.default = _default;
@@ -36794,7 +36897,13 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("SubItem")
+  return _c(
+    "Draggable",
+    _vm._l(_vm.items, function(item) {
+      return _c("SubItem", { key: item.id, attrs: { name: item.name } })
+    }),
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -36823,13 +36932,189 @@ render._withStripped = true
         }
 
         
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
       }
     })();
-},{"./SubItem":"vue/components/SubItem.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/EditTodoItemForm.vue":[function(require,module,exports) {
+},{"./SubItem":"vue/components/SubItem.vue","vuedraggable":"node_modules/vuedraggable/dist/vuedraggable.common.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddSubItemForm.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'AddSubItemForm',
+  props: ['todoListItem'],
+
+  data() {
+    return {
+      form: {
+        name: ''
+      },
+      formActive: false
+    };
+  },
+
+  methods: {
+    focusForm() {
+      this.formActive = true;
+      this.$nextTick(() => {
+        this.$refs.subItemName.focus();
+      });
+    },
+
+    blurForm() {
+      this.formActive = false;
+    },
+
+    async addSubItem() {
+      await this.$store.dispatch('addSubItem', {
+        listId: this.todoListItem.listId,
+        todoItemId: this.todoListItem.id,
+        name: this.form.name
+      });
+      this.blurForm();
+      this.form.name = '';
+    }
+
+  }
+};
+exports.default = _default;
+        var $efb0d1 = exports.default || module.exports;
+      
+      if (typeof $efb0d1 === 'function') {
+        $efb0d1 = $efb0d1.options;
+      }
+    
+        /* template */
+        Object.assign($efb0d1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-form",
+    {
+      attrs: { id: "add-sub-item-form" },
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.addSubItem($event)
+        }
+      }
+    },
+    [
+      !_vm.formActive
+        ? _c(
+            "b-button",
+            { attrs: { size: "sm" }, on: { click: _vm.focusForm } },
+            [_vm._v("\n        Add an item\n    ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.formActive
+        ? _c(
+            "div",
+            { staticClass: "add-sub-item-input-wrapper" },
+            [
+              _c(
+                "b-form-group",
+                { attrs: { label: "Name" } },
+                [
+                  _c("b-form-input", {
+                    ref: "subItemName",
+                    attrs: { maxlength: "50", minlength: "1", required: "" },
+                    model: {
+                      value: _vm.form.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "name", $$v)
+                      },
+                      expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                { attrs: { size: "sm", variant: "success", type: "submit" } },
+                [_vm._v("\n            Add\n        ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                { attrs: { size: "sm" }, on: { click: _vm.blurForm } },
+                [_vm._v("\n            Cancel\n        ")]
+              )
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$efb0d1', $efb0d1);
+          } else {
+            api.reload('$efb0d1', $efb0d1);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/EditTodoItemForm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36837,12 +37122,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _moment = _interopRequireDefault(require("moment"));
+
 var _SubItems = _interopRequireDefault(require("./SubItems"));
 
-var _moment = _interopRequireDefault(require("moment"));
+var _AddSubItemForm = _interopRequireDefault(require("./AddSubItemForm"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -36927,7 +37215,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   name: 'EditTodoItemForm',
   props: ['todoListItem'],
-  data: function data() {
+
+  data() {
     return {
       editingName: false,
       editingNotes: false,
@@ -36938,37 +37227,43 @@ var _default = {
       }
     };
   },
+
   components: {
-    SubItems: _SubItems.default
+    SubItems: _SubItems.default,
+    AddSubItemForm: _AddSubItemForm.default
   },
   computed: {
-    dueDate: function dueDate() {
+    dueDate() {
       return this.form.dueDate;
     }
+
   },
   watch: {
-    dueDate: function dueDate() {
+    dueDate: function () {
       this.updateItem();
     }
   },
   methods: {
-    refresh: function refresh() {
+    refresh() {
       this.form.name = this.todoListItem.name;
       this.form.notes = this.todoListItem.notes;
       this.form.dueDate = this.todoListItem.dueDate;
     },
-    cancelChangesToName: function cancelChangesToName() {
+
+    cancelChangesToName() {
       this.form.name = this.todoListItem.name;
       this.editingName = false;
     },
-    cancelChangesToNotes: function cancelChangesToNotes() {
+
+    cancelChangesToNotes() {
       this.form.notes = this.todoListItem.notes;
       this.editingNotes = false;
     },
-    updateItem: function updateItem() {
+
+    updateItem() {
       this.editingName = false;
       this.editingNotes = false;
-      var item = {
+      let item = {
         id: this.todoListItem.id,
         listId: this.todoListItem.listId,
         name: this.form.name,
@@ -36976,12 +37271,13 @@ var _default = {
         dueDate: this.form.dueDate
       };
       this.$store.dispatch('updateItem', {
-        item: item
+        item
       });
     }
+
   },
   filters: {
-    formatDate: function formatDate(value) {
+    formatDate: function (value) {
       return (0, _moment.default)(value).format('MM/D/YYYY');
     }
   }
@@ -37144,9 +37440,12 @@ exports.default = _default;
             "b-form-group",
             [
               _c("label", { attrs: { for: "due-date" } }, [
-                _vm._v(
-                  "Due Date: " + _vm._s(_vm._f("formatDate")(_vm.form.dueDate))
-                )
+                _vm._v("Due Date: "),
+                _vm.form.dueDate
+                  ? _c("span", [
+                      _vm._v(_vm._s(_vm._f("formatDate")(_vm.form.dueDate)))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("b-form-datepicker", {
@@ -37166,9 +37465,14 @@ exports.default = _default;
         1
       ),
       _vm._v(" "),
-      _c("b-form-group", { attrs: { label: "Sub-items" } }),
+      _c("b-form-group", {
+        staticClass: "mb-2",
+        attrs: { label: "Sub-items" }
+      }),
       _vm._v(" "),
-      _c("SubItems")
+      _c("SubItems"),
+      _vm._v(" "),
+      _c("AddSubItemForm", { attrs: { todoListItem: _vm.todoListItem } })
     ],
     1
   )
@@ -37206,7 +37510,7 @@ render._withStripped = true
       
       }
     })();
-},{"./SubItems":"vue/components/SubItems.vue","moment":"node_modules/moment/moment.js","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoListItem.vue":[function(require,module,exports) {
+},{"moment":"node_modules/moment/moment.js","./SubItems":"vue/components/SubItems.vue","./AddSubItemForm":"vue/components/AddSubItemForm.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoListItem.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37258,23 +37562,25 @@ var _default = {
   },
   computed: {
     itemCompletedState: {
-      get: function get() {
+      get() {
         return this.$store.getters.getItemCompletedState(this.todoListItem.listId, this.todoListItem.id);
       },
-      set: function set(value) {
+
+      set(value) {
         this.$store.dispatch('toggleItemCompletedState', {
           listId: this.todoListItem.listId,
           itemId: this.todoListItem.id,
           completed: value
         });
       }
+
     }
   },
   filters: {
-    formatDate: function formatDate(value) {
+    formatDate: function (value) {
       return (0, _moment.default)(value).format('MM/D/YYYY');
     },
-    truncate: function truncate(text, length, suffix) {
+    truncate: function (text, length, suffix) {
       return text.substring(0, length) + suffix;
     }
   }
@@ -37479,55 +37785,54 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   name: 'TodoListItems',
   props: ['listId', 'todoListItems'],
-  data: function data() {
+
+  data() {
     return {
       layout: []
     };
   },
-  created: function created() {
+
+  created() {
     this.getLayout();
   },
-  mounted: function mounted() {
-    var _this = this;
 
-    this.$store.state.connection.on("ListLayoutChanged", function (listId) {
-      return _this.refreshLayout(listId);
-    });
-    this.$store.state.connection.on("ItemTrashed", function (listId, item) {
-      return _this.refreshLayout(listId);
-    });
+  mounted() {
+    this.$store.state.connection.on("ListLayoutChanged", listId => this.refreshLayout(listId));
+    this.$store.state.connection.on("ItemTrashed", (listId, item) => this.refreshLayout(listId));
   },
-  methods: {
-    getLayout: function getLayout() {
-      var _this2 = this;
 
+  methods: {
+    getLayout() {
       (0, _axios.default)({
         method: 'GET',
         url: "api/lists/".concat(this.listId, "/layout")
-      }).then(function (response) {
-        _this2.layout = response.data;
+      }).then(response => {
+        this.layout = response.data;
       });
     },
-    updateLayout: function updateLayout(e) {
-      var position = e.newIndex;
-      var itemId = e.item.getAttribute('data-id');
+
+    updateLayout(e) {
+      let position = e.newIndex;
+      let itemId = e.item.getAttribute('data-id');
       (0, _axios.default)({
         method: 'PUT',
         url: "api/lists/".concat(this.listId, "/layout"),
         data: JSON.stringify({
-          itemId: itemId,
-          position: position
+          itemId,
+          position
         }),
         headers: {
           'content-type': 'application/json'
         }
       });
     },
-    refreshLayout: function refreshLayout(listId) {
+
+    refreshLayout(listId) {
       if (this.listId === listId) {
         this.getLayout();
       }
     }
+
   },
   components: {
     Draggable: _vuedraggable.default,
@@ -37653,7 +37958,8 @@ exports.default = void 0;
 //
 var _default = {
   props: ['listId'],
-  data: function data() {
+
+  data() {
     return {
       form: {
         email: ''
@@ -37663,8 +37969,9 @@ var _default = {
       dismissCountDown: 0
     };
   },
+
   methods: {
-    invite: function invite() {
+    invite() {
       this.$store.dispatch('inviteContributorToList', {
         listId: this.listId,
         email: this.form.email
@@ -37672,12 +37979,15 @@ var _default = {
       this.form.email = '';
       this.showAlert();
     },
-    countDownChanged: function countDownChanged(dismissCountDown) {
+
+    countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
-    showAlert: function showAlert() {
+
+    showAlert() {
       this.dismissCountDown = this.dismissSecs;
     }
+
   }
 };
 exports.default = _default;
@@ -37853,32 +38163,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   name: "TodoList",
   props: ['todoListId'],
-  data: function data() {
+
+  data() {
     return {
       items: []
     };
   },
-  created: function created() {
-    var _this = this;
 
+  created() {
     this.$store.dispatch('loadItemsByListId', {
       todoListId: this.todoListId
-    }).then(function () {
-      _this.items = _this.getItems();
+    }).then(() => {
+      this.items = this.getItems();
     });
   },
+
   computed: {
-    list: function list() {
+    list() {
       return this.$store.getters.getTodoListById(this.todoListId);
     },
-    contributors: function contributors() {
+
+    contributors() {
       return this.$store.getters.contributors;
     },
-    allItemsCompleted: function allItemsCompleted() {
-      return this.items.every(function (item) {
-        return item.completed === true;
-      }) && this.items.length > 0;
+
+    allItemsCompleted() {
+      return this.items.every(item => item.completed === true) && this.items.length > 0;
     }
+
   },
   components: {
     AddTodoListItemForm: _AddTodoListItemForm.default,
@@ -37887,9 +38199,10 @@ var _default = {
     InviteContributorsForm: _InviteContributorsForm.default
   },
   methods: {
-    getItems: function getItems() {
+    getItems() {
       return this.$store.getters.getItemsByListId(this.todoListId);
     }
+
   }
 };
 exports.default = _default;
@@ -38107,16 +38420,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   name: 'Login',
-  data: function data() {
+
+  data() {
     return {};
   },
+
   methods: {
-    logout: function logout() {
+    logout() {
       (0, _axios.default)({
         method: 'GET',
         url: '/api/accounts/logout'
       });
     }
+
   }
 };
 exports.default = _default;
@@ -38196,7 +38512,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _vue.default.use(_vueRouter.default); // Views
 
 
-var router = new _vueRouter.default({
+const router = new _vueRouter.default({
   routes: [{
     path: '/login',
     component: _Login.default,
@@ -38244,44 +38560,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   name: 'Header',
-  created: function created() {
+  created: function () {
     this.checkAuthState();
   },
   computed: {
-    user: function user() {
+    user() {
       return this.$store.getters.user;
     }
+
   },
   methods: {
-    checkAuthState: function checkAuthState() {
-      var _this = this;
-
+    checkAuthState() {
       (0, _axios.default)({
         method: 'GET',
         url: 'api/accounts/login'
-      }).then(function (response) {
+      }).then(response => {
         (0, _axios.default)({
           method: 'GET',
           url: 'api/accounts'
-        }).then(function (user) {
-          _this.$store.commit('setUserData', user.data);
+        }).then(user => {
+          this.$store.commit('setUserData', user.data);
         });
-      }).catch(function () {
-        if (_this.$router.name !== 'Login') {
-          _this.$router.push('/login');
+      }).catch(() => {
+        if (this.$router.name !== 'Login') {
+          this.$router.push('/login');
         }
       });
     },
-    logout: function logout() {
-      var _this2 = this;
 
+    logout() {
       (0, _axios.default)({
         method: 'GET',
         url: 'api/accounts/logout'
-      }).then(function () {
-        _this2.$router.push('/login');
+      }).then(() => {
+        this.$router.push('/login');
       });
     }
+
   }
 };
 exports.default = _default;
@@ -38383,41 +38698,30 @@ var _default = {
   components: {
     Header: _Header.default
   },
-  beforeCreate: function beforeCreate() {
+
+  beforeCreate() {
     this.$store.dispatch('loadTodoLists');
   },
-  mounted: function mounted() {
-    var _this = this;
 
-    this.$store.state.connection.start().catch(function (err) {
-      return console.error(err.toString());
-    });
-    this.$store.state.connection.on("InvitationSent", function (list) {
-      return _this.$store.dispatch('loadTodoLists');
-    });
-    this.$store.state.connection.on("ListCompletedStateChanged", function (listId, listCompletedState) {
-      return _this.$store.commit('setTodoListCompletedState', {
-        listId: listId,
-        listCompletedState: listCompletedState
-      });
-    });
-    this.$store.state.connection.on("ItemCreated", function (listId, item) {
-      return _this.$store.commit('addItem', {
-        listId: listId,
-        item: item
-      });
-    });
-    this.$store.state.connection.on("ItemCompleted", function (item) {
-      return _this.$store.commit('updateItemCompletedState', {
-        item: item
-      });
-    });
-    this.$store.state.connection.on("ItemUpdated", function (item) {
-      return _this.$store.commit('updateItem', {
-        item: item
-      });
-    });
+  mounted() {
+    this.$store.state.connection.start().catch(err => console.error(err.toString()));
+    this.$store.state.connection.on("InvitationSent", list => this.$store.dispatch('loadTodoLists'));
+    this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.$store.commit('setTodoListCompletedState', {
+      listId,
+      listCompletedState
+    }));
+    this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit('addItem', {
+      listId,
+      item
+    }));
+    this.$store.state.connection.on("ItemCompleted", item => this.$store.commit('updateItemCompletedState', {
+      item
+    }));
+    this.$store.state.connection.on("ItemUpdated", item => this.$store.commit('updateItem', {
+      item
+    }));
   }
+
 };
 exports.default = _default;
         var $fcc03e = exports.default || module.exports;
@@ -87765,9 +88069,7 @@ new _vue.default({
   el: '#app',
   store: _store.default,
   router: _router.default,
-  render: function render(h) {
-    return h(_App.default);
-  }
+  render: h => h(_App.default)
 });
 },{"vue":"node_modules/vue/dist/vue.runtime.esm.js","./modules/store":"modules/store.js","./modules/router":"modules/router.js","./vue/App.vue":"vue/App.vue","./modules/bootstrap":"modules/bootstrap.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -87797,7 +88099,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50845" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
