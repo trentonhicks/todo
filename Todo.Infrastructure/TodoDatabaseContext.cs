@@ -35,6 +35,7 @@ namespace Todo.Infrastructure
         public virtual DbSet<TodoListLayout> TodoListLayouts { get; set; }
         public virtual DbSet<SubItem> SubItems { get; set; }
         public virtual DbSet<SubItemLayout> SubItemLayouts { get; set; }
+        public virtual DbSet<AccountPlan> AccountsPlans { get; set; }
         public virtual DbSet<AccountLists> AccountLists { get; set; }
         public virtual DbSet<Plan> Plans { get; set; }
 
@@ -185,6 +186,15 @@ namespace Todo.Infrastructure
 
                 entity
                     .Property(e => e.Role).HasColumnName("Role");
+            });
+
+            modelBuilder.Entity<AccountPlan>(entity =>
+            {
+                entity
+                    .HasKey(k => new { k.AccountId, k.PlanId });
+
+                entity
+                    .Property(e => e.ListCount).HasColumnName("ListCount");
             });
 
             modelBuilder.Entity<Plan>(entity =>

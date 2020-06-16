@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
-using Todo.Infrastructure.Repositories;
-using Todo.Infrastructure.Guids;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure.Guids;
 using Todo.Domain;
 
 namespace Todo.Infrastructure.EFRepositories
@@ -18,9 +17,9 @@ namespace Todo.Infrastructure.EFRepositories
         {
             _context = context;
         }
-        public async Task<Plan> FindPlanByName(string name)
+        public async Task<Plan> FindPlanByIdAsync(int planId)
         {
-            return await _context.Plans.FirstOrDefaultAsync(p => p.Name == name);
+            return await _context.Plans.FindAsync(planId);
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

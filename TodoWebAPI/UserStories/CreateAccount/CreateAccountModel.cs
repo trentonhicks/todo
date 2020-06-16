@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Todo.Infrastructure;
+using Todo.Domain;
 
 namespace TodoWebAPI.Models
 {

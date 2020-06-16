@@ -8,7 +8,6 @@ using Todo.Domain;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure;
 using Todo.Infrastructure.Guids;
-using Todo.Infrastructure.Repositories;
 using TodoWebAPI.Models;
 
 namespace TodoWebAPI.UserStories.CreateAccount
@@ -30,13 +29,10 @@ namespace TodoWebAPI.UserStories.CreateAccount
                 return account;
             }
 
-            account = new Account()
+            account = new Account(_accountRepository.NextId(), request.Email, PlanTiers.Free)
             {
-                Id = _accountRepository.NextId(),
                 FullName = request.FullName,
-                Email = request.Email,
                 PictureUrl = request.PictureUrl,
-                PlanId = PlanTiers.Free
             };
 
             _accountRepository.AddAccount(account);

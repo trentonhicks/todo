@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Todo.Domain.Repositories;
-using Todo.Infrastructure;
 
-namespace Todo.Infrastructure.Repositories
+namespace Todo.Domain.Repositories
 {
     public interface IAccountRepository : IRepository
     {

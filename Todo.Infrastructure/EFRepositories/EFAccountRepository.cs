@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
-using Todo.Infrastructure.Repositories;
 using Todo.Infrastructure.Guids;
+using Todo.Domain.Repositories;
+using Todo.Domain;
 
 namespace Todo.Infrastructure.EFRepositories
 {

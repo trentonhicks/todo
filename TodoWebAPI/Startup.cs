@@ -27,7 +27,6 @@ using System.Text.Json;
 using Octokit;
 using Octokit.Internal;
 using TodoWebAPI.Models;
-using Todo.Infrastructure.Repositories;
 using Todo.Infrastructure.Guids;
 using Dapper;
 using TodoWebAPI.TypeHandlers;
@@ -71,6 +70,7 @@ namespace TodoWebAPI
             services.AddScoped<ITodoListLayoutRepository, EFTodoListLayoutRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
+            services.AddScoped<IAccountPlanRepository, EFAccountPlanRepository>();
             services.AddScoped<IPlanRepository, EFPlanRepository>();
             services.AddScoped<IServiceBusEmail, ServiceBusEmail>();
             services.AddScoped<ISubItemRepository, EFSubItemRepository>();
