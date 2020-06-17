@@ -1,5 +1,5 @@
 <template>
-    <b-list-group-item class="sub-item bg-light">
+    <b-list-group-item class="sub-item bg-light" :data-id="subItem.id">
         <div class="sub-item-handle mr-2" v-if="!editingSubItem">
             <b-icon-list></b-icon-list>
         </div>

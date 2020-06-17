@@ -37251,7 +37251,7 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "b-list-group-item",
-    { staticClass: "sub-item bg-light" },
+    { staticClass: "sub-item bg-light", attrs: { "data-id": _vm.subItem.id } },
     [
       !_vm.editingSubItem
         ? _c(
@@ -37409,6 +37409,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _SubItem = _interopRequireDefault(require("./SubItem"));
 
 var _vuedraggable = _interopRequireDefault(require("vuedraggable"));
@@ -37437,12 +37439,14 @@ var _default = {
     SubItem: _SubItem.default
   },
 
-  created() {
+  async created() {
     this.items = this.setSubItems();
+    await this.getLayout();
   },
 
   mounted() {
-    this.$store.state.connection.on("SubItemTrashed", subItem => this.refreshLayout(subItem));
+    this.$store.state.connection.on("ItemLayoutUpdated", async itemId => await this.refreshSubItemLayout(itemId));
+    this.$store.state.connection.on("SubItemTrashed", async (itemId, subItem) => await this.refreshSubItemLayout(itemId));
   },
 
   data() {
@@ -37453,12 +37457,44 @@ var _default = {
   },
 
   methods: {
-    getLayout() {},
+    async getLayout() {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'GET',
+          url: "api/lists/".concat(this.todoListItem.listId, "/todos/").concat(this.todoListItem.id, "/layout")
+        });
+        this.layout = response.data.layout;
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
-    updateLayout() {},
+    async updateSubItemPosition(event) {
+      const subItemId = event.item.getAttribute('data-id');
+      const position = event.newIndex;
 
-    refreshLayout(subItem) {
-      console.log('Refresh sub-item layout');
+      try {
+        await (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(this.todoListItem.listId, "/todos/").concat(this.todoListItem.id, "/layout"),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: JSON.stringify({
+            subItemId,
+            position
+          })
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async refreshSubItemLayout(todoItemId) {
+      if (todoItemId === this.todoListItem.id) {
+        console.log(todoItemId);
+        await this.getLayout();
+      }
     },
 
     setSubItems() {
@@ -37487,6 +37523,7 @@ exports.default = _default;
         "Draggable",
         {
           attrs: { handle: ".sub-item-handle" },
+          on: { end: _vm.updateSubItemPosition },
           model: {
             value: _vm.layout,
             callback: function($$v) {
@@ -37495,10 +37532,15 @@ exports.default = _default;
             expression: "layout"
           }
         },
-        _vm._l(_vm.items, function(item) {
+        _vm._l(_vm.layout, function(itemId) {
           return _c("SubItem", {
-            key: item.id,
-            attrs: { subItem: item, listId: _vm.todoListItem.listId }
+            key: itemId,
+            attrs: {
+              subItem: _vm.items.find(function(x) {
+                return x.id === itemId
+              }),
+              listId: _vm.todoListItem.listId
+            }
           })
         }),
         1
@@ -37536,7 +37578,7 @@ render._withStripped = true
         
       }
     })();
-},{"./SubItem":"vue/components/SubItem.vue","vuedraggable":"node_modules/vuedraggable/dist/vuedraggable.common.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddSubItemForm.vue":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","./SubItem":"vue/components/SubItem.vue","vuedraggable":"node_modules/vuedraggable/dist/vuedraggable.common.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddSubItemForm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
