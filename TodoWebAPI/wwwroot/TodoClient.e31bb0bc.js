@@ -37285,6 +37285,7 @@ exports.default = _default;
                   _c("b-form-input", {
                     ref: "subItemName",
                     staticClass: "mr-2",
+                    attrs: { maxlength: "50", minlength: "1", required: "" },
                     model: {
                       value: _vm.form.name,
                       callback: function($$v) {

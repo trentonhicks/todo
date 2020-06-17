@@ -15,7 +15,7 @@
 
         <b-form @submit.prevent="updateSubItem" v-if="editingSubItem" class="edit-sub-item-form">
             <b-form-group>
-                <b-form-input ref="subItemName" v-model="form.name" class="mr-2"></b-form-input>
+                <b-form-input ref="subItemName" v-model="form.name" maxlength="50" minlength="1" class="mr-2" required></b-form-input>
             </b-form-group>
 
             <b-button
