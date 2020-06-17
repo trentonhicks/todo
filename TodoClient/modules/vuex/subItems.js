@@ -17,6 +17,10 @@ const subItems = {
         },
         removeSubItem() {
 
+        },
+        updateSubItemCompletedState(state, { subItem }) {
+            const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+            state.subItems[subItem.listItemId][index].completed = subItem.completed;
         }
     },
     actions: {
@@ -35,7 +39,7 @@ const subItems = {
         },
         async addSubItem(context, { listId, todoItemId, name }) {
             try {
-                const response = await axios({
+                await axios({
                     method: 'POST',
                     url: `api/lists/${listId}/todos/${todoItemId}/subitems`,
                     headers: { 'content-type': 'application/json' },
@@ -51,6 +55,21 @@ const subItems = {
         },
         trashSubItem() {
 
+        },
+        async toggleSubItemCompletedState(context, { listId, todoItemId, subItemId, completed }) {
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems/${subItemId}/completed`,
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    data: completed
+                });
+            }
+            catch(error) {
+                console.log(error);
+            }
         }
     },
     getters: {
