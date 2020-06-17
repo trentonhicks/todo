@@ -19314,7 +19314,14 @@ const subItems = {
 
     updateSubItem() {},
 
-    removeSubItem() {}
+    removeSubItem() {},
+
+    updateSubItemCompletedState(state, {
+      subItem
+    }) {
+      const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+      state.subItems[subItem.listItemId][index].completed = subItem.completed;
+    }
 
   },
   actions: {
@@ -19342,7 +19349,7 @@ const subItems = {
       name
     }) {
       try {
-        const response = await (0, _axios.default)({
+        await (0, _axios.default)({
           method: 'POST',
           url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems"),
           headers: {
@@ -19359,7 +19366,27 @@ const subItems = {
 
     updateSubItem() {},
 
-    trashSubItem() {}
+    trashSubItem() {},
+
+    async toggleSubItemCompletedState(context, {
+      listId,
+      todoItemId,
+      subItemId,
+      completed
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems/").concat(subItemId, "/completed"),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: completed
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   },
   getters: {
@@ -36851,19 +36878,32 @@ exports.default = void 0;
 //
 //
 var _default = {
-  props: ['name'],
+  props: ['listId', 'subItem'],
+  computed: {
+    completedState: {
+      get() {
+        return this.$store.getters.getSubItemCompletedState(this.subItem.listItemId, this.subItem.id);
+      },
+
+      set(value) {
+        this.$store.dispatch('toggleSubItemCompletedState', {
+          listId: this.listId,
+          todoItemId: this.subItem.listItemId,
+          subItemId: this.subItem.id,
+          completed: value
+        });
+      }
+
+    }
+  },
 
   data() {
     return {
       editingSubItem: false,
       itemCompletedState: false
     };
-  },
-
-  methods: {
-    updateSubItem() {}
-
   }
+
 };
 exports.default = _default;
         var $7b87e9 = exports.default || module.exports;
@@ -36898,11 +36938,11 @@ exports.default = _default;
             [
               _c("b-form-checkbox", {
                 model: {
-                  value: _vm.itemCompletedState,
+                  value: _vm.completedState,
                   callback: function($$v) {
-                    _vm.itemCompletedState = $$v
+                    _vm.completedState = $$v
                   },
-                  expression: "itemCompletedState"
+                  expression: "completedState"
                 }
               })
             ],
@@ -36921,7 +36961,7 @@ exports.default = _default;
                 }
               }
             },
-            [_vm._v("\n        " + _vm._s(_vm.name) + "\n    ")]
+            [_vm._v("\n        " + _vm._s(_vm.subItem.name) + "\n    ")]
           )
         : _vm._e(),
       _vm._v(" "),
@@ -36944,11 +36984,11 @@ exports.default = _default;
                   _c("b-form-input", {
                     staticClass: "mr-2",
                     model: {
-                      value: _vm.name,
+                      value: _vm.subItem.name,
                       callback: function($$v) {
-                        _vm.name = $$v
+                        _vm.$set(_vm.subItem, "name", $$v)
                       },
-                      expression: "name"
+                      expression: "subItem.name"
                     }
                   })
                 ],
@@ -37045,6 +37085,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: ['todoListItem'],
   components: {
@@ -37053,15 +37094,28 @@ var _default = {
   },
 
   created() {
-    this.items = this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
+    this.items = this.setSubItems();
   },
 
   data() {
     return {
-      items: []
+      items: [],
+      layout: []
     };
-  }
+  },
 
+  methods: {
+    getLayout() {},
+
+    updateLayout() {},
+
+    refreshLayout() {},
+
+    setSubItems() {
+      return this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
+    }
+
+  }
 };
 exports.default = _default;
         var $9ad823 = exports.default || module.exports;
@@ -37081,9 +37135,21 @@ exports.default = _default;
     [
       _c(
         "Draggable",
-        { attrs: { handle: ".sub-item-handle" } },
+        {
+          attrs: { handle: ".sub-item-handle" },
+          model: {
+            value: _vm.layout,
+            callback: function($$v) {
+              _vm.layout = $$v
+            },
+            expression: "layout"
+          }
+        },
         _vm._l(_vm.items, function(item) {
-          return _c("SubItem", { key: item.id, attrs: { name: item.name } })
+          return _c("SubItem", {
+            key: item.id,
+            attrs: { subItem: item, listId: _vm.todoListItem.listId }
+          })
         }),
         1
       )
@@ -38919,6 +38985,9 @@ var _default = {
       item
     }));
     this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit('addSubItem', {
+      subItem
+    }));
+    this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit('updateSubItemCompletedState', {
       subItem
     }));
   }

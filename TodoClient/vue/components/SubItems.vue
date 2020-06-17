@@ -1,11 +1,12 @@
 <template>
     
     <b-list-group>
-        <Draggable handle=".sub-item-handle">
+        <Draggable handle=".sub-item-handle" v-model="layout">
             <SubItem
                 v-for="item in items"
                 :key="item.id"
-                :name="item.name">
+                :subItem="item"
+                :listId="todoListItem.listId">
             </SubItem>
         </Draggable>
     </b-list-group>
@@ -24,11 +25,26 @@ export default {
         SubItem
     },
     created() {
-        this.items = this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
+        this.items = this.setSubItems();
     },
     data() {
         return {
-            items: []
+            items: [],
+            layout: []
+        }
+    },
+    methods: {
+        getLayout() {
+
+        },
+        updateLayout() {
+
+        },
+        refreshLayout() {
+            
+        },
+        setSubItems() {
+            return this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
         }
     },
 }

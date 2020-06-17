@@ -5,17 +5,17 @@
         </div>
         
         <div class="sub-item-checkbox-wrapper" v-if="!editingSubItem">
-            <b-form-checkbox v-model="itemCompletedState">
+            <b-form-checkbox v-model="completedState">
             </b-form-checkbox>
         </div>
 
         <div class="sub-item-name" @click="editingSubItem = true;" v-if="!editingSubItem">
-            {{ name }}
+            {{ subItem.name }}
         </div>
 
         <b-form @submit.prevent="updateSubItem" v-if="editingSubItem" class="edit-sub-item-form">
             <b-form-group>
-                <b-form-input v-model="name" class="mr-2"></b-form-input>
+                <b-form-input v-model="subItem.name" class="mr-2"></b-form-input>
             </b-form-group>
 
             <b-button
@@ -38,16 +38,26 @@
 
 <script>
 export default {
-    props: ['name'],
+    props: ['listId', 'subItem'],
+    computed: {
+        completedState: {
+            get() {
+                return this.$store.getters.getSubItemCompletedState(this.subItem.listItemId, this.subItem.id);
+            },
+            set(value) {
+                this.$store.dispatch('toggleSubItemCompletedState', {
+                    listId: this.listId,
+                    todoItemId: this.subItem.listItemId,
+                    subItemId: this.subItem.id,
+                    completed: value
+                });
+            }
+        }
+    },
     data() {
         return {
             editingSubItem: false,
             itemCompletedState: false
-        }
-    },
-    methods: {
-        updateSubItem() {
-
         }
     },
 }
