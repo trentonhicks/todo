@@ -79,8 +79,8 @@ const subItems = {
         getSubItemCompletedState: (state) => (itemId, subItemId) => {
             return state.subItems[itemId].find(i => i.id === subItemId).completed;
         },
-        todoItemHasSubItems: (state) => (itemId) => {
-            return state.subItems[itemId].length > 0;
+        subItemCountByItemId: (state) => (itemId) => {
+            return state.subItems[itemId].length;
         }
     }
 }

@@ -53,9 +53,6 @@
                     });
                 }
             },
-            hasSubItems() {
-                return this.$store.getters.todoItemHasSubItems(this.todoListItem.id);
-            }
         },
         filters: {
             formatDate: function(value) {
