@@ -1,12 +1,14 @@
 <template>
     
-    <Draggable>
-        <SubItem
-            v-for="item in items"
-            :key="item.id"
-            :name="item.name">
-        </SubItem>
-    </Draggable>
+    <b-list-group>
+        <Draggable handle=".sub-item-handle">
+            <SubItem
+                v-for="item in items"
+                :key="item.id"
+                :name="item.name">
+            </SubItem>
+        </Draggable>
+    </b-list-group>
 
 </template>
 
@@ -16,14 +18,17 @@ import SubItem from "./SubItem";
 import Draggable from 'vuedraggable';
 
 export default {
-    props: ['itemId'],
+    props: ['todoListItem'],
     components: {
         Draggable,
         SubItem
     },
-    computed: {
-        items() {
-            return this.$store.subItems.getSubItemsByItemId(this.itemId);
+    created() {
+        this.items = this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
+    },
+    data() {
+        return {
+            items: []
         }
     },
 }

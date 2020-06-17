@@ -6,11 +6,11 @@ const subItems = {
         subItems: {}
     }),
     mutations: {
-        setSubItems() {
-
+        setSubItems(state, { todoItemId, subItems }) {
+            state.subItems[todoItemId] = subItems;
         },
-        addSubItem() {
-
+        addSubItem(state, { subItem }) {
+            state.subItems[subItem.listItemId].unshift(subItem);
         },
         updateSubItem() {
 
@@ -20,8 +20,18 @@ const subItems = {
         }
     },
     actions: {
-        loadSubItems() {
+        async loadSubItems(context, { listId, todoItemId }) {
+            try {
+                const response = await axios({
+                    method: 'GET',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems`
+                });
 
+                context.commit('setSubItems', { todoItemId: todoItemId, subItems: response.data });
+            }
+            catch(error) {
+                console.log(error);
+            }
         },
         async addSubItem(context, { listId, todoItemId, name }) {
             try {
@@ -31,8 +41,6 @@ const subItems = {
                     headers: { 'content-type': 'application/json' },
                     data: JSON.stringify({ name })
                 });
-    
-                return response.data;
             }
             catch(error) {
                 console.log(error);

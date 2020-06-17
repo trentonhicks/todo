@@ -84,6 +84,38 @@
     margin: 0;
 }
 }
+.sub-item {
+  transition: background-color 0.3s ease;
+}
+.sub-item.list-group-item {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+.sub-item:hover {
+  cursor: pointer;
+  background-color: #eff1f4 !important;
+}
+.sub-item:active {
+  background-color: #e9ecef !important;
+}
+.sub-item .sub-item-handle {
+  padding: 12px 0px 12px 20px;
+}
+.sub-item .sub-item-handle:hover {
+  cursor: move;
+}
+.sub-item .sub-item-name {
+  font-family: "Nunito", sans-serif;
+  font-weight: bold;
+  flex: 1 0 auto;
+  padding: 12px 0;
+}
+
+.edit-sub-item-form {
+  padding: 12px;
+  width: 100%;
+}
 h3[data-v-3f1240] {
   font-size: 24px;
 }

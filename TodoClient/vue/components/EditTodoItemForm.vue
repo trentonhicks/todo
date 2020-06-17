@@ -73,7 +73,7 @@
 
         <!-- Sub Items -->
         <b-form-group label="Sub-items" class="mb-2"></b-form-group>
-        <SubItems></SubItems>
+        <SubItems :todoListItem="todoListItem"></SubItems>
         <AddSubItemForm :todoListItem="todoListItem"></AddSubItemForm>
 
     </b-modal>
@@ -99,6 +99,9 @@
                     dueDate: this.todoListItem.dueDate
                 }
             }
+        },
+        async created() {
+            await this.$store.dispatch('loadSubItems', { listId: this.todoListItem.listId, todoItemId: this.todoListItem.id });
         },
         components: {
             SubItems,

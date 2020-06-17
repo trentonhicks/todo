@@ -19299,9 +19299,18 @@ const subItems = {
     subItems: {}
   }),
   mutations: {
-    setSubItems() {},
+    setSubItems(state, {
+      todoItemId,
+      subItems
+    }) {
+      state.subItems[todoItemId] = subItems;
+    },
 
-    addSubItem() {},
+    addSubItem(state, {
+      subItem
+    }) {
+      state.subItems[subItem.listItemId].unshift(subItem);
+    },
 
     updateSubItem() {},
 
@@ -19309,7 +19318,23 @@ const subItems = {
 
   },
   actions: {
-    loadSubItems() {},
+    async loadSubItems(context, {
+      listId,
+      todoItemId
+    }) {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'GET',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems")
+        });
+        context.commit('setSubItems', {
+          todoItemId: todoItemId,
+          subItems: response.data
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     async addSubItem(context, {
       listId,
@@ -19327,7 +19352,6 @@ const subItems = {
             name
           })
         });
-        return response.data;
       } catch (error) {
         console.log(error);
       }
@@ -36792,8 +36816,54 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
-  props: ['name']
+  props: ['name'],
+
+  data() {
+    return {
+      editingSubItem: false,
+      itemCompletedState: false
+    };
+  },
+
+  methods: {
+    updateSubItem() {}
+
+  }
 };
 exports.default = _default;
         var $7b87e9 = exports.default || module.exports;
@@ -36808,9 +36878,111 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "sub-item" }, [
-    _vm._v("name: " + _vm._s(_vm.subItemName))
-  ])
+  return _c(
+    "b-list-group-item",
+    { staticClass: "sub-item bg-light" },
+    [
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-handle mr-2" },
+            [_c("b-icon-list")],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-checkbox-wrapper" },
+            [
+              _c("b-form-checkbox", {
+                model: {
+                  value: _vm.itemCompletedState,
+                  callback: function($$v) {
+                    _vm.itemCompletedState = $$v
+                  },
+                  expression: "itemCompletedState"
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            {
+              staticClass: "sub-item-name",
+              on: {
+                click: function($event) {
+                  _vm.editingSubItem = true
+                }
+              }
+            },
+            [_vm._v("\n        " + _vm._s(_vm.name) + "\n    ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.editingSubItem
+        ? _c(
+            "b-form",
+            {
+              staticClass: "edit-sub-item-form",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.updateSubItem($event)
+                }
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                [
+                  _c("b-form-input", {
+                    staticClass: "mr-2",
+                    model: {
+                      value: _vm.name,
+                      callback: function($$v) {
+                        _vm.name = $$v
+                      },
+                      expression: "name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  staticClass: "mr-1",
+                  attrs: { size: "sm", variant: "success", type: "submit" }
+                },
+                [_vm._v("\n            Save\n        ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  attrs: { size: "sm", variant: "secondary" },
+                  on: {
+                    click: function($event) {
+                      _vm.editingSubItem = false
+                    }
+                  }
+                },
+                [_vm._v("\n            Cancel\n        ")]
+              )
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -36871,18 +37043,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
-  props: ['itemId'],
+  props: ['todoListItem'],
   components: {
     Draggable: _vuedraggable.default,
     SubItem: _SubItem.default
   },
-  computed: {
-    items() {
-      return this.$store.subItems.getSubItemsByItemId(this.itemId);
-    }
 
+  created() {
+    this.items = this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
+  },
+
+  data() {
+    return {
+      items: []
+    };
   }
+
 };
 exports.default = _default;
         var $9ad823 = exports.default || module.exports;
@@ -36898,10 +37077,17 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "Draggable",
-    _vm._l(_vm.items, function(item) {
-      return _c("SubItem", { key: item.id, attrs: { name: item.name } })
-    }),
+    "b-list-group",
+    [
+      _c(
+        "Draggable",
+        { attrs: { handle: ".sub-item-handle" } },
+        _vm._l(_vm.items, function(item) {
+          return _c("SubItem", { key: item.id, attrs: { name: item.name } })
+        }),
+        1
+      )
+    ],
     1
   )
 }
@@ -36941,6 +37127,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+//
 //
 //
 //
@@ -37037,7 +37224,11 @@ exports.default = _default;
       !_vm.formActive
         ? _c(
             "b-button",
-            { attrs: { size: "sm" }, on: { click: _vm.focusForm } },
+            {
+              staticClass: "mt-3",
+              attrs: { size: "sm" },
+              on: { click: _vm.focusForm }
+            },
             [_vm._v("\n        Add an item\n    ")]
           )
         : _vm._e(),
@@ -37045,7 +37236,7 @@ exports.default = _default;
       _vm.formActive
         ? _c(
             "div",
-            { staticClass: "add-sub-item-input-wrapper" },
+            { staticClass: "add-sub-item-input-wrapper mt-3" },
             [
               _c(
                 "b-form-group",
@@ -37226,6 +37417,13 @@ var _default = {
         dueDate: this.todoListItem.dueDate
       }
     };
+  },
+
+  async created() {
+    await this.$store.dispatch('loadSubItems', {
+      listId: this.todoListItem.listId,
+      todoItemId: this.todoListItem.id
+    });
   },
 
   components: {
@@ -37470,7 +37668,7 @@ exports.default = _default;
         attrs: { label: "Sub-items" }
       }),
       _vm._v(" "),
-      _c("SubItems"),
+      _c("SubItems", { attrs: { todoListItem: _vm.todoListItem } }),
       _vm._v(" "),
       _c("AddSubItemForm", { attrs: { todoListItem: _vm.todoListItem } })
     ],
@@ -38719,6 +38917,9 @@ var _default = {
     }));
     this.$store.state.connection.on("ItemUpdated", item => this.$store.commit('updateItem', {
       item
+    }));
+    this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit('addSubItem', {
+      subItem
     }));
   }
 
@@ -88099,7 +88300,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50845" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56086" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
