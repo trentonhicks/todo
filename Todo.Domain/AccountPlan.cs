@@ -12,5 +12,14 @@ namespace Todo.Domain
         public Guid AccountId { get; set; }
         public int PlanId { get; set; }
         public int ListCount { get; set; }
+
+        public void IncrementListCount()
+        {
+            ListCount++;
+        }
+        public void DecrementListCount()
+        {
+            ListCount--;
+        }
     }
 }
