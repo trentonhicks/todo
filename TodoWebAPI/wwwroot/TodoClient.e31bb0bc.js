@@ -19312,7 +19312,13 @@ const subItems = {
       state.subItems[subItem.listItemId].unshift(subItem);
     },
 
-    updateSubItem() {},
+    updateSubItem(state, {
+      subItem
+    }) {
+      const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+
+      _vue.default.set(state.subItems[subItem.listItemId], index, subItem);
+    },
 
     removeSubItem() {},
 
@@ -19364,7 +19370,27 @@ const subItems = {
       }
     },
 
-    updateSubItem() {},
+    async updateSubItem(context, {
+      listId,
+      todoItemId,
+      subItemId,
+      name
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems/").concat(subItemId),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: JSON.stringify({
+            name
+          })
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     trashSubItem() {},
 
@@ -37160,10 +37186,32 @@ var _default = {
   data() {
     return {
       editingSubItem: false,
-      itemCompletedState: false
+      itemCompletedState: false,
+      form: {
+        name: this.subItem.name
+      }
     };
-  }
+  },
 
+  methods: {
+    focusForm() {
+      this.editingSubItem = true;
+      this.$nextTick(() => {
+        this.$refs.subItemName.focus();
+      });
+    },
+
+    async updateSubItem() {
+      await this.$store.dispatch('updateSubItem', {
+        listId: this.listId,
+        todoItemId: this.subItem.listItemId,
+        subItemId: this.subItem.id,
+        name: this.form.name
+      });
+      this.editingSubItem = false;
+    }
+
+  }
 };
 exports.default = _default;
         var $7b87e9 = exports.default || module.exports;
@@ -37213,14 +37261,7 @@ exports.default = _default;
       !_vm.editingSubItem
         ? _c(
             "div",
-            {
-              staticClass: "sub-item-name",
-              on: {
-                click: function($event) {
-                  _vm.editingSubItem = true
-                }
-              }
-            },
+            { staticClass: "sub-item-name", on: { click: _vm.focusForm } },
             [_vm._v("\n        " + _vm._s(_vm.subItem.name) + "\n    ")]
           )
         : _vm._e(),
@@ -37242,13 +37283,14 @@ exports.default = _default;
                 "b-form-group",
                 [
                   _c("b-form-input", {
+                    ref: "subItemName",
                     staticClass: "mr-2",
                     model: {
-                      value: _vm.subItem.name,
+                      value: _vm.form.name,
                       callback: function($$v) {
-                        _vm.$set(_vm.subItem, "name", $$v)
+                        _vm.$set(_vm.form, "name", $$v)
                       },
-                      expression: "subItem.name"
+                      expression: "form.name"
                     }
                   })
                 ],
@@ -39282,6 +39324,9 @@ var _default = {
       subItem
     }));
     this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit('updateSubItemCompletedState', {
+      subItem
+    }));
+    this.$store.state.connection.on("SubItemUpdated", subItem => this.$store.commit('updateSubItem', {
       subItem
     }));
   }

@@ -12,8 +12,9 @@ const subItems = {
         addSubItem(state, { subItem }) {
             state.subItems[subItem.listItemId].unshift(subItem);
         },
-        updateSubItem() {
-
+        updateSubItem(state, { subItem }) {
+            const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+            Vue.set(state.subItems[subItem.listItemId], index, subItem);
         },
         removeSubItem() {
 
@@ -50,8 +51,18 @@ const subItems = {
                 console.log(error);
             }
         },
-        updateSubItem() {
-
+        async updateSubItem(context, { listId, todoItemId, subItemId, name }) {
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems/${subItemId}`,
+                    headers: { 'content-type': 'application/json' },
+                    data: JSON.stringify({ name })
+                })
+            }
+            catch(error) {
+                console.log(error);
+            }
         },
         trashSubItem() {
 

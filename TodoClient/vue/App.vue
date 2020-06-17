@@ -30,6 +30,7 @@
       this.$store.state.connection.on("ItemUpdated", (item) => this.$store.commit('updateItem', { item }));
       this.$store.state.connection.on("SubItemCreated", (subItem) => this.$store.commit('addSubItem', { subItem }));
       this.$store.state.connection.on("SubItemCompletedStateChanged", (subItem) => this.$store.commit('updateSubItemCompletedState', { subItem }));
+      this.$store.state.connection.on("SubItemUpdated", (subItem) => this.$store.commit('updateSubItem', { subItem }));
     },
   };
 

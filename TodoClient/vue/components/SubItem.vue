@@ -9,13 +9,13 @@
             </b-form-checkbox>
         </div>
 
-        <div class="sub-item-name" @click="editingSubItem = true;" v-if="!editingSubItem">
+        <div class="sub-item-name" @click="focusForm" v-if="!editingSubItem">
             {{ subItem.name }}
         </div>
 
         <b-form @submit.prevent="updateSubItem" v-if="editingSubItem" class="edit-sub-item-form">
             <b-form-group>
-                <b-form-input v-model="subItem.name" class="mr-2"></b-form-input>
+                <b-form-input ref="subItemName" v-model="form.name" class="mr-2"></b-form-input>
             </b-form-group>
 
             <b-button
@@ -57,7 +57,29 @@ export default {
     data() {
         return {
             editingSubItem: false,
-            itemCompletedState: false
+            itemCompletedState: false,
+            form: {
+                name: this.subItem.name
+            }
+        }
+    },
+    methods: {
+        focusForm() {
+            this.editingSubItem = true;
+
+            this.$nextTick(() => {
+                this.$refs.subItemName.focus();
+            });
+        },
+        async updateSubItem() {
+            await this.$store.dispatch('updateSubItem', {
+                listId: this.listId,
+                todoItemId: this.subItem.listItemId,
+                subItemId: this.subItem.id,
+                name: this.form.name
+            });
+
+            this.editingSubItem = false;
         }
     },
 }
