@@ -6,6 +6,7 @@
         </div>
 
         <b-form-checkbox
+            :disabled="hasSubItems"
             class="todo-item-checkbox"
             v-model="itemCompletedState">
         </b-form-checkbox>
@@ -51,6 +52,9 @@
                         completed: value
                     });
                 }
+            },
+            hasSubItems() {
+                return this.$store.getters.todoItemHasSubItems(this.todoListItem.id);
             }
         },
         filters: {

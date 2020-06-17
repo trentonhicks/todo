@@ -19395,6 +19395,9 @@ const subItems = {
     },
     getSubItemCompletedState: state => (itemId, subItemId) => {
       return state.subItems[itemId].find(i => i.id === subItemId).completed;
+    },
+    todoItemHasSubItems: state => itemId => {
+      return state.subItems[itemId].length > 0;
     }
   }
 };
@@ -37818,6 +37821,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   name: 'TodoListItem',
   props: ['todoListItem'],
@@ -37838,7 +37842,12 @@ var _default = {
         });
       }
 
+    },
+
+    hasSubItems() {
+      return this.$store.getters.todoItemHasSubItems(this.todoListItem.id);
     }
+
   },
   filters: {
     formatDate: function (value) {
@@ -37877,6 +37886,7 @@ exports.default = _default;
       _vm._v(" "),
       _c("b-form-checkbox", {
         staticClass: "todo-item-checkbox",
+        attrs: { disabled: _vm.hasSubItems },
         model: {
           value: _vm.itemCompletedState,
           callback: function($$v) {
