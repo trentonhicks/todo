@@ -64,8 +64,16 @@ const subItems = {
                 console.log(error);
             }
         },
-        trashSubItem() {
-
+        async trashSubItem(context, { listId, todoItemId, subItemId }) {
+            try {
+                await axios({
+                    method: 'DELETE',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems/${subItemId}`,
+                });
+            }
+            catch(error) {
+                console.log(error);
+            }
         },
         async toggleSubItemCompletedState(context, { listId, todoItemId, subItemId, completed }) {
             try {

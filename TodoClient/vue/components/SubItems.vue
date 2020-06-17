@@ -27,6 +27,9 @@ export default {
     created() {
         this.items = this.setSubItems();
     },
+    mounted() {
+      this.$store.state.connection.on("SubItemTrashed", (subItem) => this.refreshLayout(subItem));
+    },
     data() {
         return {
             items: [],
@@ -40,8 +43,8 @@ export default {
         updateLayout() {
 
         },
-        refreshLayout() {
-            
+        refreshLayout(subItem) {
+            console.log('Refresh sub-item layout');
         },
         setSubItems() {
             return this.$store.getters.getSubItemsByItemId(this.todoListItem.id);

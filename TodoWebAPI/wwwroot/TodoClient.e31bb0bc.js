@@ -19168,13 +19168,6 @@ const todoLists = {
       let index = state.items[item.listId].findIndex(i => i.id === item.id);
 
       _vue.default.set(state.items[item.listId], index, item);
-    },
-
-    removeItem(state, {
-      listId,
-      item
-    }) {
-      _vue.default.set(state.items, null);
     }
 
   },
@@ -19392,7 +19385,20 @@ const subItems = {
       }
     },
 
-    trashSubItem() {},
+    async trashSubItem(context, {
+      listId,
+      todoItemId,
+      subItemId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'DELETE',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems/").concat(subItemId)
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     async toggleSubItemCompletedState(context, {
       listId,
@@ -37163,6 +37169,15 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ['listId', 'subItem'],
   computed: {
@@ -37209,6 +37224,14 @@ var _default = {
         name: this.form.name
       });
       this.editingSubItem = false;
+    },
+
+    async deleteSubItem() {
+      await this.$store.dispatch('trashSubItem', {
+        listId: this.listId,
+        todoItemId: this.subItem.listItemId,
+        subItemId: this.subItem.id
+      });
     }
 
   }
@@ -37263,6 +37286,24 @@ exports.default = _default;
             "div",
             { staticClass: "sub-item-name", on: { click: _vm.focusForm } },
             [_vm._v("\n        " + _vm._s(_vm.subItem.name) + "\n    ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-controls pr-3" },
+            [
+              _c(
+                "b-button",
+                {
+                  attrs: { size: "sm", variant: "danger" },
+                  on: { click: _vm.deleteSubItem }
+                },
+                [_vm._v("\n            Delete\n        ")]
+              )
+            ],
+            1
           )
         : _vm._e(),
       _vm._v(" "),
@@ -37400,6 +37441,10 @@ var _default = {
     this.items = this.setSubItems();
   },
 
+  mounted() {
+    this.$store.state.connection.on("SubItemTrashed", subItem => this.refreshLayout(subItem));
+  },
+
   data() {
     return {
       items: [],
@@ -37412,7 +37457,9 @@ var _default = {
 
     updateLayout() {},
 
-    refreshLayout() {},
+    refreshLayout(subItem) {
+      console.log('Refresh sub-item layout');
+    },
 
     setSubItems() {
       return this.$store.getters.getSubItemsByItemId(this.todoListItem.id);

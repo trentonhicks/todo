@@ -13,6 +13,15 @@
             {{ subItem.name }}
         </div>
 
+        <div class="sub-item-controls pr-3" v-if="!editingSubItem">
+            <b-button
+                size="sm"
+                variant="danger"
+                @click="deleteSubItem">
+                Delete
+            </b-button>
+        </div>
+
         <b-form @submit.prevent="updateSubItem" v-if="editingSubItem" class="edit-sub-item-form">
             <b-form-group>
                 <b-form-input ref="subItemName" v-model="form.name" maxlength="50" minlength="1" class="mr-2" required></b-form-input>
@@ -80,6 +89,13 @@ export default {
             });
 
             this.editingSubItem = false;
+        },
+        async deleteSubItem() {
+            await this.$store.dispatch('trashSubItem', {
+                listId: this.listId,
+                todoItemId: this.subItem.listItemId,
+                subItemId: this.subItem.id
+            });
         }
     },
 }
