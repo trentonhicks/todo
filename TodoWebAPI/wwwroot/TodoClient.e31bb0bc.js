@@ -18990,11 +18990,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const user = {
   state: () => ({
-    user: {}
+    user: {},
+    plan: {}
   }),
   mutations: {
     setUserData(state, data) {
       state.user = data;
+    },
+
+    setPlanData(state, data) {
+      state.plan = data;
     }
 
   },
@@ -19002,6 +19007,10 @@ const user = {
   getters: {
     user(state) {
       return state.user;
+    },
+
+    plan(state) {
+      return state.plan;
     }
 
   }
@@ -37935,6 +37944,10 @@ var _default = {
   computed: {
     dueDate() {
       return this.form.dueDate;
+    },
+
+    plan() {
+      return this.$store.getters.plan;
     }
 
   },
@@ -38126,44 +38139,46 @@ exports.default = _default;
         1
       ),
       _vm._v(" "),
-      _c(
-        "b-form",
-        {
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-            }
-          }
-        },
-        [
-          _c(
-            "b-form-group",
-            [
-              _c("label", { attrs: { for: "due-date" } }, [
-                _vm._v("Due Date: "),
-                _vm.form.dueDate
-                  ? _c("span", [
-                      _vm._v(_vm._s(_vm._f("formatDate")(_vm.form.dueDate)))
-                    ])
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("b-form-datepicker", {
-                attrs: { id: "due-date" },
-                model: {
-                  value: _vm.form.dueDate,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "dueDate", $$v)
-                  },
-                  expression: "form.dueDate"
+      _vm.plan.canAddDueDates
+        ? _c(
+            "b-form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
                 }
-              })
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                [
+                  _c("label", { attrs: { for: "due-date" } }, [
+                    _vm._v("Due Date: "),
+                    _vm.form.dueDate
+                      ? _c("span", [
+                          _vm._v(_vm._s(_vm._f("formatDate")(_vm.form.dueDate)))
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("b-form-datepicker", {
+                    attrs: { id: "due-date" },
+                    model: {
+                      value: _vm.form.dueDate,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "dueDate", $$v)
+                      },
+                      expression: "form.dueDate"
+                    }
+                  })
+                ],
+                1
+              )
             ],
             1
           )
-        ],
-        1
-      ),
+        : _vm._e(),
       _vm._v(" "),
       _c("b-form-group", {
         staticClass: "mb-2",
@@ -39392,9 +39407,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   name: 'Header',
-  created: function () {
-    this.checkAuthState();
+
+  async created() {
+    await this.checkAuthState();
+    await this.getPlan();
   },
+
   computed: {
     user() {
       return this.$store.getters.user;
@@ -39402,22 +39420,34 @@ var _default = {
 
   },
   methods: {
-    checkAuthState() {
-      (0, _axios.default)({
-        method: 'GET',
-        url: 'api/accounts/login'
-      }).then(response => {
-        (0, _axios.default)({
+    async checkAuthState() {
+      try {
+        await (0, _axios.default)({
+          method: 'GET',
+          url: 'api/accounts/login'
+        });
+        const user = await (0, _axios.default)({
           method: 'GET',
           url: 'api/accounts'
-        }).then(user => {
-          this.$store.commit('setUserData', user.data);
         });
-      }).catch(() => {
+        this.$store.commit('setUserData', user.data);
+      } catch {
         if (this.$router.name !== 'Login') {
           this.$router.push('/login');
         }
-      });
+      }
+    },
+
+    async getPlan() {
+      try {
+        const plan = await (0, _axios.default)({
+          method: 'GET',
+          url: 'api/accounts/plan'
+        });
+        this.$store.commit('setPlanData', plan.data);
+      } catch (error) {
+        console.log("she didn't work " + error);
+      }
     },
 
     logout() {

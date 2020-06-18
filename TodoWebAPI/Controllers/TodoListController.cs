@@ -40,7 +40,7 @@ namespace TodoWebAPI.Controllers
             var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
             var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
 
-            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan.ListCount, plan.MaxLists);
+            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
 
             if (!accountPlanAuthorization.CanCreateList())
                 return BadRequest("Reached maximum number of lists allowed on your plan.");

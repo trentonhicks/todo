@@ -218,6 +218,10 @@ namespace Todo.Infrastructure
                 entity
                     .Property(e => e.CanNotifyViaEmail)
                     .HasColumnName("CanNotifyViaEmail");
+
+                entity
+                    .Property(e => e.CanAddDueDates)
+                    .HasColumnName("CanAddDueDates");
             });
         }
     }

@@ -5,20 +5,25 @@ namespace Todo.Domain
 {
     public class AccountPlanAuthorizationValidator
     {
-        public int ListCount { get; private set; }
-        public int MaxLists { get; private set; }
-        public AccountPlanAuthorizationValidator(int listCount, int maxLists)
+        public AccountPlan AccountPlan { get; private set; }
+        public Plan Plan { get; private set; }
+        public AccountPlanAuthorizationValidator(AccountPlan accountPlan, Plan plan)
         {
-            ListCount = listCount;
-            MaxLists = maxLists;
+            AccountPlan = accountPlan;
+            Plan = plan;
         }
 
         public bool CanCreateList()
         {
-            if (ListCount < MaxLists || MaxLists == -1)
+            if (AccountPlan.ListCount < Plan.MaxLists || Plan.MaxLists == -1)
                 return true;
 
             return false;
+        }
+
+        public bool CanAddDueDate()
+        {
+            return Plan.CanAddDueDates;
         }
     }
 }

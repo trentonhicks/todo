@@ -61,7 +61,7 @@
         </b-form>
 
         <!-- Due Date -->
-        <b-form @submit.prevent="">
+        <b-form @submit.prevent="" v-if="plan.canAddDueDates">
             <b-form-group>
                 <label for="due-date">Due Date: <span v-if="form.dueDate">{{ form.dueDate | formatDate }}</span></label>
                 <b-form-datepicker
@@ -107,6 +107,9 @@
         computed: {
             dueDate() {
                 return this.form.dueDate;
+            },
+            plan() {
+                return this.$store.getters.plan;
             }
         },
         watch: {

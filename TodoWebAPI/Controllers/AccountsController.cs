@@ -76,5 +76,16 @@ namespace TodoWebAPI.Controllers
 
             return Ok("account deleted!");
         }
+
+        [Authorize]
+        [HttpGet("api/accounts/plan")]
+        public async Task<IActionResult> GetPlanAsync()
+        {
+            var accountId = Guid.Parse(User.FindFirst(c => c.Type == "urn:codefliptodo:accountid").Value);
+
+            var dapper = new DapperQuery(_config);
+
+            return Ok(await dapper.GetPlanByAccountIdAsync(accountId));
+        }
     }
 }

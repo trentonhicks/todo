@@ -75,6 +75,16 @@ namespace TodoWebAPI
             }
         }
 
+        public async Task<PlanPresentation> GetPlanByAccountIdAsync(Guid accountId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryAsync<PlanPresentation>("Select Name, MaxContributors, MaxContributors, MaxLists, CanAddDueDates From Plans Where ID = (Select PlanID From AccountsPlans Where AccountID = @accountId)", new { accountId = accountId });
+                return result.FirstOrDefault();
+            }
+        }
+
         public async Task<List<TodoListModel>> GetListsAsync(Guid accountId)
         {
             using (var connection = new SqlConnection(_connectionString))
