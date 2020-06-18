@@ -73,7 +73,7 @@
 
         <!-- Sub Items -->
         <b-form-group label="Sub-items" class="mb-2"></b-form-group>
-        <SubItems></SubItems>
+        <SubItems :todoListItem="todoListItem"></SubItems>
         <AddSubItemForm :todoListItem="todoListItem"></AddSubItemForm>
 
     </b-modal>

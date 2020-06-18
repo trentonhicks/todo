@@ -107,7 +107,7 @@ namespace TodoWebAPI
             }
         }
 
-        public async Task<Dictionary<string, SubItemModel>> GetSubItems(Guid listItemId)
+        public async Task<List<SubItemModel>> GetSubItems(Guid listItemId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -115,7 +115,7 @@ namespace TodoWebAPI
 
                 var result = await connection.QueryAsync<SubItemModel>("SELECT * FROM SubItems WHERE ListItemID = @listItemId", new { listItemId = listItemId });
                 
-                return result.ToDictionary(kvp => kvp.Id.ToString(), kvp => kvp);
+                return result.ToList();
             }
         }
 

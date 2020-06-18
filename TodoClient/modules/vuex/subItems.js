@@ -6,43 +6,89 @@ const subItems = {
         subItems: {}
     }),
     mutations: {
-        setSubItems() {
-
+        setSubItems(state, { todoItemId, subItems }) {
+            state.subItems[todoItemId] = subItems;
         },
-        addSubItem() {
-
+        addSubItem(state, { subItem }) {
+            state.subItems[subItem.listItemId].unshift(subItem);
         },
-        updateSubItem() {
-
+        updateSubItem(state, { subItem }) {
+            const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+            Vue.set(state.subItems[subItem.listItemId], index, subItem);
         },
         removeSubItem() {
 
+        },
+        updateSubItemCompletedState(state, { subItem }) {
+            const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+            state.subItems[subItem.listItemId][index].completed = subItem.completed;
         }
     },
     actions: {
-        loadSubItems() {
-
-        },
-        async addSubItem(context, { listId, todoItemId, name }) {
+        async loadSubItems(context, { listId, todoItemId }) {
             try {
                 const response = await axios({
-                    method: 'POST',
-                    url: `api/lists/${listId}/todos/${todoItemId}/subitems`,
-                    headers: { 'content-type': 'application/json' },
-                    data: JSON.stringify({ name })
+                    method: 'GET',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems`
                 });
-    
-                return response.data;
+
+                context.commit('setSubItems', { todoItemId: todoItemId, subItems: response.data });
             }
             catch(error) {
                 console.log(error);
             }
         },
-        updateSubItem() {
-
+        async addSubItem(context, { listId, todoItemId, name }) {
+            try {
+                await axios({
+                    method: 'POST',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems`,
+                    headers: { 'content-type': 'application/json' },
+                    data: JSON.stringify({ name })
+                });
+            }
+            catch(error) {
+                console.log(error);
+            }
         },
-        trashSubItem() {
-
+        async updateSubItem(context, { listId, todoItemId, subItemId, name }) {
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems/${subItemId}`,
+                    headers: { 'content-type': 'application/json' },
+                    data: JSON.stringify({ name })
+                })
+            }
+            catch(error) {
+                console.log(error);
+            }
+        },
+        async trashSubItem(context, { listId, todoItemId, subItemId }) {
+            try {
+                await axios({
+                    method: 'DELETE',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems/${subItemId}`,
+                });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        },
+        async toggleSubItemCompletedState(context, { listId, todoItemId, subItemId, completed }) {
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: `api/lists/${listId}/todos/${todoItemId}/subitems/${subItemId}/completed`,
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    data: completed
+                });
+            }
+            catch(error) {
+                console.log(error);
+            }
         }
     },
     getters: {
@@ -51,6 +97,9 @@ const subItems = {
         },
         getSubItemCompletedState: (state) => (itemId, subItemId) => {
             return state.subItems[itemId].find(i => i.id === subItemId).completed;
+        },
+        subItemCountByItemId: (state) => (itemId) => {
+            return state.subItems[itemId].length;
         }
     }
 }

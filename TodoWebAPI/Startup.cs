@@ -60,8 +60,9 @@ namespace TodoWebAPI
             {
                 services.AddSingleton<IEmailService, SendGridEmailService>();
             }
-           
-            services.AddRazorPages();
+
+            services.AddApplicationInsightsTelemetry();
+            services.AddApplicationInsightsTelemetryWorkerService();
 
             services.AddDbContext<TodoDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
