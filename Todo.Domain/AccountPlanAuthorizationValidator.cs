@@ -15,7 +15,7 @@ namespace Todo.Domain
 
         public bool CanCreateList()
         {
-            if (ListCount < MaxLists)
+            if (ListCount < MaxLists || MaxLists == -1)
                 return true;
 
             return false;

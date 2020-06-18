@@ -52,7 +52,7 @@ namespace TodoWebAPI.Controllers
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
 
-                return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
+                return Ok();
         }
 
         [HttpGet("api/lists")]
