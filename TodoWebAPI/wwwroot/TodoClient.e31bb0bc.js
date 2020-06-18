@@ -19168,13 +19168,6 @@ const todoLists = {
       let index = state.items[item.listId].findIndex(i => i.id === item.id);
 
       _vue.default.set(state.items[item.listId], index, item);
-    },
-
-    removeItem(state, {
-      listId,
-      item
-    }) {
-      _vue.default.set(state.items, null);
     }
 
   },
@@ -19299,17 +19292,55 @@ const subItems = {
     subItems: {}
   }),
   mutations: {
-    setSubItems() {},
+    setSubItems(state, {
+      todoItemId,
+      subItems
+    }) {
+      state.subItems[todoItemId] = subItems;
+    },
 
-    addSubItem() {},
+    addSubItem(state, {
+      subItem
+    }) {
+      state.subItems[subItem.listItemId].unshift(subItem);
+    },
 
-    updateSubItem() {},
+    updateSubItem(state, {
+      subItem
+    }) {
+      const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
 
-    removeSubItem() {}
+      _vue.default.set(state.subItems[subItem.listItemId], index, subItem);
+    },
+
+    removeSubItem() {},
+
+    updateSubItemCompletedState(state, {
+      subItem
+    }) {
+      const index = state.subItems[subItem.listItemId].findIndex(i => i.id == subItem.id);
+      state.subItems[subItem.listItemId][index].completed = subItem.completed;
+    }
 
   },
   actions: {
-    loadSubItems() {},
+    async loadSubItems(context, {
+      listId,
+      todoItemId
+    }) {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'GET',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems")
+        });
+        context.commit('setSubItems', {
+          todoItemId: todoItemId,
+          subItems: response.data
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     async addSubItem(context, {
       listId,
@@ -19317,7 +19348,7 @@ const subItems = {
       name
     }) {
       try {
-        const response = await (0, _axios.default)({
+        await (0, _axios.default)({
           method: 'POST',
           url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems"),
           headers: {
@@ -19327,15 +19358,67 @@ const subItems = {
             name
           })
         });
-        return response.data;
       } catch (error) {
         console.log(error);
       }
     },
 
-    updateSubItem() {},
+    async updateSubItem(context, {
+      listId,
+      todoItemId,
+      subItemId,
+      name
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems/").concat(subItemId),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: JSON.stringify({
+            name
+          })
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
-    trashSubItem() {}
+    async trashSubItem(context, {
+      listId,
+      todoItemId,
+      subItemId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'DELETE',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems/").concat(subItemId)
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async toggleSubItemCompletedState(context, {
+      listId,
+      todoItemId,
+      subItemId,
+      completed
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(listId, "/todos/").concat(todoItemId, "/subitems/").concat(subItemId, "/completed"),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: completed
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   },
   getters: {
@@ -19344,6 +19427,9 @@ const subItems = {
     },
     getSubItemCompletedState: state => (itemId, subItemId) => {
       return state.subItems[itemId].find(i => i.id === subItemId).completed;
+    },
+    subItemCountByItemId: state => itemId => {
+      return state.subItems[itemId].length;
     }
   }
 };
@@ -23265,7 +23351,264 @@ render._withStripped = true
         
       }
     })();
-},{"../components/TodoLists":"vue/components/TodoLists.vue","../components/AddTodoListForm":"vue/components/AddTodoListForm.vue","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddTodoListItemForm.vue":[function(require,module,exports) {
+},{"../components/TodoLists":"vue/components/TodoLists.vue","../components/AddTodoListForm":"vue/components/AddTodoListForm.vue","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"node_modules/confetti-js/dist/index.es.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ConfettiGenerator(params) {
+  //////////////
+  // Defaults
+  var appstate = {
+    target: 'confetti-holder',
+    // Id of the canvas
+    max: 80,
+    // Max itens to render
+    size: 1,
+    // prop size
+    animate: true,
+    // Should animate?
+    respawn: true,
+    // Should confettis be respawned when getting out of screen?
+    props: ['circle', 'square', 'triangle', 'line'],
+    // Types of confetti
+    colors: [[165, 104, 246], [230, 61, 135], [0, 199, 228], [253, 214, 126]],
+    // Colors to render confetti
+    clock: 25,
+    // Speed of confetti fall
+    interval: null,
+    // Draw interval holder
+    rotate: false,
+    // Whenever to rotate a prop
+    start_from_edge: false,
+    // Should confettis spawn at the top/bottom of the screen?
+    width: window.innerWidth,
+    // canvas width (as int, in px)
+    height: window.innerHeight // canvas height (as int, in px)
+
+  }; //////////////
+  // Setting parameters if received
+
+  if (params) {
+    if (params.target) appstate.target = params.target;
+    if (params.max) appstate.max = params.max;
+    if (params.size) appstate.size = params.size;
+    if (params.animate !== undefined && params.animate !== null) appstate.animate = params.animate;
+    if (params.respawn !== undefined && params.respawn !== null) appstate.respawn = params.respawn;
+    if (params.props) appstate.props = params.props;
+    if (params.colors) appstate.colors = params.colors;
+    if (params.clock) appstate.clock = params.clock;
+    if (params.start_from_edge !== undefined && params.start_from_edge !== null) appstate.start_from_edge = params.start_from_edge;
+    if (params.width) appstate.width = params.width;
+    if (params.height) appstate.height = params.height;
+    if (params.rotate !== undefined && params.rotate !== null) appstate.rotate = params.rotate;
+  } //////////////
+  // Early exit if the target is not the correct type, or is null
+
+
+  if (typeof appstate.target != 'object' && typeof appstate.target != 'string') {
+    throw new TypeError('The target parameter should be a node or string');
+  }
+
+  if (typeof appstate.target == 'object' && (appstate.target === null || !appstate.target instanceof HTMLCanvasElement) || typeof appstate.target == 'string' && (document.getElementById(appstate.target) === null || !document.getElementById(appstate.target) instanceof HTMLCanvasElement)) {
+    throw new ReferenceError('The target element does not exist or is not a canvas element');
+  } //////////////
+  // Properties
+
+
+  var cv = typeof appstate.target == 'object' ? appstate.target : document.getElementById(appstate.target);
+  var ctx = cv.getContext("2d");
+  var particles = []; //////////////
+  // Random helper (to minimize typing)
+
+  function rand(limit, floor) {
+    if (!limit) limit = 1;
+    var rand = Math.random() * limit;
+    return !floor ? rand : Math.floor(rand);
+  }
+
+  var totalWeight = appstate.props.reduce(function (weight, prop) {
+    return weight + (prop.weight || 1);
+  }, 0);
+
+  function selectProp() {
+    var rand = Math.random() * totalWeight;
+
+    for (var i = 0; i < appstate.props.length; ++i) {
+      var weight = appstate.props[i].weight || 1;
+      if (rand < weight) return i;
+      rand -= weight;
+    }
+  } //////////////
+  // Confetti particle generator
+
+
+  function particleFactory() {
+    var prop = appstate.props[selectProp()];
+    var p = {
+      prop: prop.type ? prop.type : prop,
+      //prop type
+      x: rand(appstate.width),
+      //x-coordinate
+      y: appstate.start_from_edge ? appstate.clock >= 0 ? -10 : parseFloat(appstate.height) + 10 : rand(appstate.height),
+      //y-coordinate
+      src: prop.src,
+      radius: rand(4) + 1,
+      //radius
+      size: prop.size,
+      rotate: appstate.rotate,
+      line: Math.floor(rand(65) - 30),
+      // line angle
+      angles: [rand(10, true) + 2, rand(10, true) + 2, rand(10, true) + 2, rand(10, true) + 2],
+      // triangle drawing angles
+      color: appstate.colors[rand(appstate.colors.length, true)],
+      // color
+      rotation: rand(360, true) * Math.PI / 180,
+      speed: rand(appstate.clock / 7) + appstate.clock / 30
+    };
+    return p;
+  } //////////////
+  // Confetti drawing on canvas
+
+
+  function particleDraw(p) {
+    if (!p) {
+      return;
+    }
+
+    var op = p.radius <= 3 ? 0.4 : 0.8;
+    ctx.fillStyle = ctx.strokeStyle = "rgba(" + p.color + ", " + op + ")";
+    ctx.beginPath();
+
+    switch (p.prop) {
+      case 'circle':
+        {
+          ctx.moveTo(p.x, p.y);
+          ctx.arc(p.x, p.y, p.radius * appstate.size, 0, Math.PI * 2, true);
+          ctx.fill();
+          break;
+        }
+
+      case 'triangle':
+        {
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x + p.angles[0] * appstate.size, p.y + p.angles[1] * appstate.size);
+          ctx.lineTo(p.x + p.angles[2] * appstate.size, p.y + p.angles[3] * appstate.size);
+          ctx.closePath();
+          ctx.fill();
+          break;
+        }
+
+      case 'line':
+        {
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x + p.line * appstate.size, p.y + p.radius * 5);
+          ctx.lineWidth = 2 * appstate.size;
+          ctx.stroke();
+          break;
+        }
+
+      case 'square':
+        {
+          ctx.save();
+          ctx.translate(p.x + 15, p.y + 5);
+          ctx.rotate(p.rotation);
+          ctx.fillRect(-15 * appstate.size, -5 * appstate.size, 15 * appstate.size, 5 * appstate.size);
+          ctx.restore();
+          break;
+        }
+
+      case 'svg':
+        {
+          ctx.save();
+          var image = new window.Image();
+          image.src = p.src;
+          var size = p.size || 15;
+          ctx.translate(p.x + size / 2, p.y + size / 2);
+          if (p.rotate) ctx.rotate(p.rotation);
+          ctx.drawImage(image, -(size / 2) * appstate.size, -(size / 2) * appstate.size, size * appstate.size, size * appstate.size);
+          ctx.restore();
+          break;
+        }
+    }
+  } //////////////
+  // Public itens
+  //////////////
+  //////////////
+  // Clean actual state
+
+
+  var _clear = function () {
+    appstate.animate = false;
+    clearInterval(appstate.interval);
+    requestAnimationFrame(function () {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      var w = cv.width;
+      cv.width = 1;
+      cv.width = w;
+    });
+  }; //////////////
+  // Render confetti on canvas
+
+
+  var _render = function () {
+    cv.width = appstate.width;
+    cv.height = appstate.height;
+    particles = [];
+
+    for (var i = 0; i < appstate.max; i++) particles.push(particleFactory());
+
+    function draw() {
+      ctx.clearRect(0, 0, appstate.width, appstate.height);
+
+      for (var i in particles) particleDraw(particles[i]);
+
+      update();
+      if (appstate.animate) requestAnimationFrame(draw);
+    }
+
+    function update() {
+      for (var i = 0; i < appstate.max; i++) {
+        var p = particles[i];
+
+        if (p) {
+          if (appstate.animate) p.y += p.speed;
+          if (p.rotate) p.rotation += p.speed / 35;
+
+          if (p.speed >= 0 && p.y > appstate.height || p.speed < 0 && p.y < 0) {
+            if (appstate.respawn) {
+              particles[i] = p;
+              particles[i].x = rand(appstate.width, true);
+              particles[i].y = p.speed >= 0 ? -10 : parseFloat(appstate.height);
+            } else {
+              particles[i] = undefined;
+            }
+          }
+        }
+      }
+
+      if (particles.every(function (p) {
+        return p === undefined;
+      })) {
+        _clear();
+      }
+    }
+
+    return requestAnimationFrame(draw);
+  };
+
+  return {
+    render: _render,
+    clear: _clear
+  };
+}
+
+var _default = ConfettiGenerator;
+exports.default = _default;
+},{}],"vue/components/AddTodoListItemForm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36792,8 +37135,106 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
-  props: ['name']
+  props: ['listId', 'subItem'],
+  computed: {
+    completedState: {
+      get() {
+        return this.$store.getters.getSubItemCompletedState(this.subItem.listItemId, this.subItem.id);
+      },
+
+      set(value) {
+        this.$store.dispatch('toggleSubItemCompletedState', {
+          listId: this.listId,
+          todoItemId: this.subItem.listItemId,
+          subItemId: this.subItem.id,
+          completed: value
+        });
+      }
+
+    }
+  },
+
+  data() {
+    return {
+      editingSubItem: false,
+      itemCompletedState: false,
+      form: {
+        name: this.subItem.name
+      }
+    };
+  },
+
+  methods: {
+    focusForm() {
+      this.editingSubItem = true;
+      this.$nextTick(() => {
+        this.$refs.subItemName.focus();
+      });
+    },
+
+    async updateSubItem() {
+      await this.$store.dispatch('updateSubItem', {
+        listId: this.listId,
+        todoItemId: this.subItem.listItemId,
+        subItemId: this.subItem.id,
+        name: this.form.name
+      });
+      this.editingSubItem = false;
+    },
+
+    async deleteSubItem() {
+      await this.$store.dispatch('trashSubItem', {
+        listId: this.listId,
+        todoItemId: this.subItem.listItemId,
+        subItemId: this.subItem.id
+      });
+    }
+
+  }
 };
 exports.default = _default;
         var $7b87e9 = exports.default || module.exports;
@@ -36808,9 +37249,124 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "sub-item" }, [
-    _vm._v("name: " + _vm._s(_vm.subItemName))
-  ])
+  return _c(
+    "b-list-group-item",
+    { staticClass: "sub-item bg-light", attrs: { "data-id": _vm.subItem.id } },
+    [
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-handle mr-2" },
+            [_c("b-icon-list")],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-checkbox-wrapper" },
+            [
+              _c("b-form-checkbox", {
+                model: {
+                  value: _vm.completedState,
+                  callback: function($$v) {
+                    _vm.completedState = $$v
+                  },
+                  expression: "completedState"
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-name", on: { click: _vm.focusForm } },
+            [_vm._v("\n        " + _vm._s(_vm.subItem.name) + "\n    ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.editingSubItem
+        ? _c(
+            "div",
+            { staticClass: "sub-item-controls pr-3" },
+            [
+              _c(
+                "b-button",
+                {
+                  attrs: { size: "sm", variant: "danger" },
+                  on: { click: _vm.deleteSubItem }
+                },
+                [_vm._v("\n            Delete\n        ")]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.editingSubItem
+        ? _c(
+            "b-form",
+            {
+              staticClass: "edit-sub-item-form",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.updateSubItem($event)
+                }
+              }
+            },
+            [
+              _c(
+                "b-form-group",
+                [
+                  _c("b-form-input", {
+                    ref: "subItemName",
+                    staticClass: "mr-2",
+                    attrs: { maxlength: "50", minlength: "1", required: "" },
+                    model: {
+                      value: _vm.form.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "name", $$v)
+                      },
+                      expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  staticClass: "mr-1",
+                  attrs: { size: "sm", variant: "success", type: "submit" }
+                },
+                [_vm._v("\n            Save\n        ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  attrs: { size: "sm", variant: "secondary" },
+                  on: {
+                    click: function($event) {
+                      _vm.editingSubItem = false
+                    }
+                  }
+                },
+                [_vm._v("\n            Cancel\n        ")]
+              )
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -36853,6 +37409,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _SubItem = _interopRequireDefault(require("./SubItem"));
 
 var _vuedraggable = _interopRequireDefault(require("vuedraggable"));
@@ -36871,15 +37429,76 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
 var _default = {
-  props: ['itemId'],
+  props: ['todoListItem'],
   components: {
     Draggable: _vuedraggable.default,
     SubItem: _SubItem.default
   },
-  computed: {
-    items() {
-      return this.$store.subItems.getSubItemsByItemId(this.itemId);
+
+  async created() {
+    this.items = this.setSubItems();
+    await this.getLayout();
+  },
+
+  mounted() {
+    this.$store.state.connection.on("ItemLayoutUpdated", async itemId => await this.refreshSubItemLayout(itemId));
+    this.$store.state.connection.on("SubItemTrashed", async (itemId, subItem) => await this.refreshSubItemLayout(itemId));
+  },
+
+  data() {
+    return {
+      items: [],
+      layout: []
+    };
+  },
+
+  methods: {
+    async getLayout() {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'GET',
+          url: "api/lists/".concat(this.todoListItem.listId, "/todos/").concat(this.todoListItem.id, "/layout")
+        });
+        this.layout = response.data.layout;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async updateSubItemPosition(event) {
+      const subItemId = event.item.getAttribute('data-id');
+      const position = event.newIndex;
+
+      try {
+        await (0, _axios.default)({
+          method: 'PUT',
+          url: "api/lists/".concat(this.todoListItem.listId, "/todos/").concat(this.todoListItem.id, "/layout"),
+          headers: {
+            'content-type': 'application/json'
+          },
+          data: JSON.stringify({
+            subItemId,
+            position
+          })
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async refreshSubItemLayout(todoItemId) {
+      if (todoItemId === this.todoListItem.id) {
+        await this.getLayout();
+      }
+    },
+
+    setSubItems() {
+      return this.$store.getters.getSubItemsByItemId(this.todoListItem.id);
     }
 
   }
@@ -36898,10 +37517,41 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "Draggable",
-    _vm._l(_vm.items, function(item) {
-      return _c("SubItem", { key: item.id, attrs: { name: item.name } })
-    }),
+    "b-list-group",
+    [
+      _c(
+        "Draggable",
+        {
+          attrs: { handle: ".sub-item-handle" },
+          on: { end: _vm.updateSubItemPosition },
+          model: {
+            value: _vm.layout,
+            callback: function($$v) {
+              _vm.layout = $$v
+            },
+            expression: "layout"
+          }
+        },
+        [
+          _vm._l(_vm.layout, function(itemId) {
+            return _c("SubItem", {
+              key: itemId,
+              attrs: {
+                subItem: _vm.items.find(function(x) {
+                  return x.id === itemId
+                }),
+                listId: _vm.todoListItem.listId
+              }
+            })
+          }),
+          _vm._v(" "),
+          _vm.layout.length < 1
+            ? _c("b-list-group-item", [_vm._v("There are no sub-items.")])
+            : _vm._e()
+        ],
+        2
+      )
+    ],
     1
   )
 }
@@ -36934,13 +37584,15 @@ render._withStripped = true
         
       }
     })();
-},{"./SubItem":"vue/components/SubItem.vue","vuedraggable":"node_modules/vuedraggable/dist/vuedraggable.common.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddSubItemForm.vue":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","./SubItem":"vue/components/SubItem.vue","vuedraggable":"node_modules/vuedraggable/dist/vuedraggable.common.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddSubItemForm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+//
+//
 //
 //
 //
@@ -36995,6 +37647,9 @@ var _default = {
 
     blurForm() {
       this.formActive = false;
+      this.$nextTick(() => {
+        this.$refs.addItemBtn.focus();
+      });
     },
 
     async addSubItem() {
@@ -37037,7 +37692,12 @@ exports.default = _default;
       !_vm.formActive
         ? _c(
             "b-button",
-            { attrs: { size: "sm" }, on: { click: _vm.focusForm } },
+            {
+              ref: "addItemBtn",
+              staticClass: "mt-3",
+              attrs: { size: "sm" },
+              on: { click: _vm.focusForm }
+            },
             [_vm._v("\n        Add an item\n    ")]
           )
         : _vm._e(),
@@ -37045,7 +37705,7 @@ exports.default = _default;
       _vm.formActive
         ? _c(
             "div",
-            { staticClass: "add-sub-item-input-wrapper" },
+            { staticClass: "add-sub-item-input-wrapper mt-3" },
             [
               _c(
                 "b-form-group",
@@ -37470,7 +38130,7 @@ exports.default = _default;
         attrs: { label: "Sub-items" }
       }),
       _vm._v(" "),
-      _c("SubItems"),
+      _c("SubItems", { attrs: { todoListItem: _vm.todoListItem } }),
       _vm._v(" "),
       _c("AddSubItemForm", { attrs: { todoListItem: _vm.todoListItem } })
     ],
@@ -37554,12 +38214,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   name: 'TodoListItem',
   props: ['todoListItem'],
+
+  data() {
+    return {
+      subItemCount: 0
+    };
+  },
+
   components: {
     EditTodoItemForm: _EditTodoItemForm.default
   },
+
+  async created() {
+    await this.$store.dispatch('loadSubItems', {
+      listId: this.todoListItem.listId,
+      todoItemId: this.todoListItem.id
+    });
+    this.subItemCount = this.$store.getters.subItemCountByItemId(this.todoListItem.id);
+  },
+
   computed: {
     itemCompletedState: {
       get() {
@@ -37613,6 +38290,7 @@ exports.default = _default;
       _vm._v(" "),
       _c("b-form-checkbox", {
         staticClass: "todo-item-checkbox",
+        attrs: { disabled: _vm.subItemCount > 0 },
         model: {
           value: _vm.itemCompletedState,
           callback: function($$v) {
@@ -38109,6 +38787,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _confettiJs = _interopRequireDefault(require("confetti-js"));
+
 var _AddTodoListItemForm = _interopRequireDefault(require("./AddTodoListItemForm"));
 
 var _TodoListItems = _interopRequireDefault(require("./TodoListItems"));
@@ -38119,6 +38799,10 @@ var _InviteContributorsForm = _interopRequireDefault(require("./InviteContributo
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -38178,6 +38862,14 @@ var _default = {
     });
   },
 
+  beforeUpdate() {
+    var confettiSettings = {
+      target: 'confetti'
+    };
+    var confetti = new _confettiJs.default(confettiSettings);
+    confetti.render();
+  },
+
   computed: {
     list() {
       return this.$store.getters.getTodoListById(this.todoListId);
@@ -38218,59 +38910,66 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "todo-list" },
-    [
-      _vm.list.listTitle
-        ? _c("h1", { staticClass: "todo-list-title mb-4" }, [
-            _vm._v(_vm._s(_vm.list.listTitle))
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        [
-          _c(
-            "b-col",
-            { staticClass: "mb-3", attrs: { md: "8" } },
-            [
-              _c("TodoListItems", {
-                attrs: { listId: _vm.todoListId, todoListItems: _vm.items }
-              }),
-              _vm._v(" "),
-              _c("AddTodoListItemForm", {
-                staticClass: "mt-3",
-                attrs: { todoListId: _vm.todoListId }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-col",
-            { attrs: { md: "4" } },
-            [
-              _c("Contributors", {
-                staticClass: "mb-3",
-                attrs: {
-                  todoListContributors: _vm.list.contributors,
-                  accountContributors: _vm.contributors
-                }
-              }),
-              _vm._v(" "),
-              _c("InviteContributorsForm", {
-                attrs: { listId: this.todoListId }
-              })
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
+  return _c("div", { staticClass: "todo-list-wrapper" }, [
+    _c("canvas", {
+      class: { hidden: !_vm.allItemsCompleted },
+      attrs: { id: "confetti" }
+    }),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "todo-list" },
+      [
+        _vm.list.listTitle
+          ? _c("h1", { staticClass: "todo-list-title mb-4" }, [
+              _vm._v(_vm._s(_vm.list.listTitle))
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "b-row",
+          [
+            _c(
+              "b-col",
+              { staticClass: "mb-3", attrs: { md: "8" } },
+              [
+                _c("TodoListItems", {
+                  attrs: { listId: _vm.todoListId, todoListItems: _vm.items }
+                }),
+                _vm._v(" "),
+                _c("AddTodoListItemForm", {
+                  staticClass: "mt-3",
+                  attrs: { todoListId: _vm.todoListId }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-col",
+              { attrs: { md: "4" } },
+              [
+                _c("Contributors", {
+                  staticClass: "mb-3",
+                  attrs: {
+                    todoListContributors: _vm.list.contributors,
+                    accountContributors: _vm.contributors
+                  }
+                }),
+                _vm._v(" "),
+                _c("InviteContributorsForm", {
+                  attrs: { listId: this.todoListId }
+                })
+              ],
+              1
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -38279,7 +38978,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: null,
+            _scopeId: "data-v-98e7b1",
             functional: undefined
           };
         })());
@@ -38299,9 +38998,13 @@ render._withStripped = true
         }
 
         
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
       }
     })();
-},{"./AddTodoListItemForm":"vue/components/AddTodoListItemForm.vue","./TodoListItems":"vue/components/TodoListItems.vue","./Contributors":"vue/components/Contributors.vue","./InviteContributorsForm":"vue/components/InviteContributorsForm.vue","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/views/TodoListView.vue":[function(require,module,exports) {
+},{"confetti-js":"node_modules/confetti-js/dist/index.es.js","./AddTodoListItemForm":"vue/components/AddTodoListItemForm.vue","./TodoListItems":"vue/components/TodoListItems.vue","./Contributors":"vue/components/Contributors.vue","./InviteContributorsForm":"vue/components/InviteContributorsForm.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/views/TodoListView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38719,6 +39422,15 @@ var _default = {
     }));
     this.$store.state.connection.on("ItemUpdated", item => this.$store.commit('updateItem', {
       item
+    }));
+    this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit('addSubItem', {
+      subItem
+    }));
+    this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit('updateSubItemCompletedState', {
+      subItem
+    }));
+    this.$store.state.connection.on("SubItemUpdated", subItem => this.$store.commit('updateSubItem', {
+      subItem
     }));
   }
 
@@ -88099,7 +88811,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50845" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56086" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

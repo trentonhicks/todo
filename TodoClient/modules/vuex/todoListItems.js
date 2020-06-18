@@ -19,10 +19,7 @@ const todoLists = {
         updateItem(state, { item }) {
             let index = state.items[item.listId].findIndex(i => i.id === item.id);
             Vue.set(state.items[item.listId], index, item);
-        },
-        removeItem(state, { listId, item }) {
-            Vue.set(state.items, null);
-        },
+        }
     },
     actions: {
         loadItemsByListId(context, payload) {

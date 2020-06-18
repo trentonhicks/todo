@@ -1,45 +1,51 @@
 <template>
 
-    <div class="todo-list">
+    <div class="todo-list-wrapper">
+        <canvas id="confetti" :class="{ 'hidden': !allItemsCompleted }"></canvas>
 
-        <h1 class="todo-list-title mb-4" v-if="list.listTitle">{{ list.listTitle }}</h1>
+        <div class="todo-list">
 
-        <b-row>
+            <h1 class="todo-list-title mb-4" v-if="list.listTitle">{{ list.listTitle }}</h1>
 
-            <b-col md="8" class="mb-3">
+            <b-row>
 
-                <TodoListItems
-                    :listId="todoListId"
-                    :todoListItems="items"></TodoListItems>
+                <b-col md="8" class="mb-3">
 
-                <AddTodoListItemForm
-                    class="mt-3"
-                    :todoListId="todoListId">
-                </AddTodoListItemForm>
+                    <TodoListItems
+                        :listId="todoListId"
+                        :todoListItems="items"></TodoListItems>
 
-            </b-col>
+                    <AddTodoListItemForm
+                        class="mt-3"
+                        :todoListId="todoListId">
+                    </AddTodoListItemForm>
 
-            <b-col md="4">
+                </b-col>
 
-                <Contributors
-                    class="mb-3"
-                    :todoListContributors="list.contributors"
-                    :accountContributors="contributors">
-                </Contributors>
+                <b-col md="4">
 
-                <InviteContributorsForm
-                    :listId="this.todoListId">
-                </InviteContributorsForm>
+                    <Contributors
+                        class="mb-3"
+                        :todoListContributors="list.contributors"
+                        :accountContributors="contributors">
+                    </Contributors>
 
-            </b-col>
+                    <InviteContributorsForm
+                        :listId="this.todoListId">
+                    </InviteContributorsForm>
 
-        </b-row>
+                </b-col>
 
+            </b-row>
+
+        </div>
     </div>
     
 </template>
 
 <script>
+
+    import ConfettiGenerator from "confetti-js";
 
     import AddTodoListItemForm from './AddTodoListItemForm';
     import TodoListItems from './TodoListItems';
@@ -58,6 +64,11 @@
             this.$store.dispatch('loadItemsByListId', { todoListId: this.todoListId }).then(() => {
                 this.items = this.getItems();
             });
+        },
+        beforeUpdate() {
+            var confettiSettings = { target: 'confetti' };
+            var confetti = new ConfettiGenerator(confettiSettings);
+            confetti.render();
         },
         computed: {
             list() {
@@ -84,3 +95,21 @@
     }
 
 </script>
+
+<style lang="scss" scoped>
+
+    #confetti {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1040;
+
+        &.hidden {
+            opacity: 0;
+        }
+    }
+
+</style>
