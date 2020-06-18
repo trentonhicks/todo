@@ -25,11 +25,12 @@ namespace Todo.Domain
         public bool Completed { get; private set; }
         public List<string> Contributors { get; private set; } = new List<string>();
 
-        public TodoListItem CreateListItem(Guid listId, string name, string notes, DateTime? dueDate)
+        public TodoListItem CreateListItem(Guid id, string name, string notes, DateTime? dueDate)
         {
             var todoItem = new TodoListItem()
             {
-                ListId = listId,
+                ListId = this.Id,
+                Id = id,
                 Name = name,
                 Notes = notes,
                 DueDate = dueDate

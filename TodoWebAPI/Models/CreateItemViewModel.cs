@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,12 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Todo.Domain;
 
-namespace TodoWebAPI.UserStories.CreateItem
+namespace TodoWebAPI.Models
 {
-    public class CreateItem : IRequest<TodoListItem>
+    public class CreateItemViewModel
     {
-        public Guid AccountId { get; set; }
-        public string Email { get; set; }
         public Guid ListId { get; set; }
         [StringLength(200)]
         public string Notes { get; set; }

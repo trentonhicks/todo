@@ -23709,6 +23709,12 @@ var _default = {
     };
   },
 
+  computed: {
+    plan() {
+      return this.$store.getters.plan;
+    }
+
+  },
   methods: {
     focusOnForm() {
       this.$refs.title.focus();
@@ -23809,22 +23815,24 @@ exports.default = _default;
                 1
               ),
               _vm._v(" "),
-              _c(
-                "b-form-group",
-                { attrs: { label: "Due Date" } },
-                [
-                  _c("b-form-datepicker", {
-                    model: {
-                      value: _vm.form.dueDate,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "dueDate", $$v)
-                      },
-                      expression: "form.dueDate"
-                    }
-                  })
-                ],
-                1
-              ),
+              _vm.plan.canAddDueDates
+                ? _c(
+                    "b-form-group",
+                    { attrs: { label: "Due Date" } },
+                    [
+                      _c("b-form-datepicker", {
+                        model: {
+                          value: _vm.form.dueDate,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "dueDate", $$v)
+                          },
+                          expression: "form.dueDate"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "b-button",
@@ -88974,7 +88982,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62985" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59475" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

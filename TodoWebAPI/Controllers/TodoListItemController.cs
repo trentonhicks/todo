@@ -42,42 +42,24 @@ namespace TodoWebAPI.Controllers
 
 
         [HttpPost("api/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(Guid listId, [FromBody] CreateItem todo)
+        public async Task<IActionResult> CreateTodo(Guid listId, [FromBody] CreateItemViewModel todo)
         {
-            var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
-            var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
-
-            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
-
             var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-            
-            var list = await _dapperQuery.GetListAsync(listId);
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
-            var todoListAuthorization = new TodoListAuthorizationValidator(list.Contributors, userEmail);
-
-            if(todoListAuthorization.IsUserAuthorized())
+            var command = new CreateItem
             {
-                todo.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-                todo.ListId = listId;
+                AccountId = accountId,
+                Email = userEmail,
+                DueDate = todo.DueDate,
+                ListId = listId,
+                Name = todo.Name,
+                Notes = todo.Notes
+            };
 
-                if(todo.DueDate.HasValue && !accountPlanAuthorization.CanAddDueDate())
-                    return BadRequest();
-
-                var todoItem = await _mediator.Send(todo);
+            var todoItem = await _mediator.Send(command);
                 
-                if (todoItem == null)
-                    return BadRequest("List doesn't exist");
-
-                return Ok(new TodoListItemModel {
-                    Id = todoItem.Id,
-                    Name = todoItem.Name,
-                    Notes = todoItem.Notes,
-                    ListId = listId,
-                    DueDate = todoItem.DueDate
-                });
-            }
-
-            return Forbid();
+            return Ok();
         }
 
         [HttpGet("api/lists/{listId}/todos")]
