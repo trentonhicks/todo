@@ -37493,7 +37493,6 @@ var _default = {
 
     async refreshSubItemLayout(todoItemId) {
       if (todoItemId === this.todoListItem.id) {
-        console.log(todoItemId);
         await this.getLayout();
       }
     },
@@ -37547,9 +37546,7 @@ exports.default = _default;
           }),
           _vm._v(" "),
           _vm.layout.length < 1
-            ? _c("b-list-group-item", { staticClass: "bg-light" }, [
-                _vm._v("There are no sub-items.")
-              ])
+            ? _c("b-list-group-item", [_vm._v("There are no sub-items.")])
             : _vm._e()
         ],
         2
@@ -37891,13 +37888,6 @@ var _default = {
     };
   },
 
-  async created() {
-    await this.$store.dispatch('loadSubItems', {
-      listId: this.todoListItem.listId,
-      todoItemId: this.todoListItem.id
-    });
-  },
-
   components: {
     SubItems: _SubItems.default,
     AddSubItemForm: _AddSubItemForm.default
@@ -38228,9 +38218,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   name: 'TodoListItem',
   props: ['todoListItem'],
+
+  data() {
+    return {
+      subItemCount: 0
+    };
+  },
+
   components: {
     EditTodoItemForm: _EditTodoItemForm.default
   },
+
+  async created() {
+    await this.$store.dispatch('loadSubItems', {
+      listId: this.todoListItem.listId,
+      todoItemId: this.todoListItem.id
+    });
+    this.subItemCount = this.$store.getters.subItemCountByItemId(this.todoListItem.id);
+  },
+
   computed: {
     itemCompletedState: {
       get() {
@@ -38284,7 +38290,7 @@ exports.default = _default;
       _vm._v(" "),
       _c("b-form-checkbox", {
         staticClass: "todo-item-checkbox",
-        attrs: { disabled: _vm.hasSubItems },
+        attrs: { disabled: _vm.subItemCount > 0 },
         model: {
           value: _vm.itemCompletedState,
           callback: function($$v) {
@@ -38856,7 +38862,7 @@ var _default = {
     });
   },
 
-  mounted() {
+  beforeUpdate() {
     var confettiSettings = {
       target: 'confetti'
     };
@@ -38906,14 +38912,7 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "todo-list-wrapper" }, [
     _c("canvas", {
-      directives: [
-        {
-          name: "show",
-          rawName: "v-show",
-          value: _vm.allItemsCompleted,
-          expression: "allItemsCompleted"
-        }
-      ],
+      class: { hidden: !_vm.allItemsCompleted },
       attrs: { id: "confetti" }
     }),
     _vm._v(" "),
@@ -38979,7 +38978,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: null,
+            _scopeId: "data-v-98e7b1",
             functional: undefined
           };
         })());

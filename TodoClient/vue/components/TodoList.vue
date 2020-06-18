@@ -1,7 +1,7 @@
 <template>
 
     <div class="todo-list-wrapper">
-        <canvas id="confetti" v-show="allItemsCompleted"></canvas>
+        <canvas id="confetti" :class="{ 'hidden': !allItemsCompleted }"></canvas>
 
         <div class="todo-list">
 
@@ -65,7 +65,7 @@
                 this.items = this.getItems();
             });
         },
-        mounted() {
+        beforeUpdate() {
             var confettiSettings = { target: 'confetti' };
             var confetti = new ConfettiGenerator(confettiSettings);
             confetti.render();
@@ -96,7 +96,7 @@
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
     #confetti {
         position: fixed;
@@ -106,6 +106,10 @@
         height: 100%;
         pointer-events: none;
         z-index: 1040;
+
+        &.hidden {
+            opacity: 0;
+        }
     }
 
 </style>

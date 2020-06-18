@@ -6,7 +6,7 @@
         </div>
 
         <b-form-checkbox
-            :disabled="hasSubItems"
+            :disabled="subItemCount > 0"
             class="todo-item-checkbox"
             v-model="itemCompletedState">
         </b-form-checkbox>
@@ -37,8 +37,17 @@
     export default {
         name: 'TodoListItem',
         props: ['todoListItem'],
+        data() {
+            return {
+                subItemCount: 0
+            }
+        },
         components: {
             EditTodoItemForm
+        },
+        async created() {
+            await this.$store.dispatch('loadSubItems', { listId: this.todoListItem.listId, todoItemId: this.todoListItem.id });
+            this.subItemCount = this.$store.getters.subItemCountByItemId(this.todoListItem.id);
         },
         computed: {
             itemCompletedState: {

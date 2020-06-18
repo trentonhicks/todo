@@ -8,7 +8,7 @@
                 :subItem="items.find(x => x.id === itemId)"
                 :listId="todoListItem.listId">
             </SubItem>
-            <b-list-group-item class="bg-light" v-if="layout.length < 1">There are no sub-items.</b-list-group-item>
+            <b-list-group-item v-if="layout.length < 1">There are no sub-items.</b-list-group-item>
         </Draggable>
     </b-list-group>
 
@@ -74,7 +74,6 @@ export default {
         },
         async refreshSubItemLayout(todoItemId) {
             if(todoItemId === this.todoListItem.id) {
-                console.log(todoItemId);
                 await this.getLayout();
             }
         },

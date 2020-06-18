@@ -100,9 +100,6 @@
                 }
             }
         },
-        async created() {
-            await this.$store.dispatch('loadSubItems', { listId: this.todoListItem.listId, todoItemId: this.todoListItem.id });
-        },
         components: {
             SubItems,
             AddSubItemForm
