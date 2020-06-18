@@ -22,19 +22,13 @@ const todoLists = {
         }
     },
     actions: {
-        loadItemsByListId(context, payload) {
-            return new Promise((resolve, reject) => {
-                axios({
-                    method: 'GET',
-                    url: `api/lists/${payload.todoListId}/todos`
-                })
-                .then((response) => {
-                    context.commit('setItems', { listId: payload.todoListId, items: response.data });
-                })
-                .finally(() => {
-                    resolve();
-                });
+        async loadItemsByListId(context, payload) {
+            const response = await axios({
+                method: 'GET',
+                url: `api/lists/${payload.todoListId}/todos`
             });
+
+            context.commit('setItems', { listId: payload.todoListId, items: response.data });
         },
         addItem(context, payload) {
             return new Promise((resolve, reject) => {
