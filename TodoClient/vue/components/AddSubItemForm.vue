@@ -2,6 +2,7 @@
     
 <b-form id="add-sub-item-form" @submit.prevent="addSubItem">
     <b-button
+        ref="addItemBtn"
         class="mt-3"
         size="sm"
         @click="focusForm"
@@ -46,12 +47,17 @@
         methods: {
             focusForm() {
                 this.formActive = true;
+
                 this.$nextTick(() => {
                     this.$refs.subItemName.focus();
-                })
+                });
             },
             blurForm() {
                 this.formActive = false;
+
+                this.$nextTick(() => {
+                    this.$refs.addItemBtn.focus();
+                });
             },
             async addSubItem() {
                 await this.$store.dispatch('addSubItem', {

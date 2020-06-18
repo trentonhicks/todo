@@ -37432,6 +37432,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: ['todoListItem'],
   components: {
@@ -37532,18 +37533,26 @@ exports.default = _default;
             expression: "layout"
           }
         },
-        _vm._l(_vm.layout, function(itemId) {
-          return _c("SubItem", {
-            key: itemId,
-            attrs: {
-              subItem: _vm.items.find(function(x) {
-                return x.id === itemId
-              }),
-              listId: _vm.todoListItem.listId
-            }
-          })
-        }),
-        1
+        [
+          _vm._l(_vm.layout, function(itemId) {
+            return _c("SubItem", {
+              key: itemId,
+              attrs: {
+                subItem: _vm.items.find(function(x) {
+                  return x.id === itemId
+                }),
+                listId: _vm.todoListItem.listId
+              }
+            })
+          }),
+          _vm._v(" "),
+          _vm.layout.length < 1
+            ? _c("b-list-group-item", { staticClass: "bg-light" }, [
+                _vm._v("There are no sub-items.")
+              ])
+            : _vm._e()
+        ],
+        2
       )
     ],
     1
@@ -37617,6 +37626,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   name: 'AddSubItemForm',
   props: ['todoListItem'],
@@ -37640,6 +37650,9 @@ var _default = {
 
     blurForm() {
       this.formActive = false;
+      this.$nextTick(() => {
+        this.$refs.addItemBtn.focus();
+      });
     },
 
     async addSubItem() {
@@ -37683,6 +37696,7 @@ exports.default = _default;
         ? _c(
             "b-button",
             {
+              ref: "addItemBtn",
               staticClass: "mt-3",
               attrs: { size: "sm" },
               on: { click: _vm.focusForm }
