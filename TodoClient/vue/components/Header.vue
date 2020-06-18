@@ -17,8 +17,9 @@
 
     export default {
         name: 'Header',
-        created: function() {
-            this.checkAuthState();
+        async created() {
+            await this.checkAuthState();
+            await this.getPlan();
         },
         computed: {
             user() {
@@ -26,22 +27,38 @@
             }
         },
         methods: {
-            checkAuthState() {
-                axios({
-                    method: 'GET',
-                    url: 'api/accounts/login'
-                }).then((response) => {
-                    axios({
+            async checkAuthState() {
+                try {
+                    await axios({
+                        method: 'GET',
+                        url: 'api/accounts/login'
+                    });
+
+                    const user = await axios({
                         method: 'GET',
                         url: 'api/accounts'
-                        }).then((user) => {
-                        this.$store.commit('setUserData', user.data);
                     });
-                }).catch(() => {
+
+                    this.$store.commit('setUserData', user.data);
+                }
+                catch {
                     if(this.$router.name !== 'Login') {
                         this.$router.push('/login');
                     }
-                });
+                }
+            },
+            async getPlan() {
+                try {
+                    const plan = await axios({
+                        method: 'GET',
+                        url: 'api/accounts/plan'
+                    });
+
+                    this.$store.commit('setPlanData', plan.data);
+                }
+                catch(error){
+                    console.log("she didn't work " + error);
+                }
             },
             logout() {
                 axios({

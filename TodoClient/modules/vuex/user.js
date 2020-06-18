@@ -2,12 +2,16 @@ import axios from 'axios';
 
 const user = {
     state: () => ({
-        user: {}
+        user: {},
+        plan: {}
     }),
     mutations: {
         setUserData(state, data) {
             state.user = data;
         },
+        setPlanData(state, data) {
+            state.plan = data;
+        }
     },
     actions: {
 
@@ -15,6 +19,9 @@ const user = {
     getters: {
         user(state) {
             return state.user;
+        },
+        plan(state) {
+            return state.plan;
         }
     }
 }

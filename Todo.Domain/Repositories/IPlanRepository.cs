@@ -7,6 +7,6 @@ namespace Todo.Domain.Repositories
 {
     public interface IPlanRepository : IUnitOfWork
     {
-        Task<Plan> FindPlanByName(string name);
+        Task<Plan> FindPlanByIdAsync(int planId);
     }
 }

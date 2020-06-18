@@ -17,7 +17,7 @@
                 </b-form-group>
 
                 <!-- Due Date -->
-                <b-form-group label="Due Date">
+                <b-form-group label="Due Date" v-if="plan.canAddDueDates">
                    <b-form-datepicker v-model="form.dueDate"></b-form-datepicker>
                 </b-form-group>
 
@@ -41,6 +41,11 @@
                     notes: null,
                     dueDate: null,
                 }
+            }
+        },
+        computed: {
+            plan() {
+                return this.$store.getters.plan;
             }
         },
         methods: {

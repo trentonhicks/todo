@@ -12,6 +12,7 @@ using TodoWebAPI.UserStories.ItemCompletedState;
 using TodoWebAPI.Extentions;
 using Microsoft.AspNetCore.Authorization;
 using Todo.Domain;
+using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.Controllers
 {
@@ -22,48 +23,43 @@ namespace TodoWebAPI.Controllers
         private readonly IConfiguration _config;
         private readonly IMediator _mediator;
         private readonly DapperQuery _dapperQuery;
+        private readonly IAccountPlanRepository _accountPlanRepository;
+        private readonly IPlanRepository _planRepository;
 
         public TodoListItemController(
             IConfiguration config,
             IMediator mediator,
-            DapperQuery dapperQuery)
+            DapperQuery dapperQuery,
+            IAccountPlanRepository accountPlanRepository,
+            IPlanRepository planRepository)
         {
             _config = config;
             _mediator = mediator;
             _dapperQuery = dapperQuery;
+            _accountPlanRepository = accountPlanRepository;
+            _planRepository = planRepository;
         }
 
 
         [HttpPost("api/lists/{listId}/todos")]
-        public async Task<IActionResult> CreateTodo(Guid listId, [FromBody] CreateItem todo)
+        public async Task<IActionResult> CreateTodo(Guid listId, [FromBody] CreateItemViewModel todo)
         {
             var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-            
-            var list = await _dapperQuery.GetListAsync(listId);
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
-            var todoListAuthorization = new TodoListAuthorizationValidator(list.Contributors, userEmail);
-
-            if(todoListAuthorization.IsUserAuthorized())
+            var command = new CreateItem
             {
-                todo.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-                todo.ListId = listId;
+                AccountId = accountId,
+                Email = userEmail,
+                DueDate = todo.DueDate,
+                ListId = listId,
+                Name = todo.Name,
+                Notes = todo.Notes
+            };
 
-                var todoItem = await _mediator.Send(todo);
+            var todoItem = await _mediator.Send(command);
                 
-                if (todoItem == null)
-                return BadRequest("List doesn't exist");
-
-
-                return Ok(new TodoListItemModel {
-                    Id = todoItem.Id,
-                    Name = todoItem.Name,
-                    Notes = todoItem.Notes,
-                    ListId = listId,
-                    DueDate = todoItem.DueDate
-                });
-            }
-
-            return Forbid();
+            return Ok();
         }
 
         [HttpGet("api/lists/{listId}/todos")]
@@ -88,6 +84,10 @@ namespace TodoWebAPI.Controllers
         [HttpPut("api/lists/{listId}/todos/{todoId}")]
         public async Task<IActionResult> EditTodo(Guid listId, Guid todoId, [FromBody] EditItem todo)
         {
+            var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
+            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
+
             todo.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             todo.Id = todoId;
 
@@ -99,6 +99,9 @@ namespace TodoWebAPI.Controllers
 
             if(todoListAuthorizationValidator.IsUserAuthorized())
             {
+                if(todo.DueDate.HasValue && !accountPlanAuthorization.CanAddDueDate())
+                    return BadRequest();
+
                 await _mediator.Send(todo);
                 return Ok();
             }

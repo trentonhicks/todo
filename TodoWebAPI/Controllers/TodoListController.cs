@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using TodoWebAPI.Extentions;
 using TodoWebAPI.UserStories.SendInvitation;
 using Todo.Domain;
+using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.Controllers
 {
@@ -18,18 +19,32 @@ namespace TodoWebAPI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly DapperQuery _dapperQuery;
+        private readonly IPlanRepository _planRepository;
+        private readonly IAccountPlanRepository _accountPlanRepository;
 
         public TodoListController(
             IMediator mediator,
-            DapperQuery dapperQuery)
+            DapperQuery dapperQuery,
+            IPlanRepository planRepository,
+            IAccountPlanRepository accountPlanRepository)
         {
             _mediator = mediator;
             _dapperQuery = dapperQuery;
+            _planRepository = planRepository;
+            _accountPlanRepository = accountPlanRepository;
         }
 
         [HttpPost("api/lists")]
-        public async Task<IActionResult> CreateList(Guid accountId, CreateList createTodoList)
+        public async Task<IActionResult> CreateList(CreateList createTodoList)
         {
+            var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
+
+            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
+
+            if (!accountPlanAuthorization.CanCreateList())
+                return BadRequest("Reached maximum number of lists allowed on your plan.");
+
             createTodoList.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             
             var todoList = await _mediator.Send(createTodoList);
@@ -37,7 +52,7 @@ namespace TodoWebAPI.Controllers
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
 
-                return Ok(new CreateListPresentation() { Id = todoList.Id, ListTitle = todoList.ListTitle });
+                return Ok();
         }
 
         [HttpGet("api/lists")]

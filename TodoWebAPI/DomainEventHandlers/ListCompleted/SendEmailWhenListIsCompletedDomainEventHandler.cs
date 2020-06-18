@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Todo.Domain.DomainEvents;
 using Todo.Domain.Repositories;
 using Todo.Infrastructure.Email;
-using Todo.Infrastructure.Repositories;
 using TodoWebAPI.ServiceBusRabbitmq;
 
 namespace TodoWebAPI.DomainEventHandlers
