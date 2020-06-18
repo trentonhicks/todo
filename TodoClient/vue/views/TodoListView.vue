@@ -5,7 +5,7 @@
       <b-icon icon="chevron-left"></b-icon> My Lists
     </b-button>
 
-    <TodoList :todoListId="todoListId"></TodoList>
+    <TodoList :todoListId="todoListId" v-if="!loading"></TodoList>
   </b-container>
 
 </template>
@@ -19,7 +19,12 @@
     props: ['todoListId'],
     components: {
       TodoList
-    }
+    },
+    computed: {
+      loading() {
+        return this.$store.getters.getLoadingState;
+      }
+    },
   };
 
 </script>

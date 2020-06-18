@@ -5,11 +5,19 @@
 
         <div class="todo-list">
 
-            <h1 class="todo-list-title mb-4" v-if="list.listTitle">{{ list.listTitle }}</h1>
+            <h1 class="todo-list-title mb-4" @click="showTitleEditor" v-if="!editingTitle">{{ list.listTitle }}</h1>
 
             <b-row>
 
                 <b-col md="8" class="mb-3">
+
+                    <b-form class="list-title-editor" v-if="editingTitle" @submit.prevent="updateListTitle">
+                        <b-form-group>
+                            <b-form-input ref="listTitleInput" v-model="form.title" id="title" maxlength="50" required></b-form-input>
+                        </b-form-group>
+
+                        <b-button variant="success" type="submit" class="mb-3">Save</b-button>
+                    </b-form>
 
                     <TodoListItems
                         :listId="todoListId"
@@ -57,13 +65,16 @@
         props: ['todoListId'],
         data() {
             return {
-                items: []
+                items: [],
+                editingTitle: false,
+                form: {
+                    title: '',
+                }
             }
         },
-        created() {
-            this.$store.dispatch('loadItemsByListId', { todoListId: this.todoListId }).then(() => {
-                this.items = this.getItems();
-            });
+        async created() {
+            await this.$store.dispatch('loadItemsByListId', { todoListId: this.todoListId });
+            this.items = this.getItems();
         },
         beforeUpdate() {
             var confettiSettings = { target: 'confetti' };
@@ -90,6 +101,25 @@
         methods: {
             getItems() {
                 return this.$store.getters.getItemsByListId(this.todoListId);
+            },
+            showTitleEditor() {
+                this.editingTitle = true;
+
+                this.$nextTick(() => {
+                    this.$refs.listTitleInput.focus();
+                });
+
+                this.form.title = this.list.listTitle;
+            },
+            async updateListTitle() {
+                this.editingTitle = false;
+
+                await this.$store.dispatch('updateListTitle', {
+                    listId: this.todoListId,
+                    listTitle: this.form.title
+                });
+
+                this.form.title = '';
             }
         },
     }

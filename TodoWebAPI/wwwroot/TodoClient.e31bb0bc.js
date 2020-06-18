@@ -19025,7 +19025,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const todoLists = {
   state: () => ({
     todoLists: [],
-    contributors: []
+    contributors: [],
+    loading: false
   }),
   mutations: {
     updateTodoLists(state, data) {
@@ -19042,16 +19043,35 @@ const todoLists = {
       updatedList.completed = listCompletedState;
 
       _vue.default.set(state.todoLists, index, updatedList);
+    },
+
+    updateListTitle(state, {
+      listId,
+      listTitle
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === listId);
+      state.todoLists[index].listTitle = listTitle;
+    },
+
+    updateLoadingState(state, {
+      loadingState
+    }) {
+      state.loading = loadingState;
     }
 
   },
   actions: {
-    loadTodoLists(context) {
-      (0, _axios.default)({
+    async loadTodoLists(context) {
+      context.commit('updateLoadingState', {
+        loadingState: true
+      });
+      const response = await (0, _axios.default)({
         method: 'GET',
         url: 'api/lists'
-      }).then(response => {
-        context.commit('updateTodoLists', response.data);
+      });
+      context.commit('updateTodoLists', response.data);
+      context.commit('updateLoadingState', {
+        loadingState: false
       });
     },
 
@@ -19103,6 +19123,22 @@ const todoLists = {
           resolve();
         });
       });
+    },
+
+    async updateListTitle(context, {
+      listId,
+      listTitle
+    }) {
+      await (0, _axios.default)({
+        method: 'PUT',
+        url: "api/lists/".concat(listId),
+        data: JSON.stringify({
+          listTitle
+        }),
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
     }
 
   },
@@ -19117,7 +19153,16 @@ const todoLists = {
 
     getTodoListById: state => todoListId => {
       return state.todoLists.find(list => list.id === todoListId);
+    },
+    getTodoListTitle: state => todoListId => {
+      let title = state.todoLists.find(list => list.id === todoListId).listTitle;
+      return title;
+    },
+
+    getLoadingState(state) {
+      return state.loading;
     }
+
   }
 };
 var _default = todoLists;
@@ -19172,19 +19217,14 @@ const todoLists = {
 
   },
   actions: {
-    loadItemsByListId(context, payload) {
-      return new Promise((resolve, reject) => {
-        (0, _axios.default)({
-          method: 'GET',
-          url: "api/lists/".concat(payload.todoListId, "/todos")
-        }).then(response => {
-          context.commit('setItems', {
-            listId: payload.todoListId,
-            items: response.data
-          });
-        }).finally(() => {
-          resolve();
-        });
+    async loadItemsByListId(context, payload) {
+      const response = await (0, _axios.default)({
+        method: 'GET',
+        url: "api/lists/".concat(payload.todoListId, "/todos")
+      });
+      context.commit('setItems', {
+        listId: payload.todoListId,
+        items: response.data
       });
     },
 
@@ -38844,22 +38884,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   name: "TodoList",
   props: ['todoListId'],
 
   data() {
     return {
-      items: []
+      items: [],
+      editingTitle: false,
+      form: {
+        title: ''
+      }
     };
   },
 
-  created() {
-    this.$store.dispatch('loadItemsByListId', {
+  async created() {
+    await this.$store.dispatch('loadItemsByListId', {
       todoListId: this.todoListId
-    }).then(() => {
-      this.items = this.getItems();
     });
+    this.items = this.getItems();
   },
 
   beforeUpdate() {
@@ -38893,6 +38944,23 @@ var _default = {
   methods: {
     getItems() {
       return this.$store.getters.getItemsByListId(this.todoListId);
+    },
+
+    showTitleEditor() {
+      this.editingTitle = true;
+      this.$nextTick(() => {
+        this.$refs.listTitleInput.focus();
+      });
+      this.form.title = this.list.listTitle;
+    },
+
+    async updateListTitle() {
+      this.editingTitle = false;
+      await this.$store.dispatch('updateListTitle', {
+        listId: this.todoListId,
+        listTitle: this.form.title
+      });
+      this.form.title = '';
     }
 
   }
@@ -38920,10 +38988,15 @@ exports.default = _default;
       "div",
       { staticClass: "todo-list" },
       [
-        _vm.list.listTitle
-          ? _c("h1", { staticClass: "todo-list-title mb-4" }, [
-              _vm._v(_vm._s(_vm.list.listTitle))
-            ])
+        !_vm.editingTitle
+          ? _c(
+              "h1",
+              {
+                staticClass: "todo-list-title mb-4",
+                on: { click: _vm.showTitleEditor }
+              },
+              [_vm._v(_vm._s(_vm.list.listTitle))]
+            )
           : _vm._e(),
         _vm._v(" "),
         _c(
@@ -38933,6 +39006,54 @@ exports.default = _default;
               "b-col",
               { staticClass: "mb-3", attrs: { md: "8" } },
               [
+                _vm.editingTitle
+                  ? _c(
+                      "b-form",
+                      {
+                        staticClass: "list-title-editor",
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.updateListTitle($event)
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "b-form-group",
+                          [
+                            _c("b-form-input", {
+                              ref: "listTitleInput",
+                              attrs: {
+                                id: "title",
+                                maxlength: "50",
+                                required: ""
+                              },
+                              model: {
+                                value: _vm.form.title,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "title", $$v)
+                                },
+                                expression: "form.title"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "b-button",
+                          {
+                            staticClass: "mb-3",
+                            attrs: { variant: "success", type: "submit" }
+                          },
+                          [_vm._v("Save")]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("TodoListItems", {
                   attrs: { listId: _vm.todoListId, todoListItems: _vm.items }
                 }),
@@ -39033,6 +39154,12 @@ var _default = {
   props: ['todoListId'],
   components: {
     TodoList: _TodoList.default
+  },
+  computed: {
+    loading() {
+      return this.$store.getters.getLoadingState;
+    }
+
   }
 };
 exports.default = _default;
@@ -39064,7 +39191,9 @@ exports.default = _default;
         1
       ),
       _vm._v(" "),
-      _c("TodoList", { attrs: { todoListId: _vm.todoListId } })
+      !_vm.loading
+        ? _c("TodoList", { attrs: { todoListId: _vm.todoListId } })
+        : _vm._e()
     ],
     1
   )
@@ -39402,13 +39531,17 @@ var _default = {
     Header: _Header.default
   },
 
-  beforeCreate() {
-    this.$store.dispatch('loadTodoLists');
+  async beforeCreate() {
+    await this.$store.dispatch('loadTodoLists');
   },
 
   mounted() {
     this.$store.state.connection.start().catch(err => console.error(err.toString()));
     this.$store.state.connection.on("InvitationSent", list => this.$store.dispatch('loadTodoLists'));
+    this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) => this.$store.commit('updateListTitle', {
+      listId,
+      listTitle
+    }));
     this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.$store.commit('setTodoListCompletedState', {
       listId,
       listCompletedState
@@ -88811,7 +88944,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56086" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53226" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
