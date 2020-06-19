@@ -58,7 +58,7 @@ namespace TodoWebAPI.Controllers
             };
 
             var todoItem = await _mediator.Send(command);
-                
+
             return Ok();
         }
 
@@ -67,12 +67,12 @@ namespace TodoWebAPI.Controllers
         {
             var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
             var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-            
+
             var list = await _dapperQuery.GetListAsync(listId);
 
             var todoListAuthorization = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorization.IsUserAuthorized())
+            if (todoListAuthorization.IsUserAuthorized())
             {
                 var items = await _dapperQuery.GetAllTodoItemsAsync(listId);
                 return Ok(items);
@@ -81,32 +81,25 @@ namespace TodoWebAPI.Controllers
             return Forbid();
         }
 
-        [HttpPut("api/lists/{listId}/todos/{todoId}")]
-        public async Task<IActionResult> EditTodo(Guid listId, Guid todoId, [FromBody] EditItem todo)
+        [HttpPut("api/lists/{listId}/todos/{itemId}")]
+        public async Task<IActionResult> EditTodo(Guid listId, Guid itemId, [FromBody] EditItemViewModel editItem)
         {
-            var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
-            var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
-            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            var email = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
 
-            todo.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-            todo.Id = todoId;
-
-            var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-
-            var list = await _dapperQuery.GetListAsync(listId);
-
-            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
-
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            var item = new EditItem()
             {
-                if(todo.DueDate.HasValue && !accountPlanAuthorization.CanAddDueDate())
-                    return BadRequest();
+                AccountId = accountId,
+                Email = email,
+                ListId = listId,
+                ItemId = itemId,
+                Name = editItem.Name,
+                Notes = editItem.Notes,
+                DueDate = editItem.DueDate,
+            };
 
-                await _mediator.Send(todo);
-                return Ok();
-            }
-
-            return Forbid();
+            await _mediator.Send(item);
+            return Ok();
         }
 
         [HttpPut("api/lists/{listId}/todos/{todoId}/completed")]
@@ -121,7 +114,7 @@ namespace TodoWebAPI.Controllers
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 await _mediator.Send(itemCompletedState);
                 return Ok();
@@ -134,12 +127,12 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> GetLayout(Guid listId, Guid todoItemId)
         {
             var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-            
+
             var list = await _dapperQuery.GetListAsync(listId);
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 var layout = await _dapperQuery.GetTodoItemLayoutAsync(todoItemId);
                 return Ok(layout);
@@ -152,12 +145,12 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> UpdateLayout(Guid listId, Guid todoId, [FromBody] ItemLayout itemLayout)
         {
             var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-            
+
             var list = await _dapperQuery.GetListAsync(listId);
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 itemLayout.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
                 itemLayout.ItemId = todoId;
@@ -173,12 +166,12 @@ namespace TodoWebAPI.Controllers
         public async Task<IActionResult> TrashItem(Guid listId, Guid todoId)
         {
             var userEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-            
+
             var list = await _dapperQuery.GetListAsync(listId);
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
