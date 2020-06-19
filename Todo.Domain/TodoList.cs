@@ -50,18 +50,18 @@ namespace Todo.Domain
             if (Completed && !itemsCompleted)
             {
                 Completed = false;
-                DomainEvents.Add(new TodoListCompletedStateChanged { List = this});
-            } 
-            else if(!Completed && itemsCompleted)
+                DomainEvents.Add(new TodoListCompletedStateChanged { List = this });
+            }
+            else if (!Completed && itemsCompleted)
             {
                 Completed = true;
                 DomainEvents.Add(new TodoListCompletedStateChanged { List = this });
             }
         }
 
-        public void StoreColaborator(string email, Guid accountId)
+        public void StoreColaborator(string email, Guid senderAccountId)
         {
-            DomainEvents.Add(new InvitationSent { List = this, Email = email, AccountId =  accountId});
+            DomainEvents.Add(new InvitationSent { List = this, Email = email, SenderAccountId = senderAccountId });
         }
 
         public void AddCollaborator(string email)
@@ -76,4 +76,3 @@ namespace Todo.Domain
         }
     }
 }
- 

@@ -8,8 +8,8 @@ namespace Todo.Domain
 {
     public class InvitationSent : INotification
     {
+        public Guid SenderAccountId { get; set; }
         public TodoList List { get; set; }
         public string Email { get; set; }
-        public Guid AccountId { get; set; }
     }
 }
