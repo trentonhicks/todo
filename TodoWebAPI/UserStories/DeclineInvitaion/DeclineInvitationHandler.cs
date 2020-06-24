@@ -6,7 +6,7 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.UserStories
 {
-    public class DeclineInvitationHandler : INotificationHandler<DeclineInvitation>
+    public class DeclineInvitationHandler : AsyncRequestHandler<DeclineInvitation>
     {
         private readonly ITodoListRepository _listRepository;
 
@@ -14,9 +14,10 @@ namespace TodoWebAPI.UserStories
         {
             _listRepository = listRepository;
         }
-        public async Task Handle(DeclineInvitation notification, CancellationToken cancellationToken)
+
+        protected override async Task Handle(DeclineInvitation request, CancellationToken cancellationToken)
         {
-            await _listRepository.AddDeclinedRowToAccountsListsAsync(notification.AccountId, notification.ListId);
+            await _listRepository.AddDeclinedRowToAccountsListsAsync(request.AccountId, request.ListId);
             await _listRepository.SaveChangesAsync();
         }
     }

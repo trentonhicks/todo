@@ -51,7 +51,7 @@ namespace TodoWebAPI.UserStories.SendInvitation
                         return false;
 
                     await _todoListRepository.AddInvitedRowToAccountListsAsync(invitee.Id, request.ListId);
-                    list.StoreContributor(request.InviteeEmail, request.SenderAccountId);
+                    
                     await _todoListRepository.SaveChangesAsync();
 
                     return true;

@@ -14,6 +14,7 @@ namespace Todo.Domain.Repositories
         Task AddInvitedRowToAccountListsAsync(Guid accountId, Guid listId);
         Task AddContributorRowToAccountsListsAsync(Guid accountId, Guid listId);
         Task AddDeclinedRowToAccountsListsAsync(Guid accountId, Guid listId);
+        Task AddLeftRowToAccountsListsAsync(Guid accountId, Guid listId);
         void UpdateListAsync(TodoList list);
     }
 }

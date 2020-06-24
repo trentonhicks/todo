@@ -3,7 +3,7 @@ using MediatR;
 
 namespace TodoWebAPI.UserStories
 {
-    public class AcceptInvitaion : INotification
+    public class AcceptInvitaion : IRequest
     {
         public Guid ListId {get; set;}
         public Guid AccountId {get; set;}

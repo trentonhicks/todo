@@ -10,7 +10,7 @@ using TodoWebAPI.SignalR;
 
 namespace TodoWebAPI.DomainEventHandlers.Invitation
 {
-    public class SendInvitationToClientWhenInvitaionIsSent : INotificationHandler<InvitationSent>
+    public class SendInvitationToClientWhenInvitaionIsSent : INotificationHandler<InvitationAccepted>
     {
         private readonly IHubContext<NotificationHub> _hubContext;
 
@@ -18,7 +18,7 @@ namespace TodoWebAPI.DomainEventHandlers.Invitation
         {
             _hubContext = hubContext;
         }
-        public Task Handle(InvitationSent notification, CancellationToken cancellationToken)
+        public Task Handle(InvitationAccepted notification, CancellationToken cancellationToken)
         {
             return _hubContext.Clients.Users(notification.List.Contributors).SendAsync("InvitationSent", notification.List);
         }
