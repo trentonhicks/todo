@@ -96,5 +96,18 @@ namespace TodoWebAPI.Data
             _context.AccountsLists.Add(accountsLists);
             return Task.CompletedTask;
         }
+
+        public Task AddDeclinedRowToAccountsListsAsync(Guid accountId, Guid listId)
+        {
+            var accountsLists = new RoleDecline()
+            {
+                AccountId = accountId,
+                ListId = listId,
+            }
+            accountsLists.Decline();
+
+            _context.AccountsLists.Add(accountsLists);
+            return Task.CompletedTask;
+        }
     }
 }
