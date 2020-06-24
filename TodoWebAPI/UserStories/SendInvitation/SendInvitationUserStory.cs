@@ -46,14 +46,26 @@ namespace TodoWebAPI.UserStories.SendInvitation
                 if (accountPlanAuthorization.CanAddContributor(list))
                 {
                     var invitee = await _accountRepository.FindAccountByEmailAsync(request.InviteeEmail);
+                    var inviteeAccountsListsLeft = await _accountsListsRepository.FindAccountsListsLeftByAccountIdAsync(invitee.Id, request.ListId);
+                    var inviteeAccountsListsDeclined = await _accountsListsRepository.FindAccountsListsDeclinedByAccountIdAsync(invitee.Id, request.ListId);
 
                     if (list.DoesContributorExist(invitee.Email))
                         return false;
 
-                    await _accountsListsRepository.AddAccountsListsInvitedAsync(invitee.Id, request.ListId);
+                    if (inviteeAccountsListsDeclined != null)
+                    {
+                        inviteeAccountsListsDeclined.MakeInvited();
+                    }
+                    else if (inviteeAccountsListsLeft != null)
+                    {
+                        inviteeAccountsListsLeft.MakeInvited();
+                    }
+                    else
+                    {
+                        await _accountsListsRepository.AddAccountsListsInvitedAsync(invitee.Id, request.ListId);
+                    }
 
                     await _todoListRepository.SaveChangesAsync();
-
                     return true;
                 }
             }

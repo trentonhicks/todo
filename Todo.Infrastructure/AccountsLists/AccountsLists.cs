@@ -59,12 +59,20 @@ namespace Todo.Infrastructure
         {
             base.Role = Roles.Declined;
         }
+        public void MakeInvited()
+        {
+            base.Role = Roles.Invited;
+        }
     }
     public class RoleLeft : AccountsLists
     {
         public void Left()
         {
             base.Role = Roles.Left;
+        }
+        public void MakeInvited()
+        {
+            base.Role = Roles.Invited;
         }
     }
 }
