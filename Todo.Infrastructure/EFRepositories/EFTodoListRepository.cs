@@ -90,8 +90,34 @@ namespace TodoWebAPI.Data
             {
                 AccountId = accountId,
                 ListId = listId,
-            }
+            };
             accountsLists.Contributed();
+
+            _context.AccountsLists.Add(accountsLists);
+            return Task.CompletedTask;
+        }
+
+        public Task AddDeclinedRowToAccountsListsAsync(Guid accountId, Guid listId)
+        {
+            var accountsLists = new RoleDecline()
+            {
+                AccountId = accountId,
+                ListId = listId,
+            };
+            accountsLists.Decline();
+
+            _context.AccountsLists.Add(accountsLists);
+            return Task.CompletedTask;
+        }
+
+        public Task AddLeftRowToAccountsListsAsync(Guid accountId, Guid listId)
+        {
+           var accountsLists = new RoleLeft()
+            {
+                AccountId = accountId,
+                ListId = listId,
+            };
+            accountsLists.Left();
 
             _context.AccountsLists.Add(accountsLists);
             return Task.CompletedTask;

@@ -6,7 +6,7 @@ using Todo.Domain;
 
 namespace Todo.Domain
 {
-    public class InvitationSent : INotification
+    public class InvitationAccepted : INotification
     {
         public Guid SenderAccountId { get; set; }
         public TodoList List { get; set; }

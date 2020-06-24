@@ -48,4 +48,11 @@ namespace Todo.Infrastructure
             base.Role = Roles.Declined;
         }
     }
+    public class RoleLeft : AccountsLists
+    {
+        public void Left()
+        {
+            base.Role = Roles.Left;
+        }
+    }
 }

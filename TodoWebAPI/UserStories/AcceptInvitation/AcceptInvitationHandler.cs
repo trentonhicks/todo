@@ -6,7 +6,7 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.UserStories
 {
-    public class AcceptInvitationHandler : INotificationHandler<AcceptInvitaion>
+    public class AcceptInvitationHandler : AsyncRequestHandler<AcceptInvitaion>
     {
         private readonly ITodoListRepository _listRepository;
         private readonly IAccountRepository _accountRepository;
@@ -18,14 +18,17 @@ namespace TodoWebAPI.UserStories
             _accountRepository = accountRepository;
             _accountPlan = accountPlan;
         }
-        public async Task Handle(AcceptInvitaion notification, CancellationToken cancellationToken)
-        {
-            var accountPlan = await _accountPlan.FindAccountPlanByAccountIdAsync(notification.AccountId);
 
-            await _listRepository.AddContributorRowToAccountsListsAsync(notification.ListId, notification.AccountId);
+        protected override async Task Handle(AcceptInvitaion request, CancellationToken cancellationToken)
+        {
+            var accountPlan = await _accountPlan.FindAccountPlanByAccountIdAsync(request.AccountId);
+            var account = await _accountRepository.FindAccountByIdAsync(request.AccountId);
+            var list = await _listRepository.FindTodoListIdByIdAsync(request.ListId);
+
+            await _listRepository.AddContributorRowToAccountsListsAsync(request.ListId, request.AccountId);
 
             accountPlan.IncrementListCount();
-
+            list.StoreContributor(account.Email, request.AccountId);
             await _listRepository.SaveChangesAsync();
         }
     }
