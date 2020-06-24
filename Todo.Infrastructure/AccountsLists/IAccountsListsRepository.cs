@@ -5,6 +5,6 @@ namespace Todo.Infrastructure
 {
     public interface IAccountsListsRepository
     {
-        Task<AccountLists> FindAccountsListsByAccountIdAsync(Guid listId);
+        Task<AccountsLists> FindAccountsListsByAccountIdAsync(Guid listId);
     }
 }

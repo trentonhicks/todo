@@ -25,13 +25,16 @@ namespace TodoWebAPI.Data
         public Task AddTodoListAsync(TodoList todoList, Guid accountId)
         {
             _context.TodoLists.Add(todoList);
-            var accountLists = new AccountLists
+            var accountLists = new RoleOwner()
             {
+                Id = _idGenerator.NextId(),
                 AccountId = accountId,
                 ListId = todoList.Id,
-                Role = Roles.Owner
             };
-            _context.AccountLists.Add(accountLists);
+
+            accountLists.Owned();
+
+            _context.AccountsLists.Add(accountLists);
             return Task.CompletedTask;
         }
 
@@ -63,14 +66,16 @@ namespace TodoWebAPI.Data
 
         public Task AddRowToAccountListsAsync(Guid accountId, Guid listId)
         {
-            var accountLists = new AccountLists
+            var accountLists = new RoleInvited()
             {
                 AccountId = accountId,
                 ListId = listId,
-                Role = Roles.Contributer
+                Id = _idGenerator.NextId()
             };
 
-            _context.AccountLists.Add(accountLists);
+            accountLists.Invited();
+
+            _context.AccountsLists.Add(accountLists);
             return Task.CompletedTask;
         }
 

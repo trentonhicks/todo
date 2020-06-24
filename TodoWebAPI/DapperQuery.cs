@@ -42,8 +42,8 @@ namespace TodoWebAPI
 
                 var contributorsResult = await connection.QueryAsync<AccountContributorsPresentation>(@"
                     select distinct a.FullName, a.PictureUrl, a.Email
-                    from AccountLists al
-                    INNER JOIN (select ListID from AccountLists where AccountID = @accountId)
+                    from AccountsLists al
+                    INNER JOIN (select ListID from AccountsLists where AccountID = @accountId)
                     al2 ON al.ListID = al2.ListID
                     inner join Accounts a on a.ID = al.AccountID", new { accountId = accountId });
 
@@ -91,7 +91,7 @@ namespace TodoWebAPI
             {
                 await connection.OpenAsync();
 
-                var result = await connection.QueryAsync<TodoListModel>("SELECT * FROM TodoLists as t INNER JOIN AccountLists as a ON t.ID = a.ListID WHERE a.AccountID = @accountId", new { accountId = accountId });
+                var result = await connection.QueryAsync<TodoListModel>("SELECT t.ID, t.ListTitle, a.AccountID, t.Completed, t.Contributors, a.Role FROM TodoLists as t INNER JOIN AccountsLists as a ON t.ID = a.ListID WHERE a.AccountID = @accountId", new { accountId = accountId });
 
                 return result.ToList();
             }
@@ -146,7 +146,7 @@ namespace TodoWebAPI
             {
                 await connection.OpenAsync();
 
-                var result = await connection.QueryAsync<string>("SELECT Email FROM Accounts as a INNER JOIN AccountLists as l ON a.ID = l.AccountID and l.ListID = @listId", new { listId = listId });
+                var result = await connection.QueryAsync<string>("SELECT Email FROM Accounts as a INNER JOIN AccountsLists as l ON a.ID = l.AccountID and l.ListID = @listId", new { listId = listId });
                 return result.ToList();
             }
         }

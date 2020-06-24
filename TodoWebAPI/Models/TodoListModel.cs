@@ -11,5 +11,6 @@ namespace TodoWebAPI.Models
         public Guid AccountId { get; set; }
         public bool Completed { get; set; }
         public List<string> Contributors { get; set; }
+        public byte Role {get; set;}
     }
 }

@@ -16,9 +16,9 @@ namespace Todo.Infrastructure.EFRepositories
         {
             _context = context;
         }
-        public async Task<AccountLists> FindAccountsListsByAccountIdAsync(Guid accountId)
+        public async Task<AccountsLists> FindAccountsListsByAccountIdAsync(Guid accountId)
         {
-            return await _context.AccountLists
+            return await _context.AccountsLists
                 .Where(a => a.AccountId == accountId)
                 .FirstOrDefaultAsync();
         }

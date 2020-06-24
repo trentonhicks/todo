@@ -36,7 +36,7 @@ namespace Todo.Infrastructure
         public virtual DbSet<SubItem> SubItems { get; set; }
         public virtual DbSet<SubItemLayout> SubItemLayouts { get; set; }
         public virtual DbSet<AccountPlan> AccountsPlans { get; set; }
-        public virtual DbSet<AccountLists> AccountLists { get; set; }
+        public virtual DbSet<AccountsLists> AccountsLists { get; set; }
         public virtual DbSet<Plan> Plans { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -179,14 +179,13 @@ namespace Todo.Infrastructure
                     .HasColumnName("Completed");
             });
 
-            modelBuilder.Entity<AccountLists>(entity =>
-            {
-                entity
-                    .HasKey(o => new { o.AccountId, o.ListId });
-
-                entity
-                    .Property(e => e.Role).HasColumnName("Role");
-            });
+            modelBuilder.Entity<AccountsLists>()
+                .ToTable("AccountsLists")
+                .HasDiscriminator<byte>("Role")
+                .HasValue<RoleOwner>(Roles.Owner)
+                .HasValue<RoleContributor>(Roles.Contributer)
+                .HasValue<RoleInvited>(Roles.Invited)
+                .HasValue<RoleDecline>(Roles.Declined);
 
             modelBuilder.Entity<AccountPlan>(entity =>
             {
