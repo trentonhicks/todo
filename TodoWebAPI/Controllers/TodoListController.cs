@@ -10,6 +10,7 @@ using TodoWebAPI.Extentions;
 using TodoWebAPI.UserStories.SendInvitation;
 using Todo.Domain;
 using Todo.Domain.Repositories;
+using TodoWebAPI.UserStories;
 
 namespace TodoWebAPI.Controllers
 {
@@ -185,6 +186,23 @@ namespace TodoWebAPI.Controllers
                 return Ok();
 
             return BadRequest();
+        }
+
+        [HttpPost("api/lists/{listId}/accept")]
+        public async Task<IActionResult> AcceptInvitation(Guid listId, AcceptInvitaion command)
+        {
+            var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
+            var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+
+             var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
+
+            if (!accountPlanAuthorization.CanCreateList())
+                return BadRequest("Reached maximum number of lists allowed on your plan.");
+
+            var response = await _mediator.Send(command);
+
+           return Ok();
         }
     }
 }

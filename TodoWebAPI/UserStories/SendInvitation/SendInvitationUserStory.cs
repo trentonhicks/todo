@@ -50,7 +50,7 @@ namespace TodoWebAPI.UserStories.SendInvitation
                     if (list.DoesContributorExist(invitee.Email))
                         return false;
 
-                    await _todoListRepository.AddRowToAccountListsAsync(invitee.Id, request.ListId);
+                    await _todoListRepository.AddInvitedRowToAccountListsAsync(invitee.Id, request.ListId);
                     list.StoreContributor(request.InviteeEmail, request.SenderAccountId);
                     await _todoListRepository.SaveChangesAsync();
 

@@ -64,7 +64,7 @@ namespace TodoWebAPI.Data
            return _idGenerator.NextId();
         }
 
-        public Task AddRowToAccountListsAsync(Guid accountId, Guid listId)
+        public Task AddInvitedRowToAccountListsAsync(Guid accountId, Guid listId)
         {
             var accountLists = new RoleInvited()
             {
@@ -83,6 +83,18 @@ namespace TodoWebAPI.Data
         {
             _context.TodoLists.Update(list);
         }
-      
+
+        public Task AddContributorRowToAccountsListsAsync(Guid accountId, Guid listId)
+        {
+             var accountsLists = new RoleContributor()
+            {
+                AccountId = accountId,
+                ListId = listId,
+            }
+            accountsLists.Contributed();
+
+            _context.AccountsLists.Add(accountsLists);
+            return Task.CompletedTask;
+        }
     }
 }
