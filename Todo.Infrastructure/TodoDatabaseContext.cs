@@ -196,10 +196,6 @@ namespace Todo.Infrastructure
                 entity
                     .Property(e => e.ListCount)
                     .HasColumnName("ListCount");
-
-                entity
-                    .Property(e => e.ContributorCount)
-                    .HasColumnName("ContributorCount");
             });
 
             modelBuilder.Entity<Plan>(entity =>

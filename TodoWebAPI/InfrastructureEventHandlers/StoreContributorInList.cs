@@ -9,17 +9,17 @@ using Todo.Domain.Repositories;
 
 namespace TodoWebAPI.InfrastructureEventHandlers
 {
-    public class StoreCollaboratorInListHanlder : INotificationHandler<InvitationSent>
+    public class StoreContributorInList : INotificationHandler<InvitationSent>
     {
         private readonly ITodoListRepository _todoList;
 
-        public StoreCollaboratorInListHanlder(ITodoListRepository todoList)
+        public StoreContributorInList(ITodoListRepository todoList)
         {
             _todoList = todoList;
         }
         public async Task Handle(InvitationSent notification, CancellationToken cancellationToken)
         {
-            notification.List.AddCollaborator(notification.Email);
+            notification.List.AddContributor(notification.Email);
 
             _todoList.UpdateListAsync(notification.List);
 

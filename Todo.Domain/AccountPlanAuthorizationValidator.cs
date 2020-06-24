@@ -13,7 +13,7 @@ namespace Todo.Domain
             Plan = plan;
         }
         public bool CanCreateList() => AccountPlan.ListCount < Plan.MaxLists || Plan.MaxLists == -1;
-        public bool CanAddContributor() => AccountPlan.ContributorCount < Plan.MaxContributors || Plan.MaxContributors == -1;
+        public bool CanAddContributor(TodoList list) => list.GetContributorCountExcludingOwner() < Plan.MaxContributors || Plan.MaxContributors == -1;
         public bool CanAddDueDate() => Plan.CanAddDueDates;
     }
 }

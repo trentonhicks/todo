@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Todo.Domain.Repositories;
 using Todo.Domain.DomainEvents;
 using Todo.Domain;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.UserStories.SendInvitation
 {
@@ -16,48 +17,44 @@ namespace TodoWebAPI.UserStories.SendInvitation
         private readonly IAccountRepository _accountRepository;
         private readonly IAccountPlanRepository _accountPlanRepository;
         private readonly IPlanRepository _planRepository;
+        private readonly IAccountsListsRepository _accountsListsRepository;
 
         public SendInvitationUserStory(
             ITodoListRepository todoListRepository,
             IAccountRepository accountRepository,
             IAccountPlanRepository accountPlanRepository,
-            IPlanRepository planRepository)
+            IPlanRepository planRepository,
+            IAccountsListsRepository accountsListsRepository)
         {
             _todoListRepository = todoListRepository;
             _accountRepository = accountRepository;
             _accountPlanRepository = accountPlanRepository;
             _planRepository = planRepository;
+            _accountsListsRepository = accountsListsRepository;
         }
 
         public async Task<bool> Handle(SendInvitation request, CancellationToken cancellationToken)
         {
             var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(request.SenderAccountId);
             var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
+            var list = await _todoListRepository.FindTodoListIdByIdAsync(request.ListId);
+            var accountsLists = await _accountsListsRepository.FindAccountsListsByAccountIdAsync(request.SenderAccountId);
             var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
 
-            var list = await _todoListRepository.FindTodoListIdByIdAsync(request.ListId);
-            var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, request.SenderEmail);
-
-            if (todoListAuthorizationValidator.IsUserAuthorized())
+            if (accountsLists.UserIsOwner(request.SenderAccountId))
             {
-                if (accountPlanAuthorization.CanAddContributor())
+                if (accountPlanAuthorization.CanAddContributor(list))
                 {
-                    try
-                    {
-                        var invitee = await _accountRepository.FindAccountByEmailAsync(request.Email);
+                    var invitee = await _accountRepository.FindAccountByEmailAsync(request.Email);
 
-                        await _todoListRepository.AddRowToAccountListsAsync(invitee.Id, request.ListId);
-
-                        list.StoreColaborator(request.Email, request.SenderAccountId);
-
-                        await _todoListRepository.SaveChangesAsync();
-
-                        return true;
-                    }
-                    catch
-                    {
+                    if (list.Contributors.Exists(c => c == invitee.Email))
                         return false;
-                    }
+
+                    await _todoListRepository.AddRowToAccountListsAsync(invitee.Id, request.ListId);
+                    list.StoreContributor(request.Email, request.SenderAccountId);
+                    await _todoListRepository.SaveChangesAsync();
+
+                    return true;
                 }
             }
 

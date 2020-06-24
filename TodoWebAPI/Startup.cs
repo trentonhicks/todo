@@ -68,6 +68,7 @@ namespace TodoWebAPI
                 options => options.UseSqlServer(Configuration.GetConnectionString("Development"))
             );
             services.AddScoped<ITodoListRepository, EFTodoListRepository>();
+            services.AddScoped<IAccountsListsRepository, EFAccountsListsRepository>();
             services.AddScoped<ITodoListLayoutRepository, EFTodoListLayoutRepository>();
             services.AddScoped<ITodoListItemRepository, EFTodoListItemRepository>();
             services.AddScoped<IAccountRepository, EFAccountRepository>();
@@ -88,7 +89,7 @@ namespace TodoWebAPI
                 c.TimeZoneInfo = TimeZoneInfo.Local;
                 c.CronExpression = @"00 12 * * *";
             });
-            
+
 
             services.AddSignalR();
 

@@ -59,12 +59,12 @@ namespace Todo.Domain
             }
         }
 
-        public void StoreColaborator(string email, Guid senderAccountId)
+        public void StoreContributor(string email, Guid senderAccountId)
         {
             DomainEvents.Add(new InvitationSent { List = this, Email = email, SenderAccountId = senderAccountId });
         }
 
-        public void AddCollaborator(string email)
+        public void AddContributor(string email)
         {
             if (email == null)
                 return;
@@ -73,6 +73,11 @@ namespace Todo.Domain
         public void UpdateListName()
         {
             DomainEvents.Add(new ListNameUpdated { List = this });
+        }
+
+        public int GetContributorCountExcludingOwner()
+        {
+            return Contributors.Count - 1;
         }
     }
 }
