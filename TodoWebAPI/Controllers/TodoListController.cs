@@ -241,5 +241,22 @@ namespace TodoWebAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPost("api/lists/{listId}/email/removeContributor")]
+        public async Task<IActionResult> RemoveContributorFromList(Guid listId, string email)
+        {
+            var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+
+            var command = new RemoveContributorFromList
+            {
+                AccountId = accountId,
+                ListId = listId,
+                Email = email
+            };
+
+            await _mediator.Send(command);
+
+            return Ok();
+        }
     }
 }
