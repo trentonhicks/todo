@@ -37,6 +37,11 @@ namespace Todo.Infrastructure
         public virtual DbSet<SubItemLayout> SubItemLayouts { get; set; }
         public virtual DbSet<AccountPlan> AccountsPlans { get; set; }
         public virtual DbSet<AccountsLists> AccountsLists { get; set; }
+        public virtual DbSet<RoleInvited> AccountsListsInvited { get; set; }
+        public virtual DbSet<RoleDecline> AccountsListsDeclined { get; set; }
+        public virtual DbSet<RoleContributor> AccountsListsContributor { get; set; }
+        public virtual DbSet<RoleOwner> AccountsListsOwner { get; set; }
+        public virtual DbSet<RoleLeft> AccountsListsLeft { get; set; }
         public virtual DbSet<Plan> Plans { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -185,7 +190,8 @@ namespace Todo.Infrastructure
                 .HasValue<RoleOwner>(Roles.Owner)
                 .HasValue<RoleContributor>(Roles.Contributer)
                 .HasValue<RoleInvited>(Roles.Invited)
-                .HasValue<RoleDecline>(Roles.Declined);
+                .HasValue<RoleDecline>(Roles.Declined)
+                .HasValue<RoleLeft>(Roles.Left);
 
             modelBuilder.Entity<AccountPlan>(entity =>
             {

@@ -3,22 +3,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.UserStories
 {
     public class DeclineInvitationHandler : AsyncRequestHandler<DeclineInvitation>
     {
-        private readonly ITodoListRepository _listRepository;
+        private readonly IAccountsListsRepository _accountsListsRepository;
 
-        public DeclineInvitationHandler(ITodoListRepository listRepository)
+        public DeclineInvitationHandler(IAccountsListsRepository accountsListsRepository)
         {
-            _listRepository = listRepository;
+            _accountsListsRepository = accountsListsRepository;
         }
 
         protected override async Task Handle(DeclineInvitation request, CancellationToken cancellationToken)
         {
-            await _listRepository.AddDeclinedRowToAccountsListsAsync(request.AccountId, request.ListId);
-            await _listRepository.SaveChangesAsync();
+            var accountsLists = await _accountsListsRepository.FindAccountsListsInvitedByAccountIdAsync(request.AccountId, request.ListId);
+            accountsLists.MakeDeclined();
+
+            await _accountsListsRepository.SaveChangesAsync();
         }
     }
 }

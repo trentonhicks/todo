@@ -38,7 +38,7 @@ namespace TodoWebAPI.UserStories.SendInvitation
             var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(request.SenderAccountId);
             var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
             var list = await _todoListRepository.FindTodoListIdByIdAsync(request.ListId);
-            var accountsLists = await _accountsListsRepository.FindAccountsListsByAccountIdAsync(request.SenderAccountId);
+            var accountsLists = await _accountsListsRepository.FindAccountsListsByAccountIdAsync(request.SenderAccountId, request.ListId);
             var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
 
             if (accountsLists.UserIsOwner(request.SenderAccountId))
@@ -50,8 +50,8 @@ namespace TodoWebAPI.UserStories.SendInvitation
                     if (list.DoesContributorExist(invitee.Email))
                         return false;
 
-                    await _todoListRepository.AddInvitedRowToAccountListsAsync(invitee.Id, request.ListId);
-                    
+                    await _accountsListsRepository.AddAccountsListsInvitedAsync(invitee.Id, request.ListId);
+
                     await _todoListRepository.SaveChangesAsync();
 
                     return true;

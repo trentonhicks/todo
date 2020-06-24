@@ -61,66 +61,12 @@ namespace TodoWebAPI.Data
 
         public Guid NextId()
         {
-           return _idGenerator.NextId();
-        }
-
-        public Task AddInvitedRowToAccountListsAsync(Guid accountId, Guid listId)
-        {
-            var accountLists = new RoleInvited()
-            {
-                AccountId = accountId,
-                ListId = listId,
-                Id = _idGenerator.NextId()
-            };
-
-            accountLists.Invited();
-
-            _context.AccountsLists.Add(accountLists);
-            return Task.CompletedTask;
+            return _idGenerator.NextId();
         }
 
         public void UpdateListAsync(TodoList list)
         {
             _context.TodoLists.Update(list);
-        }
-
-        public Task AddContributorRowToAccountsListsAsync(Guid accountId, Guid listId)
-        {
-             var accountsLists = new RoleContributor()
-            {
-                AccountId = accountId,
-                ListId = listId,
-            };
-            accountsLists.Contributed();
-
-            _context.AccountsLists.Add(accountsLists);
-            return Task.CompletedTask;
-        }
-
-        public Task AddDeclinedRowToAccountsListsAsync(Guid accountId, Guid listId)
-        {
-            var accountsLists = new RoleDecline()
-            {
-                AccountId = accountId,
-                ListId = listId,
-            };
-            accountsLists.Decline();
-
-            _context.AccountsLists.Add(accountsLists);
-            return Task.CompletedTask;
-        }
-
-        public Task AddLeftRowToAccountsListsAsync(Guid accountId, Guid listId)
-        {
-           var accountsLists = new RoleLeft()
-            {
-                AccountId = accountId,
-                ListId = listId,
-            };
-            accountsLists.Left();
-
-            _context.AccountsLists.Add(accountsLists);
-            return Task.CompletedTask;
         }
     }
 }

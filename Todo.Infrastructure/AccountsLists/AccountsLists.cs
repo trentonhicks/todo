@@ -14,7 +14,7 @@ namespace Todo.Infrastructure
         public Guid ListId { get; set; }
         public byte Role { get; protected set; }
         public bool UserIsOwner(Guid accountId) => AccountId == accountId && Role == Roles.Owner;
-        private protected AccountsLists() {}
+        private protected AccountsLists() { }
     }
 
     public class RoleInvited : AccountsLists
@@ -22,6 +22,14 @@ namespace Todo.Infrastructure
         public void Invited()
         {
             base.Role = Roles.Invited;
+        }
+        public void MakeContributor()
+        {
+            base.Role = Roles.Contributer;
+        }
+        public void MakeDeclined()
+        {
+            base.Role = Roles.Declined;
         }
     }
 
@@ -38,6 +46,10 @@ namespace Todo.Infrastructure
         public void Contributed()
         {
             base.Role = Roles.Contributer;
+        }
+        public void MakeLeft()
+        {
+            base.Role = Roles.Left;
         }
     }
 

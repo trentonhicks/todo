@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Todo.Domain.Repositories;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI.UserStories
 {
@@ -11,12 +12,18 @@ namespace TodoWebAPI.UserStories
         private readonly ITodoListRepository _listRepository;
         private readonly IAccountPlanRepository _accountPlanRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IAccountsListsRepository _accountsListsRepository;
 
-        public RemoveSelfFromListHandler(ITodoListRepository listRepository, IAccountPlanRepository accountPlanRepository, IAccountRepository accountRepository)
+        public RemoveSelfFromListHandler(
+            ITodoListRepository listRepository,
+            IAccountPlanRepository accountPlanRepository,
+            IAccountRepository accountRepository,
+            IAccountsListsRepository accountsListsRepository)
         {
             _listRepository = listRepository;
             _accountPlanRepository = accountPlanRepository;
             _accountRepository = accountRepository;
+            _accountsListsRepository = accountsListsRepository;
         }
 
         protected override async Task Handle(RemoveSelfFromList request, CancellationToken cancellationToken)
@@ -29,7 +36,8 @@ namespace TodoWebAPI.UserStories
 
             _listRepository.UpdateListAsync(list);
 
-            await _listRepository.AddLeftRowToAccountsListsAsync(request.AccountId, request.ListId);
+            var accountsLists = await _accountsListsRepository.FindAccountsListsContributorByAccountIdAsync(request.AccountId, request.ListId);
+            accountsLists.MakeLeft();
 
             accountPlan.DecrementListCount();
 
