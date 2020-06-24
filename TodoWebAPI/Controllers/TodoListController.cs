@@ -189,20 +189,25 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("api/lists/{listId}/accept")]
-        public async Task<IActionResult> AcceptInvitation(Guid listId, AcceptInvitaion command)
+        public async Task<IActionResult> AcceptInvitation(Guid listId)
         {
             var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(User.ReadClaimAsGuidValue("urn:codefliptodo:accountid"));
             var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
             var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
 
-             var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
+            var command = new AcceptInvitaion()
+            {
+                AccountId = accountId,
+                ListId = listId
+            };
 
             if (!accountPlanAuthorization.CanCreateList())
                 return BadRequest("Reached maximum number of lists allowed on your plan.");
 
             var response = await _mediator.Send(command);
 
-           return Ok();
+            return Ok();
         }
     }
 }

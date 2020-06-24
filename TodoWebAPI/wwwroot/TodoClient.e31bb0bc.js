@@ -19066,6 +19066,14 @@ const todoLists = {
       loadingState
     }) {
       state.loading = loadingState;
+    },
+
+    changeUserRoleByListId(state, {
+      listId,
+      role
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === listId);
+      state.todoLists[index].role = role;
     }
 
   },
@@ -19148,6 +19156,23 @@ const todoLists = {
           'content-type': 'application/json'
         }
       });
+    },
+
+    async acceptInvitation(context, {
+      listId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/accept")
+        });
+        context.commit('changeUserRoleByListId', {
+          listId,
+          role: 2
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
 
   },
@@ -22890,17 +22915,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
-  props: ['todoList', 'contributors'],
+  props: ["todoList", "contributors"],
   components: {
     Contributors: _Contributors.default
   },
   methods: {
     deleteTodoList() {
-      this.$store.dispatch('deleteTodoList', {
+      this.$store.dispatch("deleteTodoList", {
         listId: this.todoList.id
       });
-    }
+    },
+
+    async acceptInvitation() {
+      this.$store.dispatch("acceptInvitation", {
+        listId: this.todoList.id
+      });
+    },
+
+    async declineInvitation() {}
 
   }
 };
@@ -22917,73 +22958,109 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "b-card",
-    { staticClass: "todo-list-preview bg-light", attrs: { "no-body": "" } },
-    [
-      _c(
-        "b-card-body",
-        { staticClass: "todo-list-preview-content" },
+  return _vm.todoList.role != 1
+    ? _c(
+        "b-card",
+        { staticClass: "todo-list-preview bg-light", attrs: { "no-body": "" } },
         [
-          _c("b-card-title", { staticClass: "todo-list-preview-title" }, [
-            _vm._v(_vm._s(_vm.todoList.listTitle))
-          ]),
-          _vm._v(" "),
           _c(
-            "b-badge",
-            {
-              staticClass: "todo-list-preview-status",
-              class: {
-                "badge-success": _vm.todoList.completed,
-                "badge-secondary": !_vm.todoList.completed
-              },
-              attrs: { pill: "" }
-            },
+            "b-card-body",
+            { staticClass: "todo-list-preview-content" },
             [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.todoList.completed ? "Completed" : "In Progress") +
-                  "\n        "
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("Contributors", {
-            staticClass: "todo-list-preview-contributors",
-            attrs: {
-              todoListContributors: _vm.todoList.contributors,
-              accountContributors: _vm.contributors
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "todo-list-preview-options" },
-            [
-              _c(
-                "b-button-group",
-                [
-                  _c(
-                    "b-button",
+              _c("b-card-title", { staticClass: "todo-list-preview-title" }, [
+                _vm._v(_vm._s(_vm.todoList.listTitle))
+              ]),
+              _vm._v(" "),
+              _vm.todoList.role == 2 || _vm.todoList.role == 3
+                ? _c(
+                    "b-badge",
                     {
-                      attrs: { variant: "info" },
-                      on: {
-                        click: function($event) {
-                          return _vm.$router.push("/lists/" + _vm.todoList.id)
-                        }
-                      }
+                      staticClass: "todo-list-preview-status",
+                      class: {
+                        "badge-success": _vm.todoList.completed,
+                        "badge-secondary": !_vm.todoList.completed
+                      },
+                      attrs: { pill: "" }
                     },
-                    [_vm._v("View")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "b-button",
-                    {
-                      attrs: { variant: "danger" },
-                      on: { click: _vm.deleteTodoList }
-                    },
-                    [_vm._v("Delete")]
+                    [
+                      _vm._v(
+                        _vm._s(
+                          _vm.todoList.completed ? "Completed" : "In Progress"
+                        )
+                      )
+                    ]
                   )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("Contributors", {
+                staticClass: "todo-list-preview-contributors",
+                attrs: {
+                  todoListContributors: _vm.todoList.contributors,
+                  accountContributors: _vm.contributors
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "todo-list-preview-options" },
+                [
+                  _vm.todoList.role == 0
+                    ? _c(
+                        "b-button-group",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "info" },
+                              on: { click: _vm.acceptInvitation }
+                            },
+                            [_vm._v("Accept")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "danger" },
+                              on: { click: _vm.declineInvitation }
+                            },
+                            [_vm._v("Decline")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.todoList.role == 2 || _vm.todoList.role == 3
+                    ? _c(
+                        "b-button-group",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "info" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.$router.push(
+                                    "/lists/" + _vm.todoList.id
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v("View")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "danger" },
+                              on: { click: _vm.deleteTodoList }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e()
                 ],
                 1
               )
@@ -22993,9 +23070,7 @@ exports.default = _default;
         ],
         1
       )
-    ],
-    1
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -88982,7 +89057,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63402" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58674" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
