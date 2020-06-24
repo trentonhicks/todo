@@ -19173,6 +19173,40 @@ const todoLists = {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    async declineInvitation(context, {
+      listId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/decline")
+        });
+        context.commit('changeUserRoleByListId', {
+          listId,
+          role: 1
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async leaveTodoList(context, {
+      listId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/removeself")
+        });
+        context.commit('changeUserRoleByListId', {
+          listId,
+          role: 4
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
 
   },
@@ -22923,6 +22957,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ["todoList", "contributors"],
   components: {
@@ -22936,12 +22981,22 @@ var _default = {
     },
 
     async acceptInvitation() {
-      this.$store.dispatch("acceptInvitation", {
+      await this.$store.dispatch("acceptInvitation", {
         listId: this.todoList.id
       });
     },
 
-    async declineInvitation() {}
+    async declineInvitation() {
+      await this.$store.dispatch("declineInvitation", {
+        listId: this.todoList.id
+      });
+    },
+
+    async leaveTodoList() {
+      await this.$store.dispatch("leaveTodoList", {
+        listId: this.todoList.id
+      });
+    }
 
   }
 };
@@ -22958,7 +23013,7 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.todoList.role != 1
+  return _vm.todoList.role != 1 && _vm.todoList.role != 4
     ? _c(
         "b-card",
         { staticClass: "todo-list-preview bg-light", attrs: { "no-body": "" } },
@@ -23030,7 +23085,43 @@ exports.default = _default;
                       )
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.todoList.role == 2 || _vm.todoList.role == 3
+                  _vm.todoList.role == 2
+                    ? _c(
+                        "b-button-group",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "info" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.$router.push(
+                                    "/lists/" + _vm.todoList.id
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v("View")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "danger" },
+                              on: { click: _vm.deleteTodoList }
+                            },
+                            [_vm._v("Delete")]
+                          ),
+                          _vm._v(" "),
+                          _c("b-button", { on: { click: _vm.leaveTodoList } }, [
+                            _vm._v("Leave List")
+                          ])
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.todoList.role == 3
                     ? _c(
                         "b-button-group",
                         [
@@ -89057,7 +89148,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58674" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61858" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

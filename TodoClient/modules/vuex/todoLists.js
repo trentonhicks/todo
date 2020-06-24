@@ -113,7 +113,33 @@ const todoLists = {
             catch (error) {
                 console.log(error);
             }
-        }
+        },
+        async declineInvitation(context, { listId }) {
+            try {
+                await axios({
+                    method: 'POST',
+                    url: `api/lists/${listId}/decline`
+                });
+
+                context.commit('changeUserRoleByListId', { listId, role: 1 });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
+        async leaveTodoList(context, { listId }) {
+            try {
+                await axios({
+                    method: 'POST',
+                    url: `api/lists/${listId}/removeself`
+                });
+
+                context.commit('changeUserRoleByListId', { listId, role: 4 });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
     },
     getters: {
         todoLists(state) {

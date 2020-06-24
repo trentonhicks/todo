@@ -1,5 +1,9 @@
 <template>
-  <b-card v-if="todoList.role != 1" class="todo-list-preview bg-light" no-body>
+  <b-card
+    v-if="todoList.role != 1 && todoList.role != 4"
+    class="todo-list-preview bg-light"
+    no-body
+  >
     <b-card-body class="todo-list-preview-content">
       <b-card-title class="todo-list-preview-title">{{ todoList.listTitle }}</b-card-title>
 
@@ -23,8 +27,15 @@
           <b-button variant="danger" @click="declineInvitation">Decline</b-button>
         </b-button-group>
 
-        <!-- Contributors and Owner Options -->
-        <b-button-group v-if="todoList.role == 2 || todoList.role == 3">
+        <!-- Contributor Options -->
+        <b-button-group v-if="todoList.role == 2">
+          <b-button variant="info" @click="$router.push(`/lists/${todoList.id}`);">View</b-button>
+          <b-button variant="danger" @click="deleteTodoList">Delete</b-button>
+          <b-button @click="leaveTodoList">Leave List</b-button>
+        </b-button-group>
+
+        <!-- Owner Options -->
+        <b-button-group v-if="todoList.role == 3">
           <b-button variant="info" @click="$router.push(`/lists/${todoList.id}`);">View</b-button>
           <b-button variant="danger" @click="deleteTodoList">Delete</b-button>
         </b-button-group>
@@ -46,9 +57,20 @@ export default {
       this.$store.dispatch("deleteTodoList", { listId: this.todoList.id });
     },
     async acceptInvitation() {
-      this.$store.dispatch("acceptInvitation", { listId: this.todoList.id });
+      await this.$store.dispatch("acceptInvitation", {
+        listId: this.todoList.id
+      });
     },
-    async declineInvitation() {}
+    async declineInvitation() {
+      await this.$store.dispatch("declineInvitation", {
+        listId: this.todoList.id
+      });
+    },
+    async leaveTodoList() {
+      await this.$store.dispatch("leaveTodoList", {
+        listId: this.todoList.id
+      });
+    }
   }
 };
 </script>
