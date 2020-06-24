@@ -14,5 +14,6 @@ namespace Todo.Infrastructure
         [Key, Column(Order = 1)]
         public Guid ListId { get; set; }
         public byte Role { get; set; }
+        public bool UserIsOwner(Guid accountId) => AccountId == accountId && Role == Roles.Owner;
     }
 }

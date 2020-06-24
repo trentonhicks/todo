@@ -1,0 +1,64 @@
+﻿using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Todo.Domain.Repositories;
+using Todo.Domain.DomainEvents;
+using Todo.Domain;
+using Todo.Infrastructure;
+
+namespace TodoWebAPI.UserStories.SendInvitation
+{
+    public class SendInvitationUserStory : IRequestHandler<SendInvitation, bool>
+    {
+        private readonly ITodoListRepository _todoListRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IAccountPlanRepository _accountPlanRepository;
+        private readonly IPlanRepository _planRepository;
+        private readonly IAccountsListsRepository _accountsListsRepository;
+
+        public SendInvitationUserStory(
+            ITodoListRepository todoListRepository,
+            IAccountRepository accountRepository,
+            IAccountPlanRepository accountPlanRepository,
+            IPlanRepository planRepository,
+            IAccountsListsRepository accountsListsRepository)
+        {
+            _todoListRepository = todoListRepository;
+            _accountRepository = accountRepository;
+            _accountPlanRepository = accountPlanRepository;
+            _planRepository = planRepository;
+            _accountsListsRepository = accountsListsRepository;
+        }
+
+        public async Task<bool> Handle(SendInvitation request, CancellationToken cancellationToken)
+        {
+            var accountPlan = await _accountPlanRepository.FindAccountPlanByAccountIdAsync(request.SenderAccountId);
+            var plan = await _planRepository.FindPlanByIdAsync(accountPlan.PlanId);
+            var list = await _todoListRepository.FindTodoListIdByIdAsync(request.ListId);
+            var accountsLists = await _accountsListsRepository.FindAccountsListsByAccountIdAsync(request.SenderAccountId);
+            var accountPlanAuthorization = new AccountPlanAuthorizationValidator(accountPlan, plan);
+
+            if (accountsLists.UserIsOwner(request.SenderAccountId))
+            {
+                if (accountPlanAuthorization.CanAddContributor(list))
+                {
+                    var invitee = await _accountRepository.FindAccountByEmailAsync(request.InviteeEmail);
+
+                    if (list.DoesContributorExist(invitee.Email))
+                        return false;
+
+                    await _todoListRepository.AddRowToAccountListsAsync(invitee.Id, request.ListId);
+                    list.StoreContributor(request.InviteeEmail, request.SenderAccountId);
+                    await _todoListRepository.SaveChangesAsync();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+}

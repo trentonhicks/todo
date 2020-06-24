@@ -46,13 +46,13 @@ namespace TodoWebAPI.Controllers
                 return BadRequest("Reached maximum number of lists allowed on your plan.");
 
             createTodoList.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-            
+
             var todoList = await _mediator.Send(createTodoList);
 
             if (todoList == null)
                 return BadRequest("Unable to create list :(");
 
-                return Ok();
+            return Ok();
         }
 
         [HttpGet("api/lists")]
@@ -74,7 +74,7 @@ namespace TodoWebAPI.Controllers
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 return Ok(list);
             }
@@ -93,7 +93,7 @@ namespace TodoWebAPI.Controllers
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 await _mediator.Send(updatedList);
                 return Ok();
@@ -101,7 +101,7 @@ namespace TodoWebAPI.Controllers
 
             return Forbid();
         }
-        
+
         [HttpDelete("api/lists/{listId}")]
         public async Task<IActionResult> DeleteList(Guid listId)
         {
@@ -117,7 +117,7 @@ namespace TodoWebAPI.Controllers
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 await _mediator.Send(deleteTodoModel);
                 return Ok();
@@ -138,7 +138,7 @@ namespace TodoWebAPI.Controllers
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 await _mediator.Send(todoListLayoutModel);
                 return Ok();
@@ -156,7 +156,7 @@ namespace TodoWebAPI.Controllers
 
             var todoListAuthorizationValidator = new TodoListAuthorizationValidator(list.Contributors, userEmail);
 
-            if(todoListAuthorizationValidator.IsUserAuthorized())
+            if (todoListAuthorizationValidator.IsUserAuthorized())
             {
                 var layout = await _dapperQuery.GetTodoListLayoutAsync(listId);
                 return Ok(layout.Layout);
@@ -166,14 +166,25 @@ namespace TodoWebAPI.Controllers
         }
 
         [HttpPost("api/lists/{listId}/email")]
-        public async Task<IActionResult> SendInvitaion(string listId, [FromBody] SendInvitation send)
+        public async Task<IActionResult> SendInvitaion(Guid listId, [FromBody] SendInvitationViewModel invitation)
         {
-            send.AccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
-            send.ListId = listId;
-            await _mediator.Send(send);
+            var senderAccountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
+            var senderEmail = User.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
 
-            return Ok();
+            var command = new SendInvitation()
+            {
+                SenderAccountId = senderAccountId,
+                SenderEmail = senderEmail,
+                ListId = listId,
+                InviteeEmail = invitation.Email
+            };
+
+            var response = await _mediator.Send(command);
+
+            if (response == true)
+                return Ok();
+
+            return BadRequest();
         }
-
     }
 }

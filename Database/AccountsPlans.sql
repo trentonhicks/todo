@@ -2,7 +2,8 @@ USE [Todo]
 
 GO
 
-CREATE TABLE [AccountsPlans] (
+CREATE TABLE [AccountsPlans]
+(
     AccountID UNIQUEIDENTIFIER NOT NULL,
     PlanID INT NOT NULL,
     ListCount INT NOT NULL,
