@@ -45,13 +45,13 @@ namespace TodoWebAPI.UserStories.SendInvitation
             {
                 if (accountPlanAuthorization.CanAddContributor(list))
                 {
-                    var invitee = await _accountRepository.FindAccountByEmailAsync(request.Email);
+                    var invitee = await _accountRepository.FindAccountByEmailAsync(request.InviteeEmail);
 
-                    if (list.Contributors.Exists(c => c == invitee.Email))
+                    if (list.DoesContributorExist(invitee.Email))
                         return false;
 
                     await _todoListRepository.AddRowToAccountListsAsync(invitee.Id, request.ListId);
-                    list.StoreContributor(request.Email, request.SenderAccountId);
+                    list.StoreContributor(request.InviteeEmail, request.SenderAccountId);
                     await _todoListRepository.SaveChangesAsync();
 
                     return true;

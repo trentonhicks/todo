@@ -10,7 +10,7 @@ namespace TodoWebAPI.UserStories.SendInvitation
     {
         public Guid SenderAccountId { get; set; }
         public string SenderEmail { get; set; }
-        public string Email { get; set; }
+        public string InviteeEmail { get; set; }
         public Guid ListId { get; set; }
     }
 }

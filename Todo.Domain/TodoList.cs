@@ -64,6 +64,11 @@ namespace Todo.Domain
             DomainEvents.Add(new InvitationSent { List = this, Email = email, SenderAccountId = senderAccountId });
         }
 
+        public bool DoesContributorExist(string inviteeEmail)
+        {
+            return this.Contributors.Exists(c => c == inviteeEmail);
+        }
+
         public void AddContributor(string email)
         {
             if (email == null)

@@ -176,7 +176,7 @@ namespace TodoWebAPI.Controllers
                 SenderAccountId = senderAccountId,
                 SenderEmail = senderEmail,
                 ListId = listId,
-                Email = invitation.Email
+                InviteeEmail = invitation.Email
             };
 
             var response = await _mediator.Send(command);
