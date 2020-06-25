@@ -29,6 +29,13 @@ const todoLists = {
         changeUserRoleByListId(state, { listId, role }) {
             const index = state.todoLists.findIndex(x => x.id === listId);
             state.todoLists[index].role = role;
+        },
+        addTodoList(state, { list }) {
+            state.todoLists.push(list);
+        },
+        removeTodoList(state, { listId }) {
+            const index = state.todoLists.findIndex(x => x.id === listId);
+            state.todoLists.splice(index, 1);
         }
     },
     actions: {
@@ -121,7 +128,7 @@ const todoLists = {
                     url: `api/lists/${listId}/decline`
                 });
 
-                context.commit('changeUserRoleByListId', { listId, role: 1 });
+                context.commit('removeTodoList', { listId });
             }
             catch (error) {
                 console.log(error);
@@ -134,7 +141,7 @@ const todoLists = {
                     url: `api/lists/${listId}/removeself`
                 });
 
-                context.commit('changeUserRoleByListId', { listId, role: 4 });
+                context.commit('removeTodoList', { listId });
             }
             catch (error) {
                 console.log(error);

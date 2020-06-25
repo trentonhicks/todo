@@ -215,7 +215,7 @@ namespace TodoWebAPI.Controllers
         {
             var accountId = User.ReadClaimAsGuidValue("urn:codefliptodo:accountid");
 
-            var command =  new DeclineInvitation()
+            var command = new DeclineInvitation()
             {
                 AccountId = accountId,
                 ListId = listId

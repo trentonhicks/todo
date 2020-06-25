@@ -19074,6 +19074,19 @@ const todoLists = {
     }) {
       const index = state.todoLists.findIndex(x => x.id === listId);
       state.todoLists[index].role = role;
+    },
+
+    addTodoList(state, {
+      list
+    }) {
+      state.todoLists.push(list);
+    },
+
+    removeTodoList(state, {
+      listId
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === listId);
+      state.todoLists.splice(index, 1);
     }
 
   },
@@ -19183,9 +19196,8 @@ const todoLists = {
           method: 'POST',
           url: "api/lists/".concat(listId, "/decline")
         });
-        context.commit('changeUserRoleByListId', {
-          listId,
-          role: 1
+        context.commit('removeTodoList', {
+          listId
         });
       } catch (error) {
         console.log(error);
@@ -19200,9 +19212,8 @@ const todoLists = {
           method: 'POST',
           url: "api/lists/".concat(listId, "/removeself")
         });
-        context.commit('changeUserRoleByListId', {
-          listId,
-          role: 4
+        context.commit('removeTodoList', {
+          listId
         });
       } catch (error) {
         console.log(error);
@@ -22967,7 +22978,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
 var _default = {
   props: ["todoList", "contributors"],
   components: {
@@ -23066,7 +23076,7 @@ exports.default = _default;
                           _c(
                             "b-button",
                             {
-                              attrs: { variant: "info" },
+                              attrs: { variant: "success" },
                               on: { click: _vm.acceptInvitation }
                             },
                             [_vm._v("Accept")]
@@ -23107,15 +23117,11 @@ exports.default = _default;
                           _c(
                             "b-button",
                             {
-                              attrs: { variant: "danger" },
-                              on: { click: _vm.deleteTodoList }
+                              attrs: { variant: "secondary" },
+                              on: { click: _vm.leaveTodoList }
                             },
-                            [_vm._v("Delete")]
-                          ),
-                          _vm._v(" "),
-                          _c("b-button", { on: { click: _vm.leaveTodoList } }, [
-                            _vm._v("Leave List")
-                          ])
+                            [_vm._v("Leave")]
+                          )
                         ],
                         1
                       )
@@ -39725,48 +39731,46 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
 var _default = {
-  name: 'App',
+  name: "App",
   components: {
     Header: _Header.default
   },
 
   async beforeCreate() {
-    await this.$store.dispatch('loadTodoLists');
+    await this.$store.dispatch("loadTodoLists");
   },
 
   mounted() {
     this.$store.state.connection.start().catch(err => console.error(err.toString()));
-    this.$store.state.connection.on("InvitationSent", list => this.$store.dispatch('loadTodoLists'));
-    this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) => this.$store.commit('updateListTitle', {
+    this.$store.state.connection.on("InvitationSent", list => this.$store.commit("addTodoList", {
+      list
+    }));
+    this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) => this.$store.commit("updateListTitle", {
       listId,
       listTitle
     }));
-    this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.$store.commit('setTodoListCompletedState', {
+    this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.$store.commit("setTodoListCompletedState", {
       listId,
       listCompletedState
     }));
-    this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit('addItem', {
+    this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit("addItem", {
       listId,
       item
     }));
-    this.$store.state.connection.on("ItemCompleted", item => this.$store.commit('updateItemCompletedState', {
+    this.$store.state.connection.on("ItemCompleted", item => this.$store.commit("updateItemCompletedState", {
       item
     }));
-    this.$store.state.connection.on("ItemUpdated", item => this.$store.commit('updateItem', {
+    this.$store.state.connection.on("ItemUpdated", item => this.$store.commit("updateItem", {
       item
     }));
-    this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit('addSubItem', {
+    this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit("addSubItem", {
       subItem
     }));
-    this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit('updateSubItemCompletedState', {
+    this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit("updateSubItemCompletedState", {
       subItem
     }));
-    this.$store.state.connection.on("SubItemUpdated", subItem => this.$store.commit('updateSubItem', {
+    this.$store.state.connection.on("SubItemUpdated", subItem => this.$store.commit("updateSubItem", {
       subItem
     }));
   }
@@ -89148,7 +89152,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61858" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63526" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

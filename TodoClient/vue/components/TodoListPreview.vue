@@ -23,15 +23,14 @@
       <div class="todo-list-preview-options">
         <!-- Invited Options -->
         <b-button-group v-if="todoList.role == 0">
-          <b-button variant="info" @click="acceptInvitation">Accept</b-button>
+          <b-button variant="success" @click="acceptInvitation">Accept</b-button>
           <b-button variant="danger" @click="declineInvitation">Decline</b-button>
         </b-button-group>
 
         <!-- Contributor Options -->
         <b-button-group v-if="todoList.role == 2">
           <b-button variant="info" @click="$router.push(`/lists/${todoList.id}`);">View</b-button>
-          <b-button variant="danger" @click="deleteTodoList">Delete</b-button>
-          <b-button @click="leaveTodoList">Leave List</b-button>
+          <b-button variant="secondary" @click="leaveTodoList">Leave</b-button>
         </b-button-group>
 
         <!-- Owner Options -->

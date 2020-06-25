@@ -22,6 +22,7 @@ namespace Todo.Infrastructure
         public void Invited()
         {
             base.Role = Roles.Invited;
+            DomainEvents.Add(new InvitationSent() { ListId = this.ListId, InviteeAccountId = this.AccountId });
         }
         public void MakeContributor()
         {
@@ -62,6 +63,7 @@ namespace Todo.Infrastructure
         public void MakeInvited()
         {
             base.Role = Roles.Invited;
+            DomainEvents.Add(new InvitationSent() { ListId = this.ListId, InviteeAccountId = this.AccountId });
         }
     }
     public class RoleLeft : AccountsLists
@@ -73,6 +75,7 @@ namespace Todo.Infrastructure
         public void MakeInvited()
         {
             base.Role = Roles.Invited;
+            DomainEvents.Add(new InvitationSent() { ListId = this.ListId, InviteeAccountId = this.AccountId });
         }
     }
 }

@@ -9,6 +9,7 @@ using Dapper.Transaction;
 using TodoWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Todo.Infrastructure;
 
 namespace TodoWebAPI
 {
@@ -60,7 +61,7 @@ namespace TodoWebAPI
                 await connection.OpenAsync();
 
                 var result = await connection.QueryAsync<TodoListItemModel>("SELECT * From TodoListItems WHERE ListID = @listId", new { listId = listId });
-                
+
                 return result.ToList();
             }
         }
@@ -91,7 +92,12 @@ namespace TodoWebAPI
             {
                 await connection.OpenAsync();
 
-                var result = await connection.QueryAsync<TodoListModel>("SELECT t.ID, t.ListTitle, a.AccountID, t.Completed, t.Contributors, a.Role FROM TodoLists as t INNER JOIN AccountsLists as a ON t.ID = a.ListID WHERE a.AccountID = @accountId", new { accountId = accountId });
+                var result = await connection.QueryAsync<TodoListModel>(@"
+                    SELECT t.ID, t.ListTitle, a.AccountID, t.Completed, t.Contributors, a.Role
+                    FROM TodoLists as t INNER JOIN AccountsLists as a
+                    ON t.ID = a.ListID WHERE a.AccountID = @accountId
+                    AND NOT (a.Role = @left OR a.Role = @declined)",
+                    new { accountId = accountId, left = Roles.Left, declined = Roles.Declined });
 
                 return result.ToList();
             }
@@ -124,7 +130,7 @@ namespace TodoWebAPI
                 await connection.OpenAsync();
 
                 var result = await connection.QueryAsync<SubItemModel>("SELECT * FROM SubItems WHERE ListItemID = @listItemId", new { listItemId = listItemId });
-                
+
                 return result.ToList();
             }
         }
@@ -157,7 +163,7 @@ namespace TodoWebAPI
             {
                 await connection.OpenAsync();
 
-                var result = await connection.QueryAsync<Guid>("SELECT ID FROM Accounts WHERE Email = @email", new { email = email});
+                var result = await connection.QueryAsync<Guid>("SELECT ID FROM Accounts WHERE Email = @email", new { email = email });
                 return result.FirstOrDefault();
             }
         }
