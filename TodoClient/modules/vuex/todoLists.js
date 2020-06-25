@@ -36,6 +36,13 @@ const todoLists = {
         removeTodoList(state, { listId }) {
             const index = state.todoLists.findIndex(x => x.id === listId);
             state.todoLists.splice(index, 1);
+        },
+        updateAccountContributors(state, { contributors }) {
+            state.contributors = contributors;
+        },
+        updateListContributors(state, { list }) {
+            const index = state.todoLists.findIndex(x => x.id === list.id);
+            state.todoLists[index].contributors = list.contributors;
         }
     },
     actions: {
@@ -147,6 +154,22 @@ const todoLists = {
                 console.log(error);
             }
         },
+        async refreshContributors(context, { list }) {
+            try {
+                const response = await axios({
+                    method: 'GET',
+                    url: `api/accounts/contributors`,
+                });
+
+                const contributors = response.data;
+
+                context.commit('updateAccountContributors', { contributors });
+                context.commit('updateListContributors', { list });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
     },
     getters: {
         todoLists(state) {

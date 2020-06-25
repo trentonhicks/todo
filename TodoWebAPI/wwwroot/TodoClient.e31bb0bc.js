@@ -19087,6 +19087,19 @@ const todoLists = {
     }) {
       const index = state.todoLists.findIndex(x => x.id === listId);
       state.todoLists.splice(index, 1);
+    },
+
+    updateAccountContributors(state, {
+      contributors
+    }) {
+      state.contributors = contributors;
+    },
+
+    updateListContributors(state, {
+      list
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === list.id);
+      state.todoLists[index].contributors = list.contributors;
     }
 
   },
@@ -19214,6 +19227,26 @@ const todoLists = {
         });
         context.commit('removeTodoList', {
           listId
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async refreshContributors(context, {
+      list
+    }) {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'GET',
+          url: "api/accounts/contributors"
+        });
+        const contributors = response.data;
+        context.commit('updateAccountContributors', {
+          contributors
+        });
+        context.commit('updateListContributors', {
+          list
         });
       } catch (error) {
         console.log(error);
@@ -39744,6 +39777,12 @@ var _default = {
   mounted() {
     this.$store.state.connection.start().catch(err => console.error(err.toString()));
     this.$store.state.connection.on("InvitationSent", list => this.$store.commit("addTodoList", {
+      list
+    }));
+    this.$store.state.connection.on("InvitationAccepted", list => this.$store.dispatch("refreshContributors", {
+      list
+    }));
+    this.$store.state.connection.on("ContributorLeft", list => this.$store.dispatch("refreshContributors", {
       list
     }));
     this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) => this.$store.commit("updateListTitle", {

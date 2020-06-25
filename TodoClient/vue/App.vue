@@ -23,6 +23,12 @@ export default {
     this.$store.state.connection.on("InvitationSent", list =>
       this.$store.commit("addTodoList", { list })
     );
+    this.$store.state.connection.on("InvitationAccepted", list =>
+      this.$store.dispatch("refreshContributors", { list })
+    );
+    this.$store.state.connection.on("ContributorLeft", list =>
+      this.$store.dispatch("refreshContributors", { list })
+    );
     this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) =>
       this.$store.commit("updateListTitle", { listId, listTitle })
     );
