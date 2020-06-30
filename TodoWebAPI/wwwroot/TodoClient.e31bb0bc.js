@@ -19066,6 +19066,40 @@ const todoLists = {
       loadingState
     }) {
       state.loading = loadingState;
+    },
+
+    changeUserRoleByListId(state, {
+      listId,
+      role
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === listId);
+      state.todoLists[index].role = role;
+    },
+
+    addTodoList(state, {
+      list
+    }) {
+      state.todoLists.push(list);
+    },
+
+    removeTodoList(state, {
+      listId
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === listId);
+      state.todoLists.splice(index, 1);
+    },
+
+    updateAccountContributors(state, {
+      contributors
+    }) {
+      state.contributors = contributors;
+    },
+
+    updateListContributors(state, {
+      list
+    }) {
+      const index = state.todoLists.findIndex(x => x.id === list.id);
+      state.todoLists[index].contributors = list.contributors;
     }
 
   },
@@ -19148,6 +19182,75 @@ const todoLists = {
           'content-type': 'application/json'
         }
       });
+    },
+
+    async acceptInvitation(context, {
+      listId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/accept")
+        });
+        context.commit('changeUserRoleByListId', {
+          listId,
+          role: 2
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async declineInvitation(context, {
+      listId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/decline")
+        });
+        context.commit('removeTodoList', {
+          listId
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async leaveTodoList(context, {
+      listId
+    }) {
+      try {
+        await (0, _axios.default)({
+          method: 'POST',
+          url: "api/lists/".concat(listId, "/removeself")
+        });
+        context.commit('removeTodoList', {
+          listId
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async refreshContributors(context, {
+      list
+    }) {
+      try {
+        const response = await (0, _axios.default)({
+          method: 'GET',
+          url: "api/accounts/contributors"
+        });
+        const contributors = response.data;
+        context.commit('updateAccountContributors', {
+          contributors
+        });
+        context.commit('updateListContributors', {
+          list
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
 
   },
@@ -22890,14 +22993,50 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
-  props: ['todoList', 'contributors'],
+  props: ["todoList", "contributors"],
   components: {
     Contributors: _Contributors.default
   },
   methods: {
     deleteTodoList() {
-      this.$store.dispatch('deleteTodoList', {
+      this.$store.dispatch("deleteTodoList", {
+        listId: this.todoList.id
+      });
+    },
+
+    async acceptInvitation() {
+      await this.$store.dispatch("acceptInvitation", {
+        listId: this.todoList.id
+      });
+    },
+
+    async declineInvitation() {
+      await this.$store.dispatch("declineInvitation", {
+        listId: this.todoList.id
+      });
+    },
+
+    async leaveTodoList() {
+      await this.$store.dispatch("leaveTodoList", {
         listId: this.todoList.id
       });
     }
@@ -22917,73 +23056,141 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "b-card",
-    { staticClass: "todo-list-preview bg-light", attrs: { "no-body": "" } },
-    [
-      _c(
-        "b-card-body",
-        { staticClass: "todo-list-preview-content" },
+  return _vm.todoList.role != 1 && _vm.todoList.role != 4
+    ? _c(
+        "b-card",
+        { staticClass: "todo-list-preview bg-light", attrs: { "no-body": "" } },
         [
-          _c("b-card-title", { staticClass: "todo-list-preview-title" }, [
-            _vm._v(_vm._s(_vm.todoList.listTitle))
-          ]),
-          _vm._v(" "),
           _c(
-            "b-badge",
-            {
-              staticClass: "todo-list-preview-status",
-              class: {
-                "badge-success": _vm.todoList.completed,
-                "badge-secondary": !_vm.todoList.completed
-              },
-              attrs: { pill: "" }
-            },
+            "b-card-body",
+            { staticClass: "todo-list-preview-content" },
             [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.todoList.completed ? "Completed" : "In Progress") +
-                  "\n        "
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("Contributors", {
-            staticClass: "todo-list-preview-contributors",
-            attrs: {
-              todoListContributors: _vm.todoList.contributors,
-              accountContributors: _vm.contributors
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "todo-list-preview-options" },
-            [
-              _c(
-                "b-button-group",
-                [
-                  _c(
-                    "b-button",
+              _c("b-card-title", { staticClass: "todo-list-preview-title" }, [
+                _vm._v(_vm._s(_vm.todoList.listTitle))
+              ]),
+              _vm._v(" "),
+              _vm.todoList.role == 2 || _vm.todoList.role == 3
+                ? _c(
+                    "b-badge",
                     {
-                      attrs: { variant: "info" },
-                      on: {
-                        click: function($event) {
-                          return _vm.$router.push("/lists/" + _vm.todoList.id)
-                        }
-                      }
+                      staticClass: "todo-list-preview-status",
+                      class: {
+                        "badge-success": _vm.todoList.completed,
+                        "badge-secondary": !_vm.todoList.completed
+                      },
+                      attrs: { pill: "" }
                     },
-                    [_vm._v("View")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "b-button",
-                    {
-                      attrs: { variant: "danger" },
-                      on: { click: _vm.deleteTodoList }
-                    },
-                    [_vm._v("Delete")]
+                    [
+                      _vm._v(
+                        _vm._s(
+                          _vm.todoList.completed ? "Completed" : "In Progress"
+                        )
+                      )
+                    ]
                   )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("Contributors", {
+                staticClass: "todo-list-preview-contributors",
+                attrs: {
+                  todoListContributors: _vm.todoList.contributors,
+                  accountContributors: _vm.contributors
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "todo-list-preview-options" },
+                [
+                  _vm.todoList.role == 0
+                    ? _c(
+                        "b-button-group",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "success" },
+                              on: { click: _vm.acceptInvitation }
+                            },
+                            [_vm._v("Accept")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "danger" },
+                              on: { click: _vm.declineInvitation }
+                            },
+                            [_vm._v("Decline")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.todoList.role == 2
+                    ? _c(
+                        "b-button-group",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "info" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.$router.push(
+                                    "/lists/" + _vm.todoList.id
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v("View")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "secondary" },
+                              on: { click: _vm.leaveTodoList }
+                            },
+                            [_vm._v("Leave")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.todoList.role == 3
+                    ? _c(
+                        "b-button-group",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "info" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.$router.push(
+                                    "/lists/" + _vm.todoList.id
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v("View")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { variant: "danger" },
+                              on: { click: _vm.deleteTodoList }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e()
                 ],
                 1
               )
@@ -22993,9 +23200,7 @@ exports.default = _default;
         ],
         1
       )
-    ],
-    1
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -39559,48 +39764,52 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
 var _default = {
-  name: 'App',
+  name: "App",
   components: {
     Header: _Header.default
   },
 
   async beforeCreate() {
-    await this.$store.dispatch('loadTodoLists');
+    await this.$store.dispatch("loadTodoLists");
   },
 
   mounted() {
     this.$store.state.connection.start().catch(err => console.error(err.toString()));
-    this.$store.state.connection.on("InvitationSent", list => this.$store.dispatch('loadTodoLists'));
-    this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) => this.$store.commit('updateListTitle', {
+    this.$store.state.connection.on("InvitationSent", list => this.$store.commit("addTodoList", {
+      list
+    }));
+    this.$store.state.connection.on("InvitationAccepted", list => this.$store.dispatch("refreshContributors", {
+      list
+    }));
+    this.$store.state.connection.on("ContributorLeft", list => this.$store.dispatch("refreshContributors", {
+      list
+    }));
+    this.$store.state.connection.on("ListNameUpdated", (listId, listTitle) => this.$store.commit("updateListTitle", {
       listId,
       listTitle
     }));
-    this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.$store.commit('setTodoListCompletedState', {
+    this.$store.state.connection.on("ListCompletedStateChanged", (listId, listCompletedState) => this.$store.commit("setTodoListCompletedState", {
       listId,
       listCompletedState
     }));
-    this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit('addItem', {
+    this.$store.state.connection.on("ItemCreated", (listId, item) => this.$store.commit("addItem", {
       listId,
       item
     }));
-    this.$store.state.connection.on("ItemCompleted", item => this.$store.commit('updateItemCompletedState', {
+    this.$store.state.connection.on("ItemCompleted", item => this.$store.commit("updateItemCompletedState", {
       item
     }));
-    this.$store.state.connection.on("ItemUpdated", item => this.$store.commit('updateItem', {
+    this.$store.state.connection.on("ItemUpdated", item => this.$store.commit("updateItem", {
       item
     }));
-    this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit('addSubItem', {
+    this.$store.state.connection.on("SubItemCreated", subItem => this.$store.commit("addSubItem", {
       subItem
     }));
-    this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit('updateSubItemCompletedState', {
+    this.$store.state.connection.on("SubItemCompletedStateChanged", subItem => this.$store.commit("updateSubItemCompletedState", {
       subItem
     }));
-    this.$store.state.connection.on("SubItemUpdated", subItem => this.$store.commit('updateSubItem', {
+    this.$store.state.connection.on("SubItemUpdated", subItem => this.$store.commit("updateSubItem", {
       subItem
     }));
   }
@@ -88982,7 +89191,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63402" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63526" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
