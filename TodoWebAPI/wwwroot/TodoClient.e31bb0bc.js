@@ -22885,14 +22885,14 @@ var _default = {
   props: ['todoListContributors', 'accountContributors']
 };
 exports.default = _default;
-        var $370f63 = exports.default || module.exports;
+        var $56d4f4 = exports.default || module.exports;
       
-      if (typeof $370f63 === 'function') {
-        $370f63 = $370f63.options;
+      if (typeof $56d4f4 === 'function') {
+        $56d4f4 = $56d4f4.options;
       }
     
         /* template */
-        Object.assign($370f63, (function () {
+        Object.assign($56d4f4, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22928,7 +22928,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-370f63",
+            _scopeId: "data-v-56d4f4",
             functional: undefined
           };
         })());
@@ -22941,9 +22941,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$370f63', $370f63);
+            api.createRecord('$56d4f4', $56d4f4);
           } else {
-            api.reload('$370f63', $370f63);
+            api.reload('$56d4f4', $56d4f4);
           }
         }
 
@@ -23044,14 +23044,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $2d7314 = exports.default || module.exports;
+        var $ab4d6b = exports.default || module.exports;
       
-      if (typeof $2d7314 === 'function') {
-        $2d7314 = $2d7314.options;
+      if (typeof $ab4d6b === 'function') {
+        $ab4d6b = $ab4d6b.options;
       }
     
         /* template */
-        Object.assign($2d7314, (function () {
+        Object.assign($ab4d6b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -23209,7 +23209,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-2d7314",
+            _scopeId: "data-v-ab4d6b",
             functional: undefined
           };
         })());
@@ -23222,9 +23222,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$2d7314', $2d7314);
+            api.createRecord('$ab4d6b', $ab4d6b);
           } else {
-            api.reload('$2d7314', $2d7314);
+            api.reload('$ab4d6b', $ab4d6b);
           }
         }
 
@@ -23282,14 +23282,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f31e3f = exports.default || module.exports;
+        var $bf725d = exports.default || module.exports;
       
-      if (typeof $f31e3f === 'function') {
-        $f31e3f = $f31e3f.options;
+      if (typeof $bf725d === 'function') {
+        $bf725d = $bf725d.options;
       }
     
         /* template */
-        Object.assign($f31e3f, (function () {
+        Object.assign($bf725d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -23313,7 +23313,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-f31e3f",
+            _scopeId: "data-v-bf725d",
             functional: undefined
           };
         })());
@@ -23326,9 +23326,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$f31e3f', $f31e3f);
+            api.createRecord('$bf725d', $bf725d);
           } else {
-            api.reload('$f31e3f', $f31e3f);
+            api.reload('$bf725d', $bf725d);
           }
         }
 
@@ -23400,14 +23400,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $baacd1 = exports.default || module.exports;
+        var $977121 = exports.default || module.exports;
       
-      if (typeof $baacd1 === 'function') {
-        $baacd1 = $baacd1.options;
+      if (typeof $977121 === 'function') {
+        $977121 = $977121.options;
       }
     
         /* template */
-        Object.assign($baacd1, (function () {
+        Object.assign($977121, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -23502,9 +23502,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$baacd1', $baacd1);
+            api.createRecord('$977121', $977121);
           } else {
-            api.reload('$baacd1', $baacd1);
+            api.reload('$977121', $977121);
           }
         }
 
@@ -23552,14 +23552,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $254769 = exports.default || module.exports;
+        var $3d62ec = exports.default || module.exports;
       
-      if (typeof $254769 === 'function') {
-        $254769 = $254769.options;
+      if (typeof $3d62ec === 'function') {
+        $3d62ec = $3d62ec.options;
       }
     
         /* template */
-        Object.assign($254769, (function () {
+        Object.assign($3d62ec, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -23596,273 +23596,16 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$254769', $254769);
+            api.createRecord('$3d62ec', $3d62ec);
           } else {
-            api.reload('$254769', $254769);
+            api.reload('$3d62ec', $3d62ec);
           }
         }
 
         
       }
     })();
-},{"../components/TodoLists":"vue/components/TodoLists.vue","../components/AddTodoListForm":"vue/components/AddTodoListForm.vue","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"node_modules/confetti-js/dist/index.es.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function ConfettiGenerator(params) {
-  //////////////
-  // Defaults
-  var appstate = {
-    target: 'confetti-holder',
-    // Id of the canvas
-    max: 80,
-    // Max itens to render
-    size: 1,
-    // prop size
-    animate: true,
-    // Should animate?
-    respawn: true,
-    // Should confettis be respawned when getting out of screen?
-    props: ['circle', 'square', 'triangle', 'line'],
-    // Types of confetti
-    colors: [[165, 104, 246], [230, 61, 135], [0, 199, 228], [253, 214, 126]],
-    // Colors to render confetti
-    clock: 25,
-    // Speed of confetti fall
-    interval: null,
-    // Draw interval holder
-    rotate: false,
-    // Whenever to rotate a prop
-    start_from_edge: false,
-    // Should confettis spawn at the top/bottom of the screen?
-    width: window.innerWidth,
-    // canvas width (as int, in px)
-    height: window.innerHeight // canvas height (as int, in px)
-
-  }; //////////////
-  // Setting parameters if received
-
-  if (params) {
-    if (params.target) appstate.target = params.target;
-    if (params.max) appstate.max = params.max;
-    if (params.size) appstate.size = params.size;
-    if (params.animate !== undefined && params.animate !== null) appstate.animate = params.animate;
-    if (params.respawn !== undefined && params.respawn !== null) appstate.respawn = params.respawn;
-    if (params.props) appstate.props = params.props;
-    if (params.colors) appstate.colors = params.colors;
-    if (params.clock) appstate.clock = params.clock;
-    if (params.start_from_edge !== undefined && params.start_from_edge !== null) appstate.start_from_edge = params.start_from_edge;
-    if (params.width) appstate.width = params.width;
-    if (params.height) appstate.height = params.height;
-    if (params.rotate !== undefined && params.rotate !== null) appstate.rotate = params.rotate;
-  } //////////////
-  // Early exit if the target is not the correct type, or is null
-
-
-  if (typeof appstate.target != 'object' && typeof appstate.target != 'string') {
-    throw new TypeError('The target parameter should be a node or string');
-  }
-
-  if (typeof appstate.target == 'object' && (appstate.target === null || !appstate.target instanceof HTMLCanvasElement) || typeof appstate.target == 'string' && (document.getElementById(appstate.target) === null || !document.getElementById(appstate.target) instanceof HTMLCanvasElement)) {
-    throw new ReferenceError('The target element does not exist or is not a canvas element');
-  } //////////////
-  // Properties
-
-
-  var cv = typeof appstate.target == 'object' ? appstate.target : document.getElementById(appstate.target);
-  var ctx = cv.getContext("2d");
-  var particles = []; //////////////
-  // Random helper (to minimize typing)
-
-  function rand(limit, floor) {
-    if (!limit) limit = 1;
-    var rand = Math.random() * limit;
-    return !floor ? rand : Math.floor(rand);
-  }
-
-  var totalWeight = appstate.props.reduce(function (weight, prop) {
-    return weight + (prop.weight || 1);
-  }, 0);
-
-  function selectProp() {
-    var rand = Math.random() * totalWeight;
-
-    for (var i = 0; i < appstate.props.length; ++i) {
-      var weight = appstate.props[i].weight || 1;
-      if (rand < weight) return i;
-      rand -= weight;
-    }
-  } //////////////
-  // Confetti particle generator
-
-
-  function particleFactory() {
-    var prop = appstate.props[selectProp()];
-    var p = {
-      prop: prop.type ? prop.type : prop,
-      //prop type
-      x: rand(appstate.width),
-      //x-coordinate
-      y: appstate.start_from_edge ? appstate.clock >= 0 ? -10 : parseFloat(appstate.height) + 10 : rand(appstate.height),
-      //y-coordinate
-      src: prop.src,
-      radius: rand(4) + 1,
-      //radius
-      size: prop.size,
-      rotate: appstate.rotate,
-      line: Math.floor(rand(65) - 30),
-      // line angle
-      angles: [rand(10, true) + 2, rand(10, true) + 2, rand(10, true) + 2, rand(10, true) + 2],
-      // triangle drawing angles
-      color: appstate.colors[rand(appstate.colors.length, true)],
-      // color
-      rotation: rand(360, true) * Math.PI / 180,
-      speed: rand(appstate.clock / 7) + appstate.clock / 30
-    };
-    return p;
-  } //////////////
-  // Confetti drawing on canvas
-
-
-  function particleDraw(p) {
-    if (!p) {
-      return;
-    }
-
-    var op = p.radius <= 3 ? 0.4 : 0.8;
-    ctx.fillStyle = ctx.strokeStyle = "rgba(" + p.color + ", " + op + ")";
-    ctx.beginPath();
-
-    switch (p.prop) {
-      case 'circle':
-        {
-          ctx.moveTo(p.x, p.y);
-          ctx.arc(p.x, p.y, p.radius * appstate.size, 0, Math.PI * 2, true);
-          ctx.fill();
-          break;
-        }
-
-      case 'triangle':
-        {
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p.x + p.angles[0] * appstate.size, p.y + p.angles[1] * appstate.size);
-          ctx.lineTo(p.x + p.angles[2] * appstate.size, p.y + p.angles[3] * appstate.size);
-          ctx.closePath();
-          ctx.fill();
-          break;
-        }
-
-      case 'line':
-        {
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p.x + p.line * appstate.size, p.y + p.radius * 5);
-          ctx.lineWidth = 2 * appstate.size;
-          ctx.stroke();
-          break;
-        }
-
-      case 'square':
-        {
-          ctx.save();
-          ctx.translate(p.x + 15, p.y + 5);
-          ctx.rotate(p.rotation);
-          ctx.fillRect(-15 * appstate.size, -5 * appstate.size, 15 * appstate.size, 5 * appstate.size);
-          ctx.restore();
-          break;
-        }
-
-      case 'svg':
-        {
-          ctx.save();
-          var image = new window.Image();
-          image.src = p.src;
-          var size = p.size || 15;
-          ctx.translate(p.x + size / 2, p.y + size / 2);
-          if (p.rotate) ctx.rotate(p.rotation);
-          ctx.drawImage(image, -(size / 2) * appstate.size, -(size / 2) * appstate.size, size * appstate.size, size * appstate.size);
-          ctx.restore();
-          break;
-        }
-    }
-  } //////////////
-  // Public itens
-  //////////////
-  //////////////
-  // Clean actual state
-
-
-  var _clear = function () {
-    appstate.animate = false;
-    clearInterval(appstate.interval);
-    requestAnimationFrame(function () {
-      ctx.clearRect(0, 0, cv.width, cv.height);
-      var w = cv.width;
-      cv.width = 1;
-      cv.width = w;
-    });
-  }; //////////////
-  // Render confetti on canvas
-
-
-  var _render = function () {
-    cv.width = appstate.width;
-    cv.height = appstate.height;
-    particles = [];
-
-    for (var i = 0; i < appstate.max; i++) particles.push(particleFactory());
-
-    function draw() {
-      ctx.clearRect(0, 0, appstate.width, appstate.height);
-
-      for (var i in particles) particleDraw(particles[i]);
-
-      update();
-      if (appstate.animate) requestAnimationFrame(draw);
-    }
-
-    function update() {
-      for (var i = 0; i < appstate.max; i++) {
-        var p = particles[i];
-
-        if (p) {
-          if (appstate.animate) p.y += p.speed;
-          if (p.rotate) p.rotation += p.speed / 35;
-
-          if (p.speed >= 0 && p.y > appstate.height || p.speed < 0 && p.y < 0) {
-            if (appstate.respawn) {
-              particles[i] = p;
-              particles[i].x = rand(appstate.width, true);
-              particles[i].y = p.speed >= 0 ? -10 : parseFloat(appstate.height);
-            } else {
-              particles[i] = undefined;
-            }
-          }
-        }
-      }
-
-      if (particles.every(function (p) {
-        return p === undefined;
-      })) {
-        _clear();
-      }
-    }
-
-    return requestAnimationFrame(draw);
-  };
-
-  return {
-    render: _render,
-    clear: _clear
-  };
-}
-
-var _default = ConfettiGenerator;
-exports.default = _default;
-},{}],"vue/components/AddTodoListItemForm.vue":[function(require,module,exports) {
+},{"../components/TodoLists":"vue/components/TodoLists.vue","../components/AddTodoListForm":"vue/components/AddTodoListForm.vue","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/AddTodoListItemForm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23937,14 +23680,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $aa59c0 = exports.default || module.exports;
+        var $879b66 = exports.default || module.exports;
       
-      if (typeof $aa59c0 === 'function') {
-        $aa59c0 = $aa59c0.options;
+      if (typeof $879b66 === 'function') {
+        $879b66 = $879b66.options;
       }
     
         /* template */
-        Object.assign($aa59c0, (function () {
+        Object.assign($879b66, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -24077,9 +23820,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$aa59c0', $aa59c0);
+            api.createRecord('$879b66', $879b66);
           } else {
-            api.reload('$aa59c0', $aa59c0);
+            api.reload('$879b66', $879b66);
           }
         }
 
@@ -37499,14 +37242,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $7b87e9 = exports.default || module.exports;
+        var $8ecb53 = exports.default || module.exports;
       
-      if (typeof $7b87e9 === 'function') {
-        $7b87e9 = $7b87e9.options;
+      if (typeof $8ecb53 === 'function') {
+        $8ecb53 = $8ecb53.options;
       }
     
         /* template */
-        Object.assign($7b87e9, (function () {
+        Object.assign($8ecb53, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -37650,9 +37393,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$7b87e9', $7b87e9);
+            api.createRecord('$8ecb53', $8ecb53);
           } else {
-            api.reload('$7b87e9', $7b87e9);
+            api.reload('$8ecb53', $8ecb53);
           }
         }
 
@@ -37766,14 +37509,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $9ad823 = exports.default || module.exports;
+        var $8a053d = exports.default || module.exports;
       
-      if (typeof $9ad823 === 'function') {
-        $9ad823 = $9ad823.options;
+      if (typeof $8a053d === 'function') {
+        $8a053d = $8a053d.options;
       }
     
         /* template */
-        Object.assign($9ad823, (function () {
+        Object.assign($8a053d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -37837,9 +37580,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$9ad823', $9ad823);
+            api.createRecord('$8a053d', $8a053d);
           } else {
-            api.reload('$9ad823', $9ad823);
+            api.reload('$8a053d', $8a053d);
           }
         }
 
@@ -37927,14 +37670,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $efb0d1 = exports.default || module.exports;
+        var $233ec5 = exports.default || module.exports;
       
-      if (typeof $efb0d1 === 'function') {
-        $efb0d1 = $efb0d1.options;
+      if (typeof $233ec5 === 'function') {
+        $233ec5 = $233ec5.options;
       }
     
         /* template */
-        Object.assign($efb0d1, (function () {
+        Object.assign($233ec5, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -38027,9 +37770,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$efb0d1', $efb0d1);
+            api.createRecord('$233ec5', $233ec5);
           } else {
-            api.reload('$efb0d1', $efb0d1);
+            api.reload('$233ec5', $233ec5);
           }
         }
 
@@ -38209,14 +37952,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $1d8a45 = exports.default || module.exports;
+        var $0f49a4 = exports.default || module.exports;
       
-      if (typeof $1d8a45 === 'function') {
-        $1d8a45 = $1d8a45.options;
+      if (typeof $0f49a4 === 'function') {
+        $0f49a4 = $0f49a4.options;
       }
     
         /* template */
-        Object.assign($1d8a45, (function () {
+        Object.assign($0f49a4, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -38412,7 +38155,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-1d8a45",
+            _scopeId: "data-v-0f49a4",
             functional: undefined
           };
         })());
@@ -38425,9 +38168,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$1d8a45', $1d8a45);
+            api.createRecord('$0f49a4', $0f49a4);
           } else {
-            api.reload('$1d8a45', $1d8a45);
+            api.reload('$0f49a4', $0f49a4);
           }
         }
 
@@ -38531,14 +38274,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $71ea3c = exports.default || module.exports;
+        var $34d7d0 = exports.default || module.exports;
       
-      if (typeof $71ea3c === 'function') {
-        $71ea3c = $71ea3c.options;
+      if (typeof $34d7d0 === 'function') {
+        $34d7d0 = $34d7d0.options;
       }
     
         /* template */
-        Object.assign($71ea3c, (function () {
+        Object.assign($34d7d0, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -38665,7 +38408,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-71ea3c",
+            _scopeId: "data-v-34d7d0",
             functional: undefined
           };
         })());
@@ -38678,9 +38421,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$71ea3c', $71ea3c);
+            api.createRecord('$34d7d0', $34d7d0);
           } else {
-            api.reload('$71ea3c', $71ea3c);
+            api.reload('$34d7d0', $34d7d0);
           }
         }
 
@@ -38786,14 +38529,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $642124 = exports.default || module.exports;
+        var $0a5bfb = exports.default || module.exports;
       
-      if (typeof $642124 === 'function') {
-        $642124 = $642124.options;
+      if (typeof $0a5bfb === 'function') {
+        $0a5bfb = $0a5bfb.options;
       }
     
         /* template */
-        Object.assign($642124, (function () {
+        Object.assign($0a5bfb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -38858,9 +38601,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$642124', $642124);
+            api.createRecord('$0a5bfb', $0a5bfb);
           } else {
-            api.reload('$642124', $642124);
+            api.reload('$0a5bfb', $0a5bfb);
           }
         }
 
@@ -38937,14 +38680,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3f1240 = exports.default || module.exports;
+        var $65875b = exports.default || module.exports;
       
-      if (typeof $3f1240 === 'function') {
-        $3f1240 = $3f1240.options;
+      if (typeof $65875b === 'function') {
+        $65875b = $65875b.options;
       }
     
         /* template */
-        Object.assign($3f1240, (function () {
+        Object.assign($65875b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -39021,7 +38764,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-3f1240",
+            _scopeId: "data-v-65875b",
             functional: undefined
           };
         })());
@@ -39034,9 +38777,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$3f1240', $3f1240);
+            api.createRecord('$65875b', $65875b);
           } else {
-            api.reload('$3f1240', $3f1240);
+            api.reload('$65875b', $65875b);
           }
         }
 
@@ -39047,7 +38790,10 @@ render._withStripped = true
       
       }
     })();
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/components/TodoList.vue":[function(require,module,exports) {
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"node_modules/vue-confetti/dist/vue-confetti.js":[function(require,module,exports) {
+var define;
+!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports["vue-confetti"]=e():t["vue-confetti"]=e()}(window,(function(){return function(t){var e={};function n(i){if(e[i])return e[i].exports;var r=e[i]={i:i,l:!1,exports:{}};return t[i].call(r.exports,r,r.exports,n),r.l=!0,r.exports}return n.m=t,n.c=e,n.d=function(t,e,i){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:i})},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var i=Object.create(null);if(n.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)n.d(i,r,function(e){return t[e]}.bind(null,r));return i},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="",n(n.s=3)}([function(t,e,n){"use strict";n.r(e);var i=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:1,e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:t+1,n=arguments.length>2&&void 0!==arguments[2]&&arguments[2],i=parseFloat(t),r=parseFloat(e),o=Math.random()*(r-i)+i;return n?Math.round(o):o};function r(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}var o=function(){function t(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},n=e.color,i=void 0===n?"blue":n,r=e.size,o=void 0===r?10:r,a=e.dropRate,c=void 0===a?10:a;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),this.color=i,this.size=o,this.dropRate=c}var e,n,o;return e=t,(n=[{key:"setup",value:function(t){var e=t.canvas,n=t.wind,r=t.windPosCoef,o=t.windSpeedMax,a=t.count;return this.canvas=e,this.wind=n,this.windPosCoef=r,this.windSpeedMax=o,this.x=i(-35,this.canvas.width+35),this.y=i(-30,-35),this.d=i(150)+10,this.particleSize=i(this.size,2*this.size),this.tilt=i(10),this.tiltAngleIncremental=(i(0,.08)+.04)*(i()<.5?-1:1),this.tiltAngle=0,this.angle=i(2*Math.PI),this.count=a+1,this.remove=!1,this}},{key:"update",value:function(){this.tiltAngle+=this.tiltAngleIncremental*(.2*Math.cos(this.wind+(this.d+this.x+this.y)*this.windPosCoef)+1),this.y+=(Math.cos(this.angle+this.d)+parseInt(this.dropRate,10))/2,this.x+=Math.sin(this.angle),this.x+=Math.cos(this.wind+(this.d+this.x+this.y)*this.windPosCoef)*this.windSpeedMax,this.y+=Math.sin(this.wind+(this.d+this.x+this.y)*this.windPosCoef)*this.windSpeedMax,this.tilt=15*Math.sin(this.tiltAngle-this.count/3)}},{key:"pastBottom",value:function(){return this.y>this.canvas.height}},{key:"draw",value:function(){this.canvas.ctx.fillStyle=this.color,this.canvas.ctx.beginPath(),this.canvas.ctx.setTransform(Math.cos(this.tiltAngle),Math.sin(this.tiltAngle),0,1,this.x,this.y)}},{key:"kill",value:function(){this.remove=!0}}])&&r(e.prototype,n),o&&r(e,o),t}();function a(t){return(a="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function c(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}function s(t,e){return!e||"object"!==a(e)&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function l(t,e,n){return(l="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(t,e,n){var i=function(t,e){for(;!Object.prototype.hasOwnProperty.call(t,e)&&null!==(t=u(t)););return t}(t,e);if(i){var r=Object.getOwnPropertyDescriptor(i,e);return r.get?r.get.call(n):r.value}})(t,e,n||t)}function u(t){return(u=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function f(t,e){return(f=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}var h=function(t){function e(){return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,e),s(this,u(e).apply(this,arguments))}var n,i,r;return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&f(t,e)}(e,t),n=e,(i=[{key:"draw",value:function(){l(u(e.prototype),"draw",this).call(this),this.canvas.ctx.arc(0,0,this.particleSize/2,0,2*Math.PI,!1),this.canvas.ctx.fill()}}])&&c(n.prototype,i),r&&c(n,r),e}(o);function p(t){return(p="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function y(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}function d(t,e){return!e||"object"!==p(e)&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function v(t,e,n){return(v="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(t,e,n){var i=function(t,e){for(;!Object.prototype.hasOwnProperty.call(t,e)&&null!==(t=b(t)););return t}(t,e);if(i){var r=Object.getOwnPropertyDescriptor(i,e);return r.get?r.get.call(n):r.value}})(t,e,n||t)}function b(t){return(b=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function m(t,e){return(m=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}var w=function(t){function e(){return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,e),d(this,b(e).apply(this,arguments))}var n,i,r;return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&m(t,e)}(e,t),n=e,(i=[{key:"draw",value:function(){v(b(e.prototype),"draw",this).call(this),this.canvas.ctx.fillRect(0,0,this.particleSize,this.particleSize/2)}}])&&y(n.prototype,i),r&&y(n,r),e}(o);function g(t){return(g="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function O(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}function P(t,e){return!e||"object"!==g(e)&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function S(t,e,n){return(S="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(t,e,n){var i=function(t,e){for(;!Object.prototype.hasOwnProperty.call(t,e)&&null!==(t=j(t)););return t}(t,e);if(i){var r=Object.getOwnPropertyDescriptor(i,e);return r.get?r.get.call(n):r.value}})(t,e,n||t)}function j(t){return(j=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function k(t,e){return(k=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}var x=function(t){function e(){return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,e),P(this,j(e).apply(this,arguments))}var n,i,r;return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&k(t,e)}(e,t),n=e,(i=[{key:"draw",value:function(){var t=this;S(j(e.prototype),"draw",this).call(this);var n=function(e,n,i,r,o,a){t.canvas.ctx.bezierCurveTo(e*(t.particleSize/200),n*(t.particleSize/200),i*(t.particleSize/200),r*(t.particleSize/200),o*(t.particleSize/200),a*(t.particleSize/200))};this.canvas.ctx.moveTo(37.5/this.particleSize,20/this.particleSize),n(75,37,70,25,50,25),n(20,25,20,62.5,20,62.5),n(20,80,40,102,75,120),n(110,102,130,80,130,62.5),n(130,62.5,130,25,100,25),n(85,25,75,37,75,40),this.canvas.ctx.fill()}}])&&O(n.prototype,i),r&&O(n,r),e}(o);function M(t){return(M="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function _(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}function E(t,e){return!e||"object"!==M(e)&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function I(t,e,n){return(I="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(t,e,n){var i=function(t,e){for(;!Object.prototype.hasOwnProperty.call(t,e)&&null!==(t=C(t)););return t}(t,e);if(i){var r=Object.getOwnPropertyDescriptor(i,e);return r.get?r.get.call(n):r.value}})(t,e,n||t)}function C(t){return(C=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function D(t,e){return(D=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}var R=function(t){function e(t,n){var i;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,e),(i=E(this,C(e).call(this,t))).imgEl=n,i}var n,i,r;return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&D(t,e)}(e,t),n=e,(i=[{key:"draw",value:function(){I(C(e.prototype),"draw",this).call(this),this.canvas.ctx.drawImage(this.imgEl,0,0,this.particleSize,this.particleSize)}}])&&_(n.prototype,i),r&&_(n,r),e}(o);function T(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}var z=function(){function t(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),this.cachedImage=null}var e,n,r;return e=t,(n=[{key:"createImageElement",value:function(t){var e=document.createElement("img");return e.setAttribute("src",t),e}},{key:"getImageElement",value:function(t){return this.cachedImage&&t===this.cachedImage.getAttribute("src")||(this.cachedImage=this.createImageElement(t)),this.cachedImage}},{key:"getRandomParticle",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},e=t.particles||[];return e.length<1?{}:e[Math.floor(Math.random()*e.length)]}},{key:"getDefaults",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};return{type:t.defaultType||"circle",size:t.defaultSize||10,dropRate:t.defaultDropRate||10,colors:t.defaultColors||["DodgerBlue","OliveDrab","Gold","pink","SlateBlue","lightblue","Violet","PaleGreen","SteelBlue","SandyBrown","Chocolate","Crimson"],url:null}}},{key:"create",value:function(t){var e=this.getDefaults(t),n=this.getRandomParticle(t),r=Object.assign(e,n),o=i(0,r.colors.length-1,!0);if(r.color=r.colors[o],"circle"===r.type)return new h(r);if("rect"===r.type)return new w(r);if("heart"===r.type)return new x(r);if("image"===r.type)return new R(r,this.getImageElement(r.url));throw Error('Unknown particle type: "'.concat(r.type,'"'))}}])&&T(e.prototype,n),r&&T(e,r),t}();function F(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}var A=function(){function t(e){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),this.items=[],this.pool=[],this.particleOptions=e,this.particleFactory=new z}var e,n,i;return e=t,(n=[{key:"update",value:function(){var t,e=this,n=[],i=[];this.items.forEach((function(t){t.update(),t.pastBottom()?t.remove||(t.setup(e.particleOptions),n.push(t)):i.push(t)})),(t=this.pool).push.apply(t,n),this.items=i}},{key:"draw",value:function(){this.items.forEach((function(t){return t.draw()}))}},{key:"add",value:function(){this.pool.length>0?this.items.push(this.pool.pop().setup(this.particleOptions)):this.items.push(this.particleFactory.create(this.particleOptions).setup(this.particleOptions))}},{key:"refresh",value:function(){this.items.forEach((function(t){t.kill()})),this.pool=[]}}])&&F(e.prototype,n),i&&F(e,i),t}();function B(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}var H=function(){function t(e){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t);var n=document.getElementById(e);if(this.isDefault=null==e,!this.isDefault&&!n)throw new Error('No element found with ID "'.concat(e,'"'));if(this.canvas=n||t.createDefaultCanvas("confetti-canvas"),!(this.canvas instanceof HTMLCanvasElement))throw new Error('Element with ID "'.concat("confetti-canvas",'" is not a valid HTMLCanvasElement'));this.ctx=this.canvas.getContext("2d")}var e,n,i;return e=t,i=[{key:"createDefaultCanvas",value:function(t){var e=document.createElement("canvas");return e.style.display="block",e.style.position="fixed",e.style.pointerEvents="none",e.style.top=0,e.style.width="100vw",e.style.height="100vh",e.id=t,document.querySelector("body").appendChild(e),e}}],(n=[{key:"clear",value:function(){this.ctx.setTransform(1,0,0,1,0,0),this.ctx.clearRect(0,0,this.width,this.height)}},{key:"updateDimensions",value:function(){this.isDefault&&(this.width===window.innerWidth&&this.height===window.innerHeight||(this.canvas.width=window.innerWidth,this.canvas.height=window.innerHeight))}},{key:"width",get:function(){return this.canvas.width}},{key:"height",get:function(){return this.canvas.height}}])&&B(e.prototype,n),i&&B(e,i),t}();function L(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}var W=function(){function t(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),this.setDefaults()}var e,n,i;return e=t,(n=[{key:"setDefaults",value:function(){this.killed=!1,this.framesSinceDrop=0,this.canvas=null,this.canvasId=null,this.W=0,this.H=0,this.particleManager=null,this.particlesPerFrame=0,this.wind=0,this.windSpeed=1,this.windSpeedMax=1,this.windChange=.01,this.windPosCoef=.002,this.animationId=null}},{key:"getParticleOptions",value:function(t){var e={canvas:this.canvas,W:this.W,H:this.H,wind:this.wind,windPosCoef:this.windPosCoef,windSpeedMax:this.windSpeedMax,count:0};return Object.assign(e,t),e}},{key:"createParticles",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},e=this.getParticleOptions(t);this.particleManager=new A(e)}},{key:"start",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};this.canvas&&t.canvasId===this.canvasId||(this.canvas=new H(t.canvasId),this.canvasId=t.canvasId),this.animationId&&cancelAnimationFrame(this.animationId),this.createParticles(t),this.canvas.updateDimensions(),this.setParticlesPerFrame(t),this.animationId=requestAnimationFrame(this.mainLoop.bind(this))}},{key:"setParticlesPerFrame",value:function(t){this.particlesPerFrame=t.particlesPerFrame||2}},{key:"stop",value:function(){this.killed=!0,this.particlesPerFrame=0}},{key:"update",value:function(t){this.canvas&&t.canvasId!==this.canvasId&&(this.stop(),this.canvas.clear(),this.start(t)),this.setParticlesPerFrame(t),this.particleManager&&(this.particleManager.particleOptions=this.getParticleOptions(t),this.particleManager.refresh())}},{key:"remove",value:function(){this.stop(),this.animationId&&cancelAnimationFrame(this.animationId),this.canvas.clear(),this.setDefaults()}},{key:"mainLoop",value:function(t){this.canvas.updateDimensions(),this.canvas.clear(),this.windSpeed=Math.sin(t/8e3)*this.windSpeedMax,this.wind=this.particleManager.particleOptions.wind+=this.windChange;for(var e=this.framesSinceDrop*this.particlesPerFrame;e>=1;)this.particleManager.add(),e-=1,this.framesSinceDrop=0;this.particleManager.update(),this.particleManager.draw(),this.killed&&!this.particleManager.items.length||(this.animationId=requestAnimationFrame(this.mainLoop.bind(this))),this.framesSinceDrop+=1}}])&&L(e.prototype,n),i&&L(e,i),t}();n.d(e,"Confetti",(function(){return W}));e.default={install:function(t,e){this.installed||(this.installed=!0,t.prototype.$confetti=new W(e))}}},,,function(t,e,n){t.exports=n(0)}])}));
+},{}],"vue/components/TodoList.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -39055,7 +38801,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _confettiJs = _interopRequireDefault(require("confetti-js"));
+var _vue = _interopRequireDefault(require("vue"));
 
 var _AddTodoListItemForm = _interopRequireDefault(require("./AddTodoListItemForm"));
 
@@ -39064,6 +38810,8 @@ var _TodoListItems = _interopRequireDefault(require("./TodoListItems"));
 var _Contributors = _interopRequireDefault(require("./Contributors"));
 
 var _InviteContributorsForm = _interopRequireDefault(require("./InviteContributorsForm"));
+
+var _vueConfetti = _interopRequireDefault(require("vue-confetti"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39111,42 +38859,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
+_vue.default.use(_vueConfetti.default);
+
 var _default = {
   name: "TodoList",
-  props: ['todoListId'],
+  props: ["todoListId"],
 
   data() {
     return {
       items: [],
       editingTitle: false,
       form: {
-        title: ''
+        title: ""
       }
     };
   },
 
   async created() {
-    await this.$store.dispatch('loadItemsByListId', {
+    await this.$store.dispatch("loadItemsByListId", {
       todoListId: this.todoListId
     });
     this.items = this.getItems();
   },
 
-  beforeUpdate() {
-    var confettiSettings = {
-      target: 'confetti'
-    };
-    var confetti = new _confettiJs.default(confettiSettings);
-    confetti.render();
+  destroyed() {
+    this.$confetti.stop();
   },
 
   computed: {
@@ -39162,6 +38899,21 @@ var _default = {
       return this.items.every(item => item.completed === true) && this.items.length > 0;
     }
 
+  },
+  watch: {
+    allItemsCompleted: function () {
+      if (this.allItemsCompleted) {
+        this.$confetti.start({
+          particles: [{
+            type: "rect"
+          }],
+          particlesPerFrame: 0.5,
+          dropRate: 8
+        });
+      } else {
+        this.$confetti.stop();
+      }
+    }
   },
   components: {
     AddTodoListItemForm: _AddTodoListItemForm.default,
@@ -39184,34 +38936,29 @@ var _default = {
 
     async updateListTitle() {
       this.editingTitle = false;
-      await this.$store.dispatch('updateListTitle', {
+      await this.$store.dispatch("updateListTitle", {
         listId: this.todoListId,
         listTitle: this.form.title
       });
-      this.form.title = '';
+      this.form.title = "";
     }
 
   }
 };
 exports.default = _default;
-        var $98e7b1 = exports.default || module.exports;
+        var $81ee7c = exports.default || module.exports;
       
-      if (typeof $98e7b1 === 'function') {
-        $98e7b1 = $98e7b1.options;
+      if (typeof $81ee7c === 'function') {
+        $81ee7c = $81ee7c.options;
       }
     
         /* template */
-        Object.assign($98e7b1, (function () {
+        Object.assign($81ee7c, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "todo-list-wrapper" }, [
-    _c("canvas", {
-      class: { hidden: !_vm.allItemsCompleted },
-      attrs: { id: "confetti" }
-    }),
-    _vm._v(" "),
     _c(
       "div",
       { staticClass: "todo-list" },
@@ -39327,7 +39074,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-98e7b1",
+            _scopeId: null,
             functional: undefined
           };
         })());
@@ -39340,20 +39087,16 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$98e7b1', $98e7b1);
+            api.createRecord('$81ee7c', $81ee7c);
           } else {
-            api.reload('$98e7b1', $98e7b1);
+            api.reload('$81ee7c', $81ee7c);
           }
         }
 
         
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
       }
     })();
-},{"confetti-js":"node_modules/confetti-js/dist/index.es.js","./AddTodoListItemForm":"vue/components/AddTodoListItemForm.vue","./TodoListItems":"vue/components/TodoListItems.vue","./Contributors":"vue/components/Contributors.vue","./InviteContributorsForm":"vue/components/InviteContributorsForm.vue","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/views/TodoListView.vue":[function(require,module,exports) {
+},{"vue":"node_modules/vue/dist/vue.runtime.esm.js","./AddTodoListItemForm":"vue/components/AddTodoListItemForm.vue","./TodoListItems":"vue/components/TodoListItems.vue","./Contributors":"vue/components/Contributors.vue","./InviteContributorsForm":"vue/components/InviteContributorsForm.vue","vue-confetti":"node_modules/vue-confetti/dist/vue-confetti.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js"}],"vue/views/TodoListView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -39391,14 +39134,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $2f27a4 = exports.default || module.exports;
+        var $c1906c = exports.default || module.exports;
       
-      if (typeof $2f27a4 === 'function') {
-        $2f27a4 = $2f27a4.options;
+      if (typeof $c1906c === 'function') {
+        $c1906c = $c1906c.options;
       }
     
         /* template */
-        Object.assign($2f27a4, (function () {
+        Object.assign($c1906c, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -39433,7 +39176,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-2f27a4",
+            _scopeId: "data-v-c1906c",
             functional: undefined
           };
         })());
@@ -39446,9 +39189,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$2f27a4', $2f27a4);
+            api.createRecord('$c1906c', $c1906c);
           } else {
-            api.reload('$2f27a4', $2f27a4);
+            api.reload('$c1906c', $c1906c);
           }
         }
 
@@ -39496,14 +39239,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d02f84 = exports.default || module.exports;
+        var $8aa952 = exports.default || module.exports;
       
-      if (typeof $d02f84 === 'function') {
-        $d02f84 = $d02f84.options;
+      if (typeof $8aa952 === 'function') {
+        $8aa952 = $8aa952.options;
       }
     
         /* template */
-        Object.assign($d02f84, (function () {
+        Object.assign($8aa952, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -39538,9 +39281,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$d02f84', $d02f84);
+            api.createRecord('$8aa952', $8aa952);
           } else {
-            api.reload('$d02f84', $d02f84);
+            api.reload('$8aa952', $8aa952);
           }
         }
 
@@ -39616,10 +39359,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
 var _default = {
-  name: 'Header',
+  name: "Header",
 
   async created() {
     await this.checkAuthState();
@@ -39636,17 +39377,17 @@ var _default = {
     async checkAuthState() {
       try {
         await (0, _axios.default)({
-          method: 'GET',
-          url: 'api/accounts/login'
+          method: "GET",
+          url: "api/accounts/login"
         });
         const user = await (0, _axios.default)({
-          method: 'GET',
-          url: 'api/accounts'
+          method: "GET",
+          url: "api/accounts"
         });
-        this.$store.commit('setUserData', user.data);
+        this.$store.commit("setUserData", user.data);
       } catch {
-        if (this.$router.name !== 'Login') {
-          this.$router.push('/login');
+        if (this.$router.name !== "Login") {
+          this.$router.push("/login");
         }
       }
     },
@@ -39654,10 +39395,10 @@ var _default = {
     async getPlan() {
       try {
         const plan = await (0, _axios.default)({
-          method: 'GET',
-          url: 'api/accounts/plan'
+          method: "GET",
+          url: "api/accounts/plan"
         });
-        this.$store.commit('setPlanData', plan.data);
+        this.$store.commit("setPlanData", plan.data);
       } catch (error) {
         console.log("she didn't work " + error);
       }
@@ -39665,24 +39406,24 @@ var _default = {
 
     logout() {
       (0, _axios.default)({
-        method: 'GET',
-        url: 'api/accounts/logout'
+        method: "GET",
+        url: "api/accounts/logout"
       }).then(() => {
-        this.$router.push('/login');
+        this.$router.push("/login");
       });
     }
 
   }
 };
 exports.default = _default;
-        var $f4778d = exports.default || module.exports;
+        var $a30a42 = exports.default || module.exports;
       
-      if (typeof $f4778d === 'function') {
-        $f4778d = $f4778d.options;
+      if (typeof $a30a42 === 'function') {
+        $a30a42 = $a30a42.options;
       }
     
         /* template */
-        Object.assign($f4778d, (function () {
+        Object.assign($a30a42, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -39691,7 +39432,7 @@ exports.default = _default;
     "b-navbar",
     {
       staticClass: "fixed-top",
-      attrs: { toggleable: "sm", type: "light", variant: "light" }
+      attrs: { toggleable: "sm", type: "light", variant: "light", id: "navbar" }
     },
     [
       _c("b-navbar-brand", [_vm._v("Todo")]),
@@ -39736,16 +39477,20 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$f4778d', $f4778d);
+            api.createRecord('$a30a42', $a30a42);
           } else {
-            api.reload('$f4778d', $f4778d);
+            api.reload('$a30a42', $a30a42);
           }
         }
 
         
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
       }
     })();
-},{"axios":"node_modules/axios/index.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/App.vue":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"node_modules/vue-hot-reload-api/dist/index.js","vue":"node_modules/vue/dist/vue.runtime.esm.js"}],"vue/App.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -39816,14 +39561,14 @@ var _default = {
 
 };
 exports.default = _default;
-        var $fcc03e = exports.default || module.exports;
+        var $afbec3 = exports.default || module.exports;
       
-      if (typeof $fcc03e === 'function') {
-        $fcc03e = $fcc03e.options;
+      if (typeof $afbec3 === 'function') {
+        $afbec3 = $afbec3.options;
       }
     
         /* template */
-        Object.assign($fcc03e, (function () {
+        Object.assign($afbec3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -39855,9 +39600,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$fcc03e', $fcc03e);
+            api.createRecord('$afbec3', $afbec3);
           } else {
-            api.reload('$fcc03e', $fcc03e);
+            api.reload('$afbec3', $afbec3);
           }
         }
 
@@ -89191,7 +88936,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63526" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50012" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -37,6 +37,7 @@
     "popper.js": "^1.16.1",
     "sign": "^1.0.2",
     "vue": "^2.6.11",
+    "vue-confetti": "^2.0.8",
     "vue-hot-reload-api": "^2.3.4",
     "vue-router": "^3.3.2",
     "vue-sortable": "^0.1.3",
