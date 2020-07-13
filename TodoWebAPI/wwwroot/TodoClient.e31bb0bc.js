@@ -8549,11 +8549,12 @@ var global = arguments[3];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.createLogger = createLogger;
 exports.install = install;
 exports.mapState = exports.mapMutations = exports.mapGetters = exports.mapActions = exports.createNamespacedHelpers = exports.Store = exports.default = void 0;
 
 /*!
- * vuex v3.4.0
+ * vuex v3.5.1
  * (c) 2020 Evan You
  * @license MIT
  */
@@ -8625,6 +8626,49 @@ function devtoolPlugin(store) {
  * @return {*}
  */
 
+
+function find(list, f) {
+  return list.filter(f)[0];
+}
+/**
+ * Deep copy the given object considering circular structure.
+ * This function caches all nested objects and its copies.
+ * If it detects circular structure, use cached copy to avoid infinite loop.
+ *
+ * @param {*} obj
+ * @param {Array<Object>} cache
+ * @return {*}
+ */
+
+
+function deepCopy(obj, cache) {
+  if (cache === void 0) cache = []; // just return if obj is immutable value
+
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  } // if obj is hit, it is in circular structure
+
+
+  var hit = find(cache, function (c) {
+    return c.original === obj;
+  });
+
+  if (hit) {
+    return hit.copy;
+  }
+
+  var copy = Array.isArray(obj) ? [] : {}; // put the copy into cache at first
+  // because we want to refer it in recursive deepCopy
+
+  cache.push({
+    original: obj,
+    copy: copy
+  });
+  Object.keys(obj).forEach(function (key) {
+    copy[key] = deepCopy(obj[key], cache);
+  });
+  return copy;
+}
 /**
  * forEach for object
  */
@@ -8785,8 +8829,17 @@ ModuleCollection.prototype.register = function register(path, rawModule, runtime
 ModuleCollection.prototype.unregister = function unregister(path) {
   var parent = this.get(path.slice(0, -1));
   var key = path[path.length - 1];
+  var child = parent.getChild(key);
 
-  if (!parent.getChild(key).runtime) {
+  if (!child) {
+    if ("development" !== 'production') {
+      console.warn("[vuex] trying to unregister module '" + key + "', which is " + "not registered");
+    }
+
+    return;
+  }
+
+  if (!child.runtime) {
     return;
   }
 
@@ -9733,17 +9786,121 @@ function getModuleByNamespace(store, helper, namespace) {
   }
 
   return module;
+} // Credits: borrowed code from fcomb/redux-logger
+
+
+function createLogger(ref) {
+  if (ref === void 0) ref = {};
+  var collapsed = ref.collapsed;
+  if (collapsed === void 0) collapsed = true;
+  var filter = ref.filter;
+  if (filter === void 0) filter = function (mutation, stateBefore, stateAfter) {
+    return true;
+  };
+  var transformer = ref.transformer;
+  if (transformer === void 0) transformer = function (state) {
+    return state;
+  };
+  var mutationTransformer = ref.mutationTransformer;
+  if (mutationTransformer === void 0) mutationTransformer = function (mut) {
+    return mut;
+  };
+  var actionFilter = ref.actionFilter;
+  if (actionFilter === void 0) actionFilter = function (action, state) {
+    return true;
+  };
+  var actionTransformer = ref.actionTransformer;
+  if (actionTransformer === void 0) actionTransformer = function (act) {
+    return act;
+  };
+  var logMutations = ref.logMutations;
+  if (logMutations === void 0) logMutations = true;
+  var logActions = ref.logActions;
+  if (logActions === void 0) logActions = true;
+  var logger = ref.logger;
+  if (logger === void 0) logger = console;
+  return function (store) {
+    var prevState = deepCopy(store.state);
+
+    if (typeof logger === 'undefined') {
+      return;
+    }
+
+    if (logMutations) {
+      store.subscribe(function (mutation, state) {
+        var nextState = deepCopy(state);
+
+        if (filter(mutation, prevState, nextState)) {
+          var formattedTime = getFormattedTime();
+          var formattedMutation = mutationTransformer(mutation);
+          var message = "mutation " + mutation.type + formattedTime;
+          startMessage(logger, message, collapsed);
+          logger.log('%c prev state', 'color: #9E9E9E; font-weight: bold', transformer(prevState));
+          logger.log('%c mutation', 'color: #03A9F4; font-weight: bold', formattedMutation);
+          logger.log('%c next state', 'color: #4CAF50; font-weight: bold', transformer(nextState));
+          endMessage(logger);
+        }
+
+        prevState = nextState;
+      });
+    }
+
+    if (logActions) {
+      store.subscribeAction(function (action, state) {
+        if (actionFilter(action, state)) {
+          var formattedTime = getFormattedTime();
+          var formattedAction = actionTransformer(action);
+          var message = "action " + action.type + formattedTime;
+          startMessage(logger, message, collapsed);
+          logger.log('%c action', 'color: #03A9F4; font-weight: bold', formattedAction);
+          endMessage(logger);
+        }
+      });
+    }
+  };
+}
+
+function startMessage(logger, message, collapsed) {
+  var startMessage = collapsed ? logger.groupCollapsed : logger.group; // render
+
+  try {
+    startMessage.call(logger, message);
+  } catch (e) {
+    logger.log(message);
+  }
+}
+
+function endMessage(logger) {
+  try {
+    logger.groupEnd();
+  } catch (e) {
+    logger.log('—— log end ——');
+  }
+}
+
+function getFormattedTime() {
+  var time = new Date();
+  return " @ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
+}
+
+function repeat(str, times) {
+  return new Array(times + 1).join(str);
+}
+
+function pad(num, maxLength) {
+  return repeat('0', maxLength - num.toString().length) + num;
 }
 
 var index = {
   Store: Store,
   install: install,
-  version: '3.4.0',
+  version: '3.5.1',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
   mapActions: mapActions,
-  createNamespacedHelpers: createNamespacedHelpers
+  createNamespacedHelpers: createNamespacedHelpers,
+  createLogger: createLogger
 };
 var _default = index;
 exports.default = _default;
@@ -12529,7 +12686,14 @@ function (_super) {
   }
 
   NodeHttpClient.prototype.send = function (httpRequest) {
-    var _this = this;
+    var _this = this; // Check that abort was not signaled before calling send
+
+
+    if (httpRequest.abortSignal) {
+      if (httpRequest.abortSignal.aborted) {
+        return Promise.reject(new _Errors.AbortError());
+      }
+    }
 
     return new Promise(function (resolve, reject) {
       var requestBody;
@@ -15542,17 +15706,8 @@ function () {
 
   WebSocketTransport.prototype.stop = function () {
     if (this.webSocket) {
-      // Clear websocket handlers because we are considering the socket closed now
-      this.webSocket.onclose = function () {};
-
-      this.webSocket.onmessage = function () {};
-
-      this.webSocket.onerror = function () {};
-
-      this.webSocket.close();
-      this.webSocket = undefined; // Manually invoke onclose callback inline so we know the HttpConnection was closed properly before returning
+      // Manually invoke onclose callback inline so we know the HttpConnection was closed properly before returning
       // This also solves an issue where websocket.onclose could take 18+ seconds to trigger during network disconnects
-
       this.close(undefined);
     }
 
@@ -15561,6 +15716,18 @@ function () {
 
   WebSocketTransport.prototype.close = function (event) {
     // webSocket will be null if the transport did not start successfully
+    if (this.webSocket) {
+      // Clear websocket handlers because we are considering the socket closed now
+      this.webSocket.onclose = function () {};
+
+      this.webSocket.onmessage = function () {};
+
+      this.webSocket.onerror = function () {};
+
+      this.webSocket.close();
+      this.webSocket = undefined;
+    }
+
     this.logger.log(_ILogger.LogLevel.Trace, "(WebSockets transport) socket closed.");
 
     if (this.onclose) {
@@ -15942,7 +16109,7 @@ function () {
 
   HttpConnection.prototype.stopInternal = function (error) {
     return __awaiter(this, void 0, void 0, function () {
-      var e_1, e_2, e_3;
+      var e_1, e_2;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -15973,7 +16140,7 @@ function () {
             , 4];
 
           case 4:
-            if (!this.sendQueue) return [3
+            if (!this.transport) return [3
             /*break*/
             , 9];
             _a.label = 5;
@@ -15983,7 +16150,7 @@ function () {
 
             return [4
             /*yield*/
-            , this.sendQueue.stop()];
+            , this.transport.stop()];
 
           case 6:
             _a.sent();
@@ -15994,55 +16161,24 @@ function () {
 
           case 7:
             e_2 = _a.sent();
-            this.logger.log(_ILogger.LogLevel.Error, "TransportSendQueue.stop() threw error '" + e_2 + "'.");
+            this.logger.log(_ILogger.LogLevel.Error, "HttpConnection.transport.stop() threw error '" + e_2 + "'.");
+            this.stopConnection();
             return [3
             /*break*/
             , 8];
 
           case 8:
-            this.sendQueue = undefined;
-            _a.label = 9;
-
-          case 9:
-            if (!this.transport) return [3
-            /*break*/
-            , 14];
-            _a.label = 10;
-
-          case 10:
-            _a.trys.push([10, 12,, 13]);
-
-            return [4
-            /*yield*/
-            , this.transport.stop()];
-
-          case 11:
-            _a.sent();
-
-            return [3
-            /*break*/
-            , 13];
-
-          case 12:
-            e_3 = _a.sent();
-            this.logger.log(_ILogger.LogLevel.Error, "HttpConnection.transport.stop() threw error '" + e_3 + "'.");
-            this.stopConnection();
-            return [3
-            /*break*/
-            , 13];
-
-          case 13:
             this.transport = undefined;
             return [3
             /*break*/
-            , 15];
+            , 10];
 
-          case 14:
+          case 9:
             this.logger.log(_ILogger.LogLevel.Debug, "HttpConnection.transport is undefined in HttpConnection.stop() because start() failed.");
             this.stopConnection();
-            _a.label = 15;
+            _a.label = 10;
 
-          case 15:
+          case 10:
             return [2
             /*return*/
             ];
@@ -16053,7 +16189,7 @@ function () {
 
   HttpConnection.prototype.startInternal = function (transferFormat) {
     return __awaiter(this, void 0, void 0, function () {
-      var url, negotiateResponse, redirects, _loop_1, this_1, e_4;
+      var url, negotiateResponse, redirects, _loop_1, this_1, e_3;
 
       return __generator(this, function (_a) {
         switch (_a.label) {
@@ -16202,15 +16338,15 @@ function () {
             , 13];
 
           case 12:
-            e_4 = _a.sent();
-            this.logger.log(_ILogger.LogLevel.Error, "Failed to start the connection: " + e_4);
+            e_3 = _a.sent();
+            this.logger.log(_ILogger.LogLevel.Error, "Failed to start the connection: " + e_3);
             this.connectionState = "Disconnected"
             /* Disconnected */
             ;
             this.transport = undefined;
             return [2
             /*return*/
-            , Promise.reject(e_4)];
+            , Promise.reject(e_3)];
 
           case 13:
             return [2
@@ -16223,7 +16359,7 @@ function () {
 
   HttpConnection.prototype.getNegotiationResponse = function (url) {
     return __awaiter(this, void 0, void 0, function () {
-      var _a, headers, token, negotiateUrl, response, negotiateResponse, e_5;
+      var _a, headers, token, negotiateUrl, response, negotiateResponse, e_4;
 
       return __generator(this, function (_b) {
         switch (_b.label) {
@@ -16281,11 +16417,11 @@ function () {
             , negotiateResponse];
 
           case 5:
-            e_5 = _b.sent();
-            this.logger.log(_ILogger.LogLevel.Error, "Failed to complete negotiation with the server: " + e_5);
+            e_4 = _b.sent();
+            this.logger.log(_ILogger.LogLevel.Error, "Failed to complete negotiation with the server: " + e_4);
             return [2
             /*return*/
-            , Promise.reject(e_5)];
+            , Promise.reject(e_4)];
 
           case 6:
             return [2
@@ -16517,6 +16653,8 @@ function () {
   };
 
   HttpConnection.prototype.stopConnection = function (error) {
+    var _this = this;
+
     this.logger.log(_ILogger.LogLevel.Debug, "HttpConnection.stopConnection(" + error + ") called while in state " + this.connectionState + ".");
     this.transport = undefined; // If we have a stopError, it takes precedence over the error from the transport
 
@@ -16551,16 +16689,25 @@ function () {
       this.logger.log(_ILogger.LogLevel.Information, "Connection disconnected.");
     }
 
+    if (this.sendQueue) {
+      this.sendQueue.stop().catch(function (e) {
+        _this.logger.log(_ILogger.LogLevel.Error, "TransportSendQueue.stop() threw error '" + e + "'.");
+      });
+      this.sendQueue = undefined;
+    }
+
     this.connectionId = undefined;
     this.connectionState = "Disconnected"
     /* Disconnected */
     ;
 
-    if (this.onclose && this.connectionStarted) {
+    if (this.connectionStarted) {
       this.connectionStarted = false;
 
       try {
-        this.onclose(error);
+        if (this.onclose) {
+          this.onclose(error);
+        }
       } catch (e) {
         this.logger.log(_ILogger.LogLevel.Error, "HttpConnection.onclose(" + error + ") threw error '" + e + "'.");
       }
@@ -17211,7 +17358,7 @@ var _Subject = require("./Subject");
 // Version token that will be replaced by the prepack command
 
 /** The version of the SignalR client. */
-var VERSION = "3.1.4";
+var VERSION = "3.1.5";
 exports.VERSION = VERSION;
 },{"./Errors":"node_modules/@microsoft/signalr/dist/esm/Errors.js","./HttpClient":"node_modules/@microsoft/signalr/dist/esm/HttpClient.js","./DefaultHttpClient":"node_modules/@microsoft/signalr/dist/esm/DefaultHttpClient.js","./HubConnection":"node_modules/@microsoft/signalr/dist/esm/HubConnection.js","./HubConnectionBuilder":"node_modules/@microsoft/signalr/dist/esm/HubConnectionBuilder.js","./IHubProtocol":"node_modules/@microsoft/signalr/dist/esm/IHubProtocol.js","./ILogger":"node_modules/@microsoft/signalr/dist/esm/ILogger.js","./ITransport":"node_modules/@microsoft/signalr/dist/esm/ITransport.js","./Loggers":"node_modules/@microsoft/signalr/dist/esm/Loggers.js","./JsonHubProtocol":"node_modules/@microsoft/signalr/dist/esm/JsonHubProtocol.js","./Subject":"node_modules/@microsoft/signalr/dist/esm/Subject.js"}],"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
@@ -19639,7 +19786,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 /*!
-  * vue-router v3.3.2
+  * vue-router v3.3.4
   * (c) 2020 Evan You
   * @license MIT
   */
@@ -21607,7 +21754,7 @@ var NavigationFailureType = {
 };
 
 function createNavigationRedirectedError(from, to) {
-  return createRouterError(from, to, NavigationFailureType.redirected, "Redirected from \"" + from.fullPath + "\" to \"" + stringifyRoute(to) + "\" via a navigation guard.");
+  return createRouterError(from, to, NavigationFailureType.redirected, "Redirected when going from \"" + from.fullPath + "\" to \"" + stringifyRoute(to) + "\" via a navigation guard.");
 }
 
 function createNavigationDuplicatedError(from, to) {
@@ -21710,10 +21857,18 @@ History.prototype.transitionTo = function transitionTo(location, onComplete, onA
     }
 
     if (err && !this$1.ready) {
-      this$1.ready = true;
-      this$1.readyErrorCbs.forEach(function (cb) {
-        cb(err);
-      });
+      this$1.ready = true; // Initial redirection should still trigger the onReady onSuccess
+      // https://github.com/vuejs/vue-router/issues/3225
+
+      if (!isRouterError(err, NavigationFailureType.redirected)) {
+        this$1.readyErrorCbs.forEach(function (cb) {
+          cb(err);
+        });
+      } else {
+        this$1.readyCbs.forEach(function (cb) {
+          cb(route);
+        });
+      }
     }
   });
 };
@@ -21740,8 +21895,11 @@ History.prototype.confirmTransition = function confirmTransition(route, onComple
     onAbort && onAbort(err);
   };
 
+  var lastRouteIndex = route.matched.length - 1;
+  var lastCurrentIndex = current.matched.length - 1;
+
   if (isSameRoute(route, current) && // in the case the route map has been dynamically appended to
-  route.matched.length === current.matched.length) {
+  lastRouteIndex === lastCurrentIndex && route.matched[lastRouteIndex] === current.matched[lastCurrentIndex]) {
     this.ensureURL();
     return abort(createNavigationDuplicatedError(current, route));
   }
@@ -22510,7 +22668,7 @@ function createHref(base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '3.3.2';
+VueRouter.version = '3.3.4';
 
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter);
@@ -88936,7 +89094,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50012" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50487" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
